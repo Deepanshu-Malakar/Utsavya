@@ -23,3 +23,11 @@ CREATE TYPE notification_type AS ENUM (
 CREATE TYPE dispute_status AS ENUM (
     'open','in_review','resolved','rejected'
 );
+
+CREATE TYPE vendor_request_status AS ENUM (
+    'pending', 'approved', 'rejected', 'withdrawn'
+);
+
+CREATE TYPE auth_provider AS ENUM (
+	'local', 'google'
+);
