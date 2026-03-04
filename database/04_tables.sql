@@ -7,7 +7,7 @@ CREATE TABLE users (
 
     phone VARCHAR(15) UNIQUE,
 
-    password_hash TEXT NOT NULL,
+    --password_hash TEXT NOT NULL,
 
     role user_role NOT NULL DEFAULT 'customer',
 
@@ -94,4 +94,16 @@ CREATE TABLE user_auth_providers (
 
     CONSTRAINT unique_provider_user_id
         UNIQUE (provider, provider_user_id)
+);
+
+CREATE TABLE user_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+
+    refresh_token_hash TEXT NOT NULL,
+
+    expires_at TIMESTAMPTZ NOT NULL,
+    
+    created_at TIMESTAMPTZ DEFAULT NOW()
 );

@@ -28,8 +28,6 @@ const generateTokens = (user) => {
     return { accessToken, refreshToken };
 };
 
-
-
 // 🔹 REGISTER (Local)
 const registerUser = async ({ full_name, email, password }) => {
     const client = await pool.connect();
@@ -94,7 +92,10 @@ const registerUser = async ({ full_name, email, password }) => {
 
         await client.query('COMMIT');
 
-        console.log(`OTP for ${email}: ${otp}`);
+        // console.log(`OTP for ${email}: ${otp}`);
+        if (process.env.NODE_ENV === "test") {
+            return { message: "Registered successfully. Please verify OTP.", testOtp: otp };
+        }
 
         return {
             message: 'Registered successfully. Please verify OTP.'
@@ -107,8 +108,6 @@ const registerUser = async ({ full_name, email, password }) => {
         client.release();
     }
 };
-
-
 
 // 🔹 VERIFY OTP
 const verifyOtp = async ({ email, otp }) => {
@@ -209,8 +208,6 @@ const verifyOtp = async ({ email, otp }) => {
         client.release();
     }
 };
-
-
 
 // 🔹 LOGIN (Local)
 const loginUser = async ({ email, password }) => {
@@ -325,8 +322,6 @@ const refreshTokenService = async (refreshToken) => {
     }
 };
 
-
-
 // 🔹 LOGOUT
 const logoutService = async (refreshToken) => {
     // Verify token first
@@ -342,6 +337,7 @@ const logoutService = async (refreshToken) => {
         [userId]
     );
 
+    let deleted = false;
     for (const session of sessions.rows) {
         const isMatch = await bcrypt.compare(
             refreshToken,
@@ -353,8 +349,12 @@ const logoutService = async (refreshToken) => {
                 `DELETE FROM user_sessions WHERE id = $1`,
                 [session.id]
             );
-            return { message: 'Logged out successfully' };
+            deleted = true;
         }
+    }
+
+    if (deleted) {
+        return { message: 'Logged out successfully' };
     }
 
     throw new Error('Session not found');

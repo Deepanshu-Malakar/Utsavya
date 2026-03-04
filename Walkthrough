@@ -1,0 +1,24 @@
+# Walkthrough: Fixing the Logout & Refresh Token Bug
+
+## The Problem
+
+The integration tests were failing on the step: `"should fail to refresh after logout"`. The `logout` endpoint was returning `200 OK`, but the subsequent `refresh` endpoint was _still_ successfully refreshing the token (returning `200` instead of the expected `401 Unauthorized`).
+
+## Root Cause Analysis
+
+During testing, the `testEmail` user logged in multiple times in rapid succession (within the same second).
+
+1. `jsonwebtoken.sign` uses the current time in seconds to set the `iat` (Issued At) claim.
+2. Because multiple logins occurred in the exact same second, the payload (`userId`) and the `iat` were identical—resulting in **exactly the same JWT Refresh Token string** being generated multiple times.
+3. The server saved multiple session records in the `user_sessions` table, all storing hashes of this identical token.
+4. When `logout` was called, `logoutService` iterated over the user's sessions. Once it successfully verified the token against the **first** matching session hash, it deleted that single session and immediately returned `200 OK`.
+5. This left the duplicate identical sessions in the database. When the test then tried to `refresh` using the same token, the remaining session was queried, providing a match, and erroneously granting a new Access Token.
+
+## The Fix
+
+I updated `logoutService` in [auth.services.js](file:///e:/My%20Works/Coding/Web%20Development/NODE.JS/Projects/EMS_Backend/src/services/auth.services.js) to fix this:
+Instead of returning immediately upon finding the first valid match, the loop now continues to securely delete **all** matching session records for that refresh token.
+
+- This guarantees that even if concurrent logins generate identical JWT strings, the single logout action perfectly invalidates the token across the entire database.
+
+All 7 Integration Tests are now fully passing!

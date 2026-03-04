@@ -1,12 +1,22 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const authRoutes = require("./routes/auth.routes");
+
 require("dotenv").config();
 
 const pool = require("./config/db");
 
 const app = express();
-app.use(cors());
+
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+}));
+
 app.use(express.json());
+app.use(cookieParser());
+app.use("/auth", authRoutes);
 
 app.get("/", async (req, res) => {
     try {
@@ -21,6 +31,16 @@ app.get("/", async (req, res) => {
     }
 });
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server running on port ${process.env.PORT}`);
-});
+// app.listen(process.env.PORT, () => {
+//     console.log(`Server running on port ${process.env.PORT}`);
+// });
+
+const PORT = process.env.PORT || 5000;
+
+if (process.env.NODE_ENV !== "test") {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
+
+module.exports = app;
