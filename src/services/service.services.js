@@ -1,0 +1,52 @@
+const {
+    createVendorService,
+    getVendorServices,
+    getAllServices,
+    getServiceById
+} = require("../models/service.model");
+
+const createService = async (user, data) => {
+
+    if (user.role !== "vendor") {
+        throw new Error("Only vendors can create services");
+    }
+
+    const service = await createVendorService({
+        vendor_id: user.userId,
+        ...data
+    });
+
+    return service;
+};
+
+const getVendorServicesService = async (user) => {
+
+    if (user.role !== "vendor") {
+        throw new Error("Only vendors can view their services");
+    }
+
+    return await getVendorServices(user.userId);
+};
+
+const getAllServicesService = async () => {
+
+    return await getAllServices();
+};
+
+const getServiceDetailsService = async (serviceId) => {
+
+    const service = await getServiceById(serviceId);
+
+    if (!service) {
+        throw new Error("Service not found");
+    }
+
+    return service;
+};
+
+module.exports = {
+    createService,
+    getVendorServicesService,
+    getAllServicesService,
+    getServiceDetailsService
+};

@@ -31,3 +31,17 @@ CREATE TYPE vendor_request_status AS ENUM (
 CREATE TYPE auth_provider AS ENUM (
 	'local', 'google'
 );
+
+CREATE TYPE event_status AS ENUM (
+    'planning',
+    'pending',
+    'confirmed',
+    'completed',
+    'cancelled'
+);
+
+CREATE TYPE collaborator_role AS ENUM (
+    'owner',
+    'planner',
+    'member'
+);

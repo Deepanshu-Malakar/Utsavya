@@ -4,6 +4,7 @@ const pool = require("../../src/config/db");
 
 beforeAll(async () => {
     await pool.query("DELETE FROM user_sessions");
+    await pool.query("DELETE FROM vendor_requests");
     await pool.query("DELETE FROM users");
 });
 
@@ -117,8 +118,4 @@ describe("Auth Integration Tests", () => {
         expect(res.statusCode).toBe(401);
     });
 
-});
-
-afterAll(async () => {
-    await pool.end();
 });

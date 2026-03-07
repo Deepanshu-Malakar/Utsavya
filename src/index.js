@@ -2,6 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth.routes");
+const authenticateUser = require("./middlewares/auth.middleware");
+const vendorRoutes = require("./routes/vendor.routes");
+const serviceRoutes = require("./routes/service.routes");
+//const authorizeRoles = require("./middlewares/role.middleware");
 
 require("dotenv").config();
 
@@ -17,6 +21,9 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 app.use("/auth", authRoutes);
+app.use("/vendors", vendorRoutes);
+app.use("/services", serviceRoutes);
+//app.use("/vendor/services", serviceRoutes);
 
 app.get("/", async (req, res) => {
     try {
@@ -31,9 +38,11 @@ app.get("/", async (req, res) => {
     }
 });
 
-// app.listen(process.env.PORT, () => {
-//     console.log(`Server running on port ${process.env.PORT}`);
-// });
+app.get("/test/auth", authenticateUser, (req, res) => {
+    res.status(200).json({
+        user: req.user
+    });
+});
 
 const PORT = process.env.PORT || 5000;
 

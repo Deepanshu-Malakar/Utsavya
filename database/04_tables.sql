@@ -107,3 +107,140 @@ CREATE TABLE user_sessions (
     
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+CREATE TABLE vendor_services (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    vendor_id UUID NOT NULL
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    title TEXT NOT NULL,
+
+    description TEXT,
+
+    city TEXT NOT NULL,
+
+    price NUMERIC(10,2),
+
+    price_type price_type NOT NULL DEFAULT 'fixed',
+
+    is_active BOOLEAN DEFAULT true,
+
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_vendor_services_vendor_id
+ON vendor_services(vendor_id);
+
+CREATE INDEX idx_vendor_services_active
+ON vendor_services(is_active);
+
+CREATE INDEX idx_vendor_services_created_at
+ON vendor_services(created_at DESC);
+
+CREATE TABLE service_media (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    service_id UUID NOT NULL
+        REFERENCES vendor_services(id)
+        ON DELETE CASCADE,
+
+    media_url TEXT NOT NULL,
+
+    media_type media_type NOT NULL,
+
+    uploaded_by UUID NOT NULL
+        REFERENCES users(id),
+
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE bookings (
+
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    booking_reference TEXT UNIQUE NOT NULL,
+
+    customer_id UUID NOT NULL
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    event_start TIMESTAMPTZ NOT NULL,
+    event_end TIMESTAMPTZ NOT NULL,
+
+    location TEXT,
+    guest_count INT,
+
+    status event_status DEFAULT 'planning',
+
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+
+    CHECK (event_end > event_start)
+);
+
+CREATE TABLE booking_items (
+
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    booking_id UUID NOT NULL
+        REFERENCES bookings(id)
+        ON DELETE CASCADE,
+
+    service_id UUID NOT NULL
+        REFERENCES vendor_services(id)
+        ON DELETE CASCADE,
+
+    vendor_id UUID NOT NULL
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    price_quote NUMERIC,
+
+    status booking_status DEFAULT 'pending',
+
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+
+    UNIQUE (booking_id, service_id, vendor_id)
+);
+
+CREATE TABLE booking_collaborators (
+
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    booking_id UUID NOT NULL
+        REFERENCES bookings(id)
+        ON DELETE CASCADE,
+
+    user_id UUID NOT NULL
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    role collaborator_role DEFAULT 'member',
+
+    invited_at TIMESTAMPTZ DEFAULT NOW(),
+
+    UNIQUE (booking_id, user_id)
+);
+
+CREATE INDEX idx_bookings_customer
+ON bookings(customer_id);
+
+CREATE INDEX idx_bookings_event_start
+ON bookings(event_start);
+
+CREATE INDEX idx_booking_items_booking
+ON booking_items(booking_id);
+
+CREATE INDEX idx_booking_items_vendor
+ON booking_items(vendor_id);
+
+CREATE INDEX idx_booking_items_service
+ON booking_items(service_id);
+
+CREATE INDEX idx_booking_collaborators_booking
+ON booking_collaborators(booking_id);
