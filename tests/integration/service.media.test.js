@@ -1,6 +1,14 @@
 const request = require("supertest");
 const app = require("../../src/index");
 const pool = require("../../src/config/db");
+const fs = require("fs");
+const path = require("path");
+
+jest.mock("../../src/config/cloudinary", () => ({
+    uploader: {
+        upload: jest.fn().mockResolvedValue({ secure_url: "https://mocked-cloudinary.com/test.jpg" })
+    }
+}));
 
 describe("Service Media API", () => {
 
@@ -9,8 +17,10 @@ describe("Service Media API", () => {
     let mediaId;
 
     const vendorEmail = `mediaVendor${Date.now()}@test.com`;
+    const dummyImagePath = path.join(__dirname, "dummy.jpg");
 
     beforeAll(async () => {
+        fs.writeFileSync(dummyImagePath, "fake image content");
 
         // register vendor
         const registerRes = await request(app)
@@ -67,14 +77,11 @@ describe("Service Media API", () => {
         const res = await request(app)
             .post(`/services/${serviceId}/media`)
             .set("Authorization", `Bearer ${vendorToken}`)
-            .send({
-                media_url: "https://cloudinary.com/test.jpg",
-                media_type: "image"
-            });
+            .attach("file", dummyImagePath);
 
         console.log("Service Media Response:", res.body);
         expect(res.statusCode).toBe(201);
-        expect(res.body.media_url).toBe("https://cloudinary.com/test.jpg");
+        expect(res.body.media_url).toBe("https://mocked-cloudinary.com/test.jpg");
 
         mediaId = res.body.id;
     });
@@ -99,6 +106,12 @@ describe("Service Media API", () => {
 
         console.log("Delete Media Response:", res.body);
         expect(res.statusCode).toBe(200);
+    });
+
+    afterAll(() => {
+        if (fs.existsSync(dummyImagePath)) {
+            fs.unlinkSync(dummyImagePath);
+        }
     });
 
 });

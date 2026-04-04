@@ -4,77 +4,30 @@ const {
     getAllServicesService,
     getServiceDetailsService
 } = require("../services/service.services");
+const asyncHandler = require("../utils/asyncHandler");
 
-const createVendorServiceController = async (req, res) => {
+const createVendorServiceController = asyncHandler(async (req, res) => {
+    const service = await createService(
+        req.user,
+        req.body
+    );
+    res.status(201).json(service);
+});
 
-    try {
+const getVendorServicesController = asyncHandler(async (req, res) => {
+    const services = await getVendorServicesService(req.user);
+    res.status(200).json(services);
+});
 
-        const service = await createService(
-            req.user,
-            req.body
-        );
+const getAllServicesController = asyncHandler(async (req, res) => {
+    const services = await getAllServicesService(req.query);
+    res.status(200).json(services);
+});
 
-        res.status(201).json(service);
-
-    } catch (error) {
-
-        res.status(400).json({
-            message: error.message
-        });
-
-    }
-};
-
-const getVendorServicesController = async (req, res) => {
-
-    try {
-
-        const services = await getVendorServicesService(req.user);
-
-        res.status(200).json(services);
-
-    } catch (error) {
-
-        res.status(400).json({
-            message: error.message
-        });
-
-    }
-};
-
-const getAllServicesController = async (req, res) => {
-
-    try {
-
-        const services = await getAllServicesService();
-
-        res.status(200).json(services);
-
-    } catch (error) {
-
-        res.status(400).json({
-            message: error.message
-        });
-
-    }
-};
-
-const getServiceDetailsController = async (req, res) => {
-
-    try {
-
-        const service = await getServiceDetailsService(req.params.id);
-
-        res.status(200).json(service);
-
-    } catch (error) {
-
-        res.status(404).json({
-            message: error.message
-        });
-
-    }
-};
+const getServiceDetailsController = asyncHandler(async (req, res) => {
+    const service = await getServiceDetailsService(req.params.id);
+    res.status(200).json(service);
+});
 
 module.exports = {
     createVendorServiceController,

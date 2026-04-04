@@ -3,67 +3,29 @@ const {
     listMedia,
     removeMedia
 } = require("../services/serviceMedia.services");
+const asyncHandler = require("../utils/asyncHandler");
 
+const uploadServiceMediaController = asyncHandler(async (req, res) => {
+    const media = await uploadMedia(
+        req.user,
+        req.params.id,
+        req.file
+    );
+    res.status(201).json(media);
+});
 
-const uploadServiceMediaController = async (req, res) => {
+const getServiceMediaController = asyncHandler(async (req, res) => {
+    const media = await listMedia(req.params.id);
+    res.status(200).json(media);
+});
 
-    try {
-
-        const media = await uploadMedia(
-            req.user,
-            req.params.id,
-            req.body
-        );
-
-        res.status(201).json(media);
-
-    } catch (error) {
-
-        res.status(400).json({
-            message: error.message
-        });
-
-    }
-};
-
-
-const getServiceMediaController = async (req, res) => {
-
-    try {
-
-        const media = await listMedia(req.params.id);
-
-        res.status(200).json(media);
-
-    } catch (error) {
-
-        res.status(400).json({
-            message: error.message
-        });
-
-    }
-};
-
-
-const deleteServiceMediaController = async (req, res) => {
-
-    try {
-
-        const deleted = await removeMedia(
-            req.user,
-            req.params.mediaId
-        );
-
-        res.status(200).json(deleted);
-
-    } catch (error) {
-
-        res.status(400).json({
-            message: error.message
-        });
-
-    }
-};
+const deleteServiceMediaController = asyncHandler(async (req, res) => {
+    const deleted = await removeMedia(
+        req.user,
+        req.params.mediaId
+    );
+    res.status(200).json(deleted);
+});
 
 module.exports = {
     uploadServiceMediaController,

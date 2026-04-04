@@ -28,9 +28,12 @@ const getVendorServicesService = async (user) => {
     return await getVendorServices(user.userId);
 };
 
-const getAllServicesService = async () => {
+const getAllServicesService = async (queryParams = {}) => {
 
-    return await getAllServices();
+    const limit = parseInt(queryParams.limit) || 10;
+    const offset = parseInt(queryParams.offset) || 0;
+
+    return await getAllServices(limit, offset);
 };
 
 const getServiceDetailsService = async (serviceId) => {
