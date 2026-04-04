@@ -1,8 +1,10 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { OAuth2Client } = require('google-auth-library');
+const crypto = require('crypto');
 const pool = require('../config/db');
 const { sendOtpEmail } = require("../utils/email");
-const { OAuth2Client } = require('google-auth-library');
+const cloudinary = require('../config/cloudinary');
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -23,7 +25,8 @@ const generateTokens = (user) => {
 
     const refreshToken = jwt.sign(
         {
-            userId: user.id
+            userId: user.id,
+            jti: crypto.randomUUID() // 🛡️ Unique ID for every rotation
         },
         process.env.JWT_REFRESH_SECRET,
         { expiresIn: REFRESH_TOKEN_EXPIRY }
@@ -191,16 +194,16 @@ const verifyOtp = async ({ email, otp }) => {
 
         // Generate tokens
         const { accessToken, refreshToken } = generateTokens(user);
-
+        const decodedToken = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
         const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
 
-        // Store refresh session
+        // Store refresh session with JTI
         await client.query(
             `
-            INSERT INTO user_sessions (user_id, refresh_token_hash, expires_at)
-            VALUES ($1, $2, NOW() + INTERVAL '7 days')
+            INSERT INTO user_sessions (user_id, refresh_token_hash, expires_at, jti)
+            VALUES ($1, $2, NOW() + INTERVAL '7 days', $3)
             `,
-            [user.id, refreshTokenHash]
+            [user.id, refreshTokenHash, decodedToken.jti]
         );
 
         await client.query('COMMIT');
@@ -249,14 +252,15 @@ const loginUser = async ({ email, password }) => {
     }
 
     const { accessToken, refreshToken } = generateTokens(user);
+    const decodedToken = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
     const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
 
     await pool.query(
         `
-        INSERT INTO user_sessions (user_id, refresh_token_hash, expires_at)
-        VALUES ($1, $2, NOW() + INTERVAL '7 days')
+        INSERT INTO user_sessions (user_id, refresh_token_hash, expires_at, jti)
+        VALUES ($1, $2, NOW() + INTERVAL '7 days', $3)
         `,
-        [user.id, refreshTokenHash]
+        [user.id, refreshTokenHash, decodedToken.jti]
     );
 
     return { accessToken, refreshToken };
@@ -276,8 +280,10 @@ const googleAuthService = async (idToken) => {
         const email = payload.email;
         const full_name = payload.name;
         const google_id = payload.sub;
+        const profile_image = payload.picture;
 
         if (!email) {
+            console.error("[Google Auth Error]: No email provided in payload", payload);
             throw new Error('Google token did not provide an email');
         }
 
@@ -290,16 +296,31 @@ const googleAuthService = async (idToken) => {
         );
 
         let user;
+        let final_profile_image = profile_image;
+
+        // Sync profile image to Cloudinary if it exists
+        if (profile_image) {
+            try {
+                const uploadRes = await cloudinary.uploader.upload(profile_image, {
+                    folder: 'profiles/google_photos',
+                    resource_type: 'image'
+                });
+                final_profile_image = uploadRes.secure_url;
+            } catch (err) {
+                console.error("[Non-critical] Google profile photo sync failed:", err.message);
+                // Fallback to original Google URL if upload fails
+            }
+        }
 
         if (existingUserResult.rows.length === 0) {
             // Register new user
             const userResult = await client.query(
                 `
-                INSERT INTO users (full_name, email, is_email_verified, email_verified_at)
-                VALUES ($1, $2, true, NOW())
-                RETURNING id, full_name, email, role
+                INSERT INTO users (full_name, email, is_email_verified, email_verified_at, profile_image)
+                VALUES ($1, $2, true, NOW(), $3)
+                RETURNING id, full_name, email, role, profile_image
                 `,
-                [full_name, email]
+                [full_name, email, final_profile_image]
             );
 
             user = userResult.rows[0];
@@ -340,20 +361,29 @@ const googleAuthService = async (idToken) => {
                         [user.id]
                     );
                 }
+
+                // If user doesn't have a profile image, or it's not from Cloudinary, update it
+                if (final_profile_image && (!user.profile_image || !user.profile_image.includes('res.cloudinary.com'))) {
+                    await client.query(
+                        `UPDATE users SET profile_image = $1 WHERE id = $2`,
+                        [final_profile_image, user.id]
+                    );
+                }
             }
         }
 
         // Generate tokens
         const { accessToken, refreshToken } = generateTokens(user);
+        const decodedToken = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
         const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
 
-        // Store refresh session
+        // Store refresh session with JTI
         await client.query(
             `
-            INSERT INTO user_sessions (user_id, refresh_token_hash, expires_at)
-            VALUES ($1, $2, NOW() + INTERVAL '7 days')
+            INSERT INTO user_sessions (user_id, refresh_token_hash, expires_at, jti)
+            VALUES ($1, $2, NOW() + INTERVAL '7 days', $3)
             `,
-            [user.id, refreshTokenHash]
+            [user.id, refreshTokenHash, decodedToken.jti]
         );
 
         await client.query('COMMIT');
@@ -387,18 +417,18 @@ const refreshTokenService = async (refreshToken) => {
             [userId]
         );
 
-        // 3. Find the matching session by comparing hash
-        let currentSession = null;
-        for (const session of sessionsRes.rows) {
-            const isMatch = await bcrypt.compare(
-                refreshToken,
-                session.refresh_token_hash
-            );
-            if (isMatch) {
-                currentSession = session;
-                break;
-            }
+        // 3. Find the matching session by comparing JTI
+        // This is O(1) and secure
+        const jti = decoded.jti;
+        if (!jti) {
+            throw new Error("Invalid refresh token: missing JTI");
         }
+
+        const sessionMatchRes = await client.query(
+            `SELECT * FROM user_sessions WHERE user_id = $1 AND jti = $2`,
+            [userId, jti]
+        );
+        let currentSession = sessionMatchRes.rows[0];
 
         if (!currentSession) {
             throw new Error("Invalid or consumed refresh token");
@@ -412,7 +442,10 @@ const refreshTokenService = async (refreshToken) => {
         }
 
         // 5. CONSUME THE TOKEN: Delete the old session to prevent reuse
-        await client.query("DELETE FROM user_sessions WHERE id = $1", [currentSession.id]);
+        const deleteRes = await client.query("DELETE FROM user_sessions WHERE id = $1", [currentSession.id]);
+        if (deleteRes.rowCount === 0) {
+            throw new Error("Invalid or already consumed refresh token");
+        }
 
         // 6. Generate NEW tokens
         const userRes = await client.query(
@@ -424,35 +457,46 @@ const refreshTokenService = async (refreshToken) => {
         const { accessToken, refreshToken: newRefreshToken } = generateTokens(user);
         const newRefreshTokenHash = await bcrypt.hash(newRefreshToken, 10);
 
-        // 7. Store NEW session
+        // 7. Store NEW session with JTI
+        // decodedNew contains the new unique JTI for current refresh operation
+        const decodedNew = jwt.verify(newRefreshToken, process.env.JWT_REFRESH_SECRET);
+        
         await client.query(
             `
-            INSERT INTO user_sessions (user_id, refresh_token_hash, expires_at)
-            VALUES ($1, $2, NOW() + INTERVAL '7 days')
+            INSERT INTO user_sessions (user_id, refresh_token_hash, expires_at, jti)
+            VALUES ($1, $2, NOW() + INTERVAL '7 days', $3)
             `,
-            [user.id, newRefreshTokenHash]
+            [user.id, newRefreshTokenHash, decodedNew.jti]
         );
 
         await client.query("COMMIT");
 
-        // 🛡️ Security Notification
-        const { createNotification } = require("./notification.services");
-        await createNotification(
-            userId,
-            "Security Alert: Session Refreshed",
-            "Your account session was recently refreshed. If this was not you, please secure your account.",
-            "system"
-        ).catch(console.error);
+        // 🛡️ Security Notification (Safe & Non-blocking)
+        try {
+            const { createNotification } = require("./notification.services");
+            createNotification(
+                userId,
+                "Security Alert: Session Refreshed",
+                "Your account session was recently refreshed. If this was not you, please secure your account.",
+                "system"
+            ).catch(err => console.error("[NON-CRITICAL] Notification failed:", err.message));
+        } catch (e) {
+            console.error("[NON-CRITICAL] Failed to load notification service:", e.message);
+        }
 
         return { accessToken, refreshToken: newRefreshToken };
 
     } catch (error) {
-        await client.query("ROLLBACK");
+        if (client) {
+            await client.query("ROLLBACK").catch(() => {});
+        }
         if (error.name === 'JsonWebTokenError') throw new Error('Invalid refresh token');
         if (error.name === 'TokenExpiredError') throw new Error('Refresh token expired');
         throw error;
     } finally {
-        client.release();
+        if (client) {
+            client.release();
+        }
     }
 };
 

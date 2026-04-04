@@ -26,7 +26,7 @@ CREATE TABLE users (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-ALTER TABLE users DROP COLUMN password_hash;
+-- ALTER TABLE users DROP COLUMN password_hash;
 
 CREATE TABLE vendor_requests (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -103,6 +103,8 @@ CREATE TABLE user_sessions (
 
     refresh_token_hash TEXT NOT NULL,
 
+    jti UUID UNIQUE, -- Unique ID for every rotation (O(1) lookup)
+
     expires_at TIMESTAMPTZ NOT NULL,
     
     created_at TIMESTAMPTZ DEFAULT NOW()
@@ -153,7 +155,8 @@ CREATE TABLE service_media (
     media_type media_type NOT NULL,
 
     uploaded_by UUID NOT NULL
-        REFERENCES users(id),
+        REFERENCES users(id)
+        ON DELETE CASCADE,
 
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -287,7 +290,7 @@ CREATE TABLE review_media (
     review_id UUID NOT NULL REFERENCES reviews(id) ON DELETE CASCADE,
     media_url TEXT NOT NULL,
     media_type media_type NOT NULL,
-    uploaded_by UUID NOT NULL REFERENCES users(id),
+    uploaded_by UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -368,4 +371,4 @@ CREATE TABLE audit_logs (
 );
 
 CREATE INDEX idx_audit_logs_event_type ON audit_logs(event_type);
-CREATE INDEX idx_audit_logs_user_id ON audit_logs(user_id);
+CREATE INDEX idx_audit_logs_user_id ON audit_logs(user_id);

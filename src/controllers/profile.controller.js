@@ -18,7 +18,7 @@ const updateProfileController = asyncHandler(async (req, res) => {
 
 const deleteAccountController = asyncHandler(async (req, res) => {
     const userId = req.user.userId;
-    const { reason } = req.body;
+    const { reason } = req.body || {};
     
     // The service now fetches the email by userId before deletion and logs the reason
     const result = await profileService.deleteAccount(userId, reason);
