@@ -10,7 +10,7 @@ beforeAll(async () => {
 
 describe("Auth Integration Tests", () => {
 
-    const testEmail = `jest_${Date.now()}@example.com`;
+    const testEmail = `bhaskarkumar1729@gmail.com`;
     let testOtp;
     let accessToken;
 

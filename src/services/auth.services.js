@@ -1,6 +1,10 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const pool = require('../config/db');
+const { sendOtpEmail } = require("../utils/email");
+const { OAuth2Client } = require('google-auth-library');
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const ACCESS_TOKEN_EXPIRY = '15m';
 const REFRESH_TOKEN_EXPIRY = '7d';
@@ -96,6 +100,8 @@ const registerUser = async ({ full_name, email, password }) => {
         if (process.env.NODE_ENV === "test") {
             return { message: "Registered successfully. Please verify OTP.", testOtp: otp };
         }
+
+        await sendOtpEmail(email, otp);
 
         return {
             message: 'Registered successfully. Please verify OTP.'
@@ -256,69 +262,197 @@ const loginUser = async ({ email, password }) => {
     return { accessToken, refreshToken };
 };
 
+// 🔹 GOOGLE AUTH (OAuth Login/Signup)
+const googleAuthService = async (idToken) => {
+    const client = await pool.connect();
+
+    try {
+        const ticket = await googleClient.verifyIdToken({
+            idToken: idToken,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        
+        const email = payload.email;
+        const full_name = payload.name;
+        const google_id = payload.sub;
+
+        if (!email) {
+            throw new Error('Google token did not provide an email');
+        }
+
+        await client.query('BEGIN');
+
+        // Check if user exists
+        const existingUserResult = await client.query(
+            `SELECT * FROM users WHERE email = $1`,
+            [email]
+        );
+
+        let user;
+
+        if (existingUserResult.rows.length === 0) {
+            // Register new user
+            const userResult = await client.query(
+                `
+                INSERT INTO users (full_name, email, is_email_verified, email_verified_at)
+                VALUES ($1, $2, true, NOW())
+                RETURNING id, full_name, email, role
+                `,
+                [full_name, email]
+            );
+
+            user = userResult.rows[0];
+
+            // Create google auth provider record
+            await client.query(
+                `
+                INSERT INTO user_auth_providers 
+                (user_id, provider, provider_user_id)
+                VALUES ($1, 'google', $2)
+                `,
+                [user.id, google_id]
+            );
+
+        } else {
+            user = existingUserResult.rows[0];
+            
+            // Check if provider exists
+            const providerResult = await client.query(
+                `SELECT * FROM user_auth_providers WHERE user_id = $1 AND provider = 'google'`,
+                [user.id]
+            );
+
+            if (providerResult.rows.length === 0) {
+                // Link this provider
+                await client.query(
+                    `
+                    INSERT INTO user_auth_providers 
+                    (user_id, provider, provider_user_id)
+                    VALUES ($1, 'google', $2)
+                    `,
+                    [user.id, google_id]
+                );
+                
+                if (!user.is_email_verified && payload.email_verified) {
+                    await client.query(
+                        `UPDATE users SET is_email_verified = true, email_verified_at = NOW() WHERE id = $1`,
+                        [user.id]
+                    );
+                }
+            }
+        }
+
+        // Generate tokens
+        const { accessToken, refreshToken } = generateTokens(user);
+        const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
+
+        // Store refresh session
+        await client.query(
+            `
+            INSERT INTO user_sessions (user_id, refresh_token_hash, expires_at)
+            VALUES ($1, $2, NOW() + INTERVAL '7 days')
+            `,
+            [user.id, refreshTokenHash]
+        );
+
+        await client.query('COMMIT');
+
+        return { accessToken, refreshToken };
+
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
+};
+
 // 🔹 REFRESH TOKEN
 const refreshTokenService = async (refreshToken) => {
+    const client = await pool.connect();
     try {
-        // 1. Verify JWT
+        await client.query("BEGIN");
+
+        // 1. Verify JWT signature and payload
         const decoded = jwt.verify(
             refreshToken,
             process.env.JWT_REFRESH_SECRET
         );
-
         const userId = decoded.userId;
 
-        // 2. Get all sessions for user
-        const sessions = await pool.query(
+        // 2. Fetch all sessions for this user
+        const sessionsRes = await client.query(
             `SELECT * FROM user_sessions WHERE user_id = $1`,
             [userId]
         );
 
-        if (sessions.rows.length === 0) {
-            throw new Error('Session not found');
-        }
-
-        // 3. Compare hashed token
-        let validSession = null;
-
-        for (const session of sessions.rows) {
+        // 3. Find the matching session by comparing hash
+        let currentSession = null;
+        for (const session of sessionsRes.rows) {
             const isMatch = await bcrypt.compare(
                 refreshToken,
                 session.refresh_token_hash
             );
-
             if (isMatch) {
-                validSession = session;
+                currentSession = session;
                 break;
             }
         }
 
-        if (!validSession) {
-            throw new Error('Invalid refresh token');
+        if (!currentSession) {
+            throw new Error("Invalid or consumed refresh token");
         }
 
         // 4. Check expiry
-        if (new Date() > validSession.expires_at) {
-            throw new Error('Refresh token expired');
+        if (new Date() > currentSession.expires_at) {
+            await client.query("DELETE FROM user_sessions WHERE id = $1", [currentSession.id]);
+            await client.query("COMMIT");
+            throw new Error("Refresh token expired");
         }
 
-        // 5. Generate new access token
-        const userResult = await pool.query(
+        // 5. CONSUME THE TOKEN: Delete the old session to prevent reuse
+        await client.query("DELETE FROM user_sessions WHERE id = $1", [currentSession.id]);
+
+        // 6. Generate NEW tokens
+        const userRes = await client.query(
             `SELECT id, role FROM users WHERE id = $1`,
             [userId]
         );
+        const user = userRes.rows[0];
+        
+        const { accessToken, refreshToken: newRefreshToken } = generateTokens(user);
+        const newRefreshTokenHash = await bcrypt.hash(newRefreshToken, 10);
 
-        const user = userResult.rows[0];
-
-        const accessToken = jwt.sign(
-            { userId: user.id, role: user.role },
-            process.env.JWT_SECRET,
-            { expiresIn: '15m' }
+        // 7. Store NEW session
+        await client.query(
+            `
+            INSERT INTO user_sessions (user_id, refresh_token_hash, expires_at)
+            VALUES ($1, $2, NOW() + INTERVAL '7 days')
+            `,
+            [user.id, newRefreshTokenHash]
         );
 
-        return { accessToken };
+        await client.query("COMMIT");
+
+        // 🛡️ Security Notification
+        const { createNotification } = require("./notification.services");
+        await createNotification(
+            userId,
+            "Security Alert: Session Refreshed",
+            "Your account session was recently refreshed. If this was not you, please secure your account.",
+            "system"
+        ).catch(console.error);
+
+        return { accessToken, refreshToken: newRefreshToken };
 
     } catch (error) {
+        await client.query("ROLLBACK");
+        if (error.name === 'JsonWebTokenError') throw new Error('Invalid refresh token');
+        if (error.name === 'TokenExpiredError') throw new Error('Refresh token expired');
         throw error;
+    } finally {
+        client.release();
     }
 };
 
@@ -364,6 +498,7 @@ module.exports = {
     registerUser,
     verifyOtp,
     loginUser,
+    googleAuthService,
     refreshTokenService,
     logoutService
 };

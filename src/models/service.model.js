@@ -44,16 +44,17 @@ const getVendorServices = async (vendor_id) => {
 };
 
 
-const getAllServices = async () => {
+const getAllServices = async (limit = 10, offset = 0) => {
 
     const query = `
         SELECT *
         FROM vendor_services
         WHERE is_active = TRUE
         ORDER BY created_at DESC
+        LIMIT $1 OFFSET $2
     `;
 
-    const { rows } = await pool.query(query);
+    const { rows } = await pool.query(query, [limit, offset]);
 
     return rows;
 };
