@@ -45,3 +45,27 @@ CREATE TYPE collaborator_role AS ENUM (
     'planner',
     'member'
 );
+
+CREATE TYPE refund_status AS ENUM (
+    'pending',
+    'successful',
+    'failed'
+);
+
+CREATE TYPE service_category AS ENUM (
+    'venue',
+    'catering',
+    'photography',
+    'music',
+    'decor',
+    'other'
+);
+
+CREATE TYPE audit_event_type AS ENUM (
+    'account_deletion',
+    'security_breach',
+    'price_change',
+    'status_update',
+    'booking_edit'
+);
+
