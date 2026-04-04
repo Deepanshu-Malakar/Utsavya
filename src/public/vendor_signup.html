@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vendor Signup - Utsavya</title>
+
+    <!-- Use SAME CSS -->
+    <link rel="stylesheet" href="css/vendors.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        .signup-section {
+            padding: 60px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .signup-card {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .signup-card h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: none;
+            height: 100px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+
+            /* SAME BUTTON STYLE FEEL */
+            background: #ff6b6b;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SAME NAVBAR -->
+    <header class="navbar">
+
+        <div class="logo">
+            <img src="images/logo.png" width="60">
+            <span>UTSAVYA</span>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard.html">Home</a>
+            <a href="events_page.html">Events</a>
+            <a href="vendors.html">Vendors</a>
+            <a href="memories_page.html">Memories</a>
+        </nav>
+
+        <div class="profile">
+            Hello Deepanshu
+            <img src="images/profile.png">
+        </div>
+
+    </header>
+
+    <!-- FORM SECTION -->
+    <section class="signup-section">
+
+        <div class="signup-card">
+
+            <h2>Signup as Vendor</h2>
+
+            <form id="vendorForm">
+
+                <!-- Business Name -->
+                <div class="form-group">
+                    <label>Business Name</label>
+                    <input type="text" name="business_name" placeholder="Enter your business name" required>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label>Business Description</label>
+                    <textarea name="business_description" placeholder="Describe your services..." required></textarea>
+                </div>
+
+                <!-- City -->
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" name="city" placeholder="Enter your city" required>
+                </div>
+
+                <!-- Aadhar -->
+                <div class="form-group">
+                    <label>Aadhar Card (Google Drive Link)</label>
+                    <input type="url" name="aadhar_url" placeholder="Paste Google Drive link" required>
+                </div>
+
+                <!-- License -->
+                <div class="form-group">
+                    <label>Business License (Google Drive Link)</label>
+                    <input type="url" name="license_url" placeholder="Paste Google Drive link" required>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    Submit Application
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+    <script>
+        document.getElementById("vendorForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                business_name: formData.get("business_name"),
+                business_description: formData.get("business_description"),
+                city: formData.get("city"),
+                aadhar_url: formData.get("aadhar_url"),
+                license_url: formData.get("license_url")
+            };
+
+            // Get token from localStorage (assuming it's stored there)
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+                alert("You must be logged in to submit a vendor application.");
+                return;
+            }
+
+            try {
+                const response = await fetch("/vendors/request", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert("Vendor application submitted successfully!");
+                    // Optionally redirect
+                    // window.location.href = "dashboard.html";
+                } else {
+                    const error = await response.json();
+                    alert("Error: " + (error.message || "Failed to submit application"));
+                }
+            } catch (err) {
+                alert("Network error. Please try again.");
+            }
+        });
+    </script>
+
+</body>
+</html>

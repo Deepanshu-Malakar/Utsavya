@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vendors - Utsavya</title>
+
+    <link rel="stylesheet" href="css/vendor_home.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            <img src="images/logo.png" alt="" width="60">
+            <span>UTSAVYA</span>
+        </div>
+
+        <input type="checkbox" id="nav-toggle" class="nav-toggle">
+        <label for="nav-toggle" class="nav-toggle-label">☰</label>
+
+        <nav class="nav-menu">
+            <a href="dashboard.html">Home</a>
+            <a href="schedule_vendor.html">Schedules</a>
+            <a href="memories_vendor.html">Memories</a>
+            <a href="#" onclick="showServicesTab()" id="servicesTab">Services</a>
+        </nav>
+
+        <div class="profile">
+            
+            Hello Deepanshu
+            <img src="images/profile.png">
+            <button class="notifications-btn">🔔</button>
+        </div>
+
+    </header>
+
+    <!-- HERO SECTION -->
+
+    <section class="hero">
+
+        <div class="hero-overlay"></div>
+        <div class="bokeh">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+        </div>
+
+        <div class="hero-content">
+
+            <h1>
+                Start Growing Your <span>Business Today</span>
+            </h1>
+
+            <div class="search-box">
+
+                <select id="eventSelect">
+                    <option value="all">Select Event</option>
+                    <option value="wedding">Wedding</option>
+                    <option value="birthday">Birthday</option>
+                    <option value="festival">Festival</option>
+                    <option value="corporate">Corporate</option>
+                </select>
+
+                <input type="text" placeholder="Search Events...">
+
+                <button>Search</button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- TABS -->
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showRequestsTab()">Booking Requests</button>
+        <button class="tab-btn" onclick="showServicesTab()">My Services</button>
+    </div>
+
+    <!-- REQUESTS SECTION -->
+
+    <div id="requestsSection" class="tab-content active">
+
+        <!-- VENDORS GRID -->
+
+        <main class="vendors-section">
+
+            
+
+            <div class="vendors-grid" id="vendorsGrid">
+
+                <!-- REQUEST CARDS -->
+
+                
+                <!-- VENDOR CARDS WILL BE GENERATED HERE -->
+                
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button onclick="prevMonth()">◀</button>
+                        <h2 id="monthYear"></h2>
+                        <button onclick="nextMonth()">▶</button>
+                    </div>
+                    
+                    <div class="calendar-days">
+                        <div>Sun</div><div>Mon</div><div>Tue</div>
+                        <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                    </div>
+                    
+                    <div class="calendar-dates" id="calendarDates"></div>
+                </div>
+                <div class="vendor-card">
+                    <div class="vendor-image">
+                        <img src="images/vendor1.jpg" alt="">
+                    </div>
+    
+                    <div class="vendor-details">
+                        <h3>Sharma Caterers</h3>
+                        <div class="category">Wedding Catering</div>
+    
+                        <div class="description">
+                            Customer requested catering for wedding event.
+                        </div>
+    
+                        <div class="vendor-footer">
+                            <span class="price">₹50,000</span>
+                            <div class="action-buttons">
+                                <button class="accept-btn">Accept</button>
+                                <button class="reject-btn">Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+    
+                <div class="vendor-card">
+                    <div class="vendor-image">
+                        <img src="images/vendor2.jpg" alt="">
+                    </div>
+    
+                    <div class="vendor-details">
+                        <h3>Royal Decor</h3>
+                        <div class="category">Event Decoration</div>
+    
+                        <div class="description">
+                            Customer requested decoration for birthday event.
+                        </div>
+    
+                        <div class="vendor-footer">
+                            <span class="price">₹25,000</span>
+                            <div class="action-buttons">
+                                <button class="accept-btn">Accept</button>
+                                <button class="reject-btn">Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+
+    </div>
+
+    <!-- SERVICES SECTION -->
+
+    <div id="servicesSection" class="tab-content">
+
+        <main class="services-section">
+
+            <div class="services-header">
+                <h2>My Services</h2>
+                <button class="add-service-btn" onclick="showAddServiceModal()">+ Add New Service</button>
+            </div>
+
+            <div class="services-grid" id="servicesGrid">
+                <!-- Services will be loaded here -->
+                <div class="loading">Loading services...</div>
+            </div>
+
+        </main>
+
+    </div>
+
+    </div>
+
+        </div>
+
+    </aside>
+
+    <!-- ADD SERVICE MODAL -->
+
+    <div id="addServiceModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAddServiceModal()">&times;</span>
+            <h2>Add New Service</h2>
+            
+            <form id="addServiceForm">
+                <div class="form-group">
+                    <label for="serviceTitle">Service Title *</label>
+                    <input type="text" id="serviceTitle" required placeholder="e.g., Wedding Photography">
+                </div>
+                
+                <div class="form-group">
+                    <label for="serviceDescription">Description *</label>
+                    <textarea id="serviceDescription" required placeholder="Describe your service..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="serviceCity">City *</label>
+                    <input type="text" id="serviceCity" required placeholder="e.g., Delhi">
+                </div>
+                
+                <div class="form-group">
+                    <label for="servicePrice">Price *</label>
+                    <input type="number" id="servicePrice" required placeholder="50000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="priceType">Price Type *</label>
+                    <select id="priceType" required>
+                        <option value="fixed">Fixed Price</option>
+                        <option value="per_person">Per Person</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="submit-btn">Add Service</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+
+        <p>© 2026 Utsavya</p>
+
+    </footer>
+
+    <script src="js/vendor_home.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vendors - Utsavya</title>
+
+    <link rel="stylesheet" href="css/vendors.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            <img src="images/logo.png" alt="" width="60">
+            <span>UTSAVYA</span>
+        </div>
+
+        <input type="checkbox" id="nav-toggle" class="nav-toggle">
+        <label for="nav-toggle" class="nav-toggle-label">☰</label>
+
+        <nav class="nav-menu">
+            <a href="dashboard.html">Home</a>
+            <a href="events_page.html">Events</a>
+            <a class="active">Vendors</a>
+            <a href="memories_page.html">Memories</a>
+            <a>Schedule</a>
+        </nav>
+
+        <div class="profile">
+            
+            Hello Deepanshu
+            <img src="images/profile.png">
+            <button class="notifications-btn">🔔</button>
+            <button class="vendor-signup-btn">Signup as Vendor</button>
+        </div>
+
+    </header>
+
+    <!-- HERO SECTION -->
+
+    <section class="hero">
+
+        <div class="hero-overlay"></div>
+        <div class="bokeh">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+        </div>
+
+        <div class="hero-content">
+
+            <h1>
+                Find Your Perfect <span>Event Vendors</span>
+            </h1>
+
+            <div class="search-box">
+
+                <select id="eventSelect">
+                    <option value="all">Select Event</option>
+                    <option value="wedding">Wedding</option>
+                    <option value="birthday">Birthday</option>
+                    <option value="festival">Festival</option>
+                    <option value="corporate">Corporate</option>
+                </select>
+
+                <input type="text" placeholder="Search vendors...">
+
+                <button>Search</button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- MAIN CONTENT -->
+
+    <div class="main-container">
+
+        <!-- SIDEBAR FILTERS -->
+
+        <aside class="sidebar">
+
+            <div class="filter-section">
+                <h3>Service Category</h3>
+                <div class="category-filter">
+                    <label>
+                        <input type="radio" name="category" value="all" checked>
+                        All Services
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="catering">
+                        🍽️ Catering
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="photography">
+                        📸 Photography
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="decoration">
+                        🎨 Decoration
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="makeup">
+                        💄 Makeup
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="videography">
+                        🎥 Videography
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="bandhbaaja">
+                        🎵 Band & DJ
+                    </label>
+                    <label>
+                        <input type="radio" name="category" value="planning">
+                        📋 Event Planning
+                    </label>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>Budget Range</h3>
+                <div class="budget-filter">
+                    <input type="range" id="budgetSlider" min="0" max="100000" step="5000" value="50000">
+                    <div class="budget-display">
+                        <span>₹0</span>
+                        <span id="selectedBudget">₹50,000</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>Ratings</h3>
+                <div class="rating-filter">
+                    <label>
+                        <input type="checkbox" name="rating" value="5">
+                        ⭐⭐⭐⭐⭐ 5 Stars
+                    </label>
+                    <label>
+                        <input type="checkbox" name="rating" value="4">
+                        ⭐⭐⭐⭐ 4+ Stars
+                    </label>
+                    <label>
+                        <input type="checkbox" name="rating" value="3">
+                        ⭐⭐⭐ 3+ Stars
+                    </label>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- VENDORS GRID -->
+
+        <main class="vendors-section">
+
+            <div class="vendors-header">
+                <h2>Available Vendors</h2>
+                <span class="vendor-count" id="vendorCount">12 Vendors</span>
+            </div>
+
+            <div class="vendors-grid" id="vendorsGrid">
+
+                <!-- VENDOR CARDS WILL BE LOADED DYNAMICALLY -->
+
+                <div class="loading" id="loadingIndicator">
+                    <p>Loading vendors...</p>
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- RIGHT SIDEBAR - CART & STATUS -->
+
+    <aside class="right-sidebar">
+
+        <!-- CART SECTION -->
+
+        <div class="cart-section">
+
+            <h3>📋 Event Cart</h3>
+
+            <div class="cart-items" id="cartItems">
+                <p class="empty-message">No vendors added yet</p>
+            </div>
+
+            <div class="cart-total" id="cartTotal" style="display: none;">
+                <div class="total-row">
+                    <span>Total:</span>
+                    <span id="totalPrice">₹0</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- REQUEST STATUS SECTION -->
+
+        <div class="status-section">
+
+            <h3>✉️ Request Status</h3>
+
+            <div class="status-items" id="statusItems">
+                <p class="empty-message">No vendor requests sent</p>
+            </div>
+
+            <div class="status-summary" id="statusSummary" style="display: none;">
+                <div class="status-row accepted">
+                    <span>Accepted:</span>
+                    <span id="acceptedCount">0</span>
+                </div>
+                <div class="status-row pending">
+                    <span>Pending:</span>
+                    <span id="pendingCount">0</span>
+                </div>
+                <div class="status-row denied">
+                    <span>Denied:</span>
+                    <span id="deniedCount">0</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- PAYMENT SECTION -->
+
+        <div class="payment-section" id="paymentSection" style="display: none;">
+
+            <h3>💳 Payment</h3>
+
+            <button class="proceed-payment-btn" onclick="proceedToPayment()">
+                Proceed to Payment
+            </button>
+
+        </div>
+
+    </aside>
+
+    <!-- MODAL FOR REQUEST STATUS SIMULATION -->
+
+    <div class="modal" id="requestModal" style="display: none;">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeRequestModal()">&times;</button>
+            <h2>Send Vendor Request</h2>
+            <p>Request sent to vendors. Vendors have 24 hours to respond.</p>
+            <div class="modal-buttons">
+                <button onclick="simulateResponses()">Simulate Responses</button>
+                <button onclick="closeRequestModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+
+        <p>© 2026 Utsavya</p>
+
+    </footer>
+
+    <script src="js/vendors.js"></script>
+
+    <script>
+        function reveal() {
+            let reveals = document.querySelectorAll(".reveal");
+            for (let i = 0; i < reveals.length; i++) {
+                let windowHeight = window.innerHeight;
+                let elementTop = reveals[i].getBoundingClientRect().top;
+                let visible = 120;
+                if (elementTop < windowHeight - visible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+
+        // Parallax scrolling
+        const hero = document.querySelector(".hero");
+        window.addEventListener("scroll", () => {
+            requestAnimationFrame(() => {
+                const scroll = window.scrollY;
+                hero.style.backgroundPosition = `center ${scroll * 0.4}px`;
+            });
+        });
+
+        // Budget Slider
+        const budgetSlider = document.getElementById('budgetSlider');
+        const selectedBudget = document.getElementById('selectedBudget');
+        
+        budgetSlider.addEventListener('input', function() {
+            const value = this.value;
+            selectedBudget.textContent = '₹' + parseInt(value).toLocaleString();
+            filterVendors();
+        });
+
+        // Category Filter
+        document.querySelectorAll('input[name="category"]').forEach(radio => {
+            radio.addEventListener('change', filterVendors);
+        });
+
+        // Filter Vendors
+        function filterVendors() {
+            const category = document.querySelector('input[name="category"]:checked').value;
+            const budget = parseInt(document.getElementById('budgetSlider').value);
+            const eventType = document.getElementById('eventSelect').value;
+            const searchTerm = document.querySelector('.search-box input').value.toLowerCase().trim();
+
+            const vendorCards = document.querySelectorAll('.vendor-card');
+            const vendorsGrid = document.getElementById('vendorsGrid');
+            let visibleCount = 0;
+
+            vendorCards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                const cardPrice = parseInt(card.getAttribute('data-price'));
+                const cardEvents = (card.getAttribute('data-event-types') || '').split(',');
+                const vendorName = card.querySelector('h3').textContent.toLowerCase();
+                const categoryLabel = card.querySelector('.category').textContent.toLowerCase();
+
+                const categoryMatch = category === 'all' || cardCategory === category;
+                const priceMatch = cardPrice <= budget;
+                const eventMatch = eventType === 'all' || cardEvents.includes(eventType);
+
+                const searchMatch = !searchTerm ||
+                    vendorName.includes(searchTerm) ||
+                    categoryLabel.includes(searchTerm) ||
+                    cardEvents.some(evt => evt.includes(searchTerm));
+
+                if (categoryMatch && priceMatch && eventMatch && searchMatch) {
+                    card.style.display = 'block';
+                    card.style.animation = 'fadeIn 0.3s ease-in';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('vendorCount').textContent = visibleCount + ' Vendor' + (visibleCount !== 1 ? 's' : '');
+
+            // Show no-results placeholder when no vendors match
+            const existingNoResults = document.querySelector('.no-results');
+            if (visibleCount === 0) {
+                if (!existingNoResults) {
+                    const noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    noResults.textContent = 'No vendors found matching your filters';
+                    noResults.style.cssText = `
+                        grid-column: 1 / -1;
+                        text-align: center;
+                        padding: 40px;
+                        color: #999;
+                        font-size: 16px;
+                    `;
+                    vendorsGrid.appendChild(noResults);
+                }
+            } else if (existingNoResults) {
+                existingNoResults.remove();
+            }
+        }
+
+        // Add animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+</body>
+
+</html>

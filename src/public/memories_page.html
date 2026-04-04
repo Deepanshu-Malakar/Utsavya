@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Memories - Utsavya</title>
+
+    <link rel="stylesheet" href="css/memories.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            <img src="images/logo.png" alt="" width="60">
+            <span>UTSAVYA</span>
+        </div>
+
+        <input type="checkbox" id="nav-toggle" class="nav-toggle">
+        <label for="nav-toggle" class="nav-toggle-label">☰</label>
+
+        <nav class="nav-menu">
+            <a href="dashboard.html">Home</a>
+            <a href="events_page.html">Events</a>
+            <a href="vendors_page.html">Vendors</a>
+            <a class="active">Memories</a>
+            <a>Schedule</a>
+        </nav>
+
+        <div class="profile">
+            
+            Hello Deepanshu
+            <img src="images/profile.png">
+            <button class="notifications-btn">🔔</button>
+            <button class="vendor-signup-btn">Signup as Vendor</button>
+        </div>
+
+    </header>
+
+    <!-- HERO SECTION -->
+
+    <section class="hero">
+
+        <div class="hero-overlay"></div>
+        <div class="bokeh">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+        </div>
+
+        <div class="hero-content">
+
+            <h1>
+                Relive Your <span>Best Moments</span>
+            </h1>
+
+            <div class="search-box">
+                <input type="text" placeholder="Search memory by event name or location">
+                <button>Search</button>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- MEMORIES FILTER + GRID -->
+
+    <section class="section">
+        <div class="memories-top">
+            <div class="memories-intro">
+                <h2>Your Event Memories</h2>
+                <p>Watch the videos of completed events you booked through Utsavya. Save, share, and cherish the best moments.</p>
+            </div>
+
+            <div class="memories-controls">
+                <div class="filter-group">
+                    <label>Year</label>
+                    <select id="yearFilter">
+                        <option value="all">All Years</option>
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Type</label>
+                    <select id="typeFilter">
+                        <option value="all">All Types</option>
+                        <option value="wedding">Wedding</option>
+                        <option value="birthday">Birthday</option>
+                        <option value="festival">Festival</option>
+                        <option value="corporate">Corporate</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="memories-grid" id="memoriesGrid">
+            <!-- Memory cards generated via JS -->
+        </div>
+
+        <div class="no-results" id="noResults" style="display: none;">
+            <div class="no-results-inner">
+                <img src="images/patrika1.png" alt="No results" class="no-results-image">
+                <h3>No memories found</h3>
+                <p>Try selecting a different year or type to see your past event videos.</p>
+            </div>
+        </div>
+
+    </section>
+
+    <footer>
+        <p>© 2026 Utsavya</p>
+    </footer>
+
+    <script src="js/memories.js"></script>
+
+    <script>
+        // Parallax effect & reveal (reused from dashboard)
+        function reveal() {
+            let reveals = document.querySelectorAll(".reveal");
+            for (let i = 0; i < reveals.length; i++) {
+                let windowHeight = window.innerHeight;
+                let elementTop = reveals[i].getBoundingClientRect().top;
+                let visible = 120;
+                if (elementTop < windowHeight - visible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+
+        const hero = document.querySelector(".hero");
+        window.addEventListener("scroll", () => {
+            requestAnimationFrame(() => {
+                const scroll = window.scrollY;
+                hero.style.backgroundPosition = `center ${scroll * 0.4}px`;
+            });
+        });
+    </script>
+
+</body>
+
+</html>

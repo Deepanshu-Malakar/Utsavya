@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utsavya - Plan Your Dream Event</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/events.css">
+</head>
+<body>
+
+    <div id="particles-js"></div>
+
+    <header class="navbar">
+        <div class="logo">
+            <img src="images/logo.png" alt="Utsavya Logo">
+            <span>UTSAVYA</span>
+        </div>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle">
+        <label for="nav-toggle" class="nav-toggle-label">☰</label>
+        <nav class="nav-menu">
+            <a href="dashboard.html">Home</a>
+            <a href="#" class="active">Events</a>
+            <a href="vendors_page.html">Vendors</a>
+            <a href="memories_page.html">Memories</a>
+            <a href="#">Schedule</a>
+        </nav>
+        <div class="profile">
+            <span>Hello Deepanshu</span>
+            <img src="images/profile.png" alt="Profile" class="profile-pic">
+            <button class="notifications-btn">🔔</button>
+        </div>
+    </header>
+
+    <header class="hero">
+        <div class="hero-content" data-aos="zoom-in">
+            <h1>Plan Your <span>Dream Event</span></h1>
+            <div class="create-event-card">
+                <h3>Create Custom Event</h3>
+                <p>Freedom to manage all the different aspects of your event. Choose and combine different vendors for decoration, catering, music, and more.</p>
+                <button class="btn-primary">⊕ Create Event</button>
+            </div>
+            <div class="hero-stats">
+                <span>1000+ VENDORS</span>
+                <span>50+ CITIES</span>
+                <span>25000+ EVENTS PLANNED</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+        <section class="event-section">
+            <h2 class="section-title">Incomplete Event Bookings</h2>
+            <div class="card-grid" id="incompleteBookingsGrid">
+                <div class="empty-state" id="loadingBookings">Loading events...</div>
+            </div>
+        </section>
+
+        <section class="list-section" id="upcomingEventsSection">
+            <h2 class="section-title">Upcoming Events</h2>
+            <div id="upcomingEventsList"></div>
+            <button class="view-more" id="upcomingViewMoreBtn" style="display:none;">View More</button>
+        </section>
+
+        <section class="list-section" id="pastEventsSection">
+            <h2 class="section-title">Past Events</h2>
+            <div id="pastEventsList"></div>
+            <button class="view-more" id="pastViewMoreBtn" style="display:none;">View More</button>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+        
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80 },
+                "color": { "value": "#ffffff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5, "random": true },
+                "size": { "value": 3, "random": true },
+                "move": { "enable": true, "speed": 1, "direction": "top", "random": true, "straight": false, "out_mode": "out" }
+            }
+        });
+    </script>
+    <script src="js/events.js"></script>
+</body>
+</html>

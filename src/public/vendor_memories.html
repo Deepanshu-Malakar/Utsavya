@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vendors - Utsavya</title>
+
+    <link rel="stylesheet" href="css/memory_vendor.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Basic styles for card display */
+        .video-section {
+            margin-top: 30px;
+        }
+
+        .video-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .video-form input, .video-form select, .video-form button {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .video-list {
+            margin-top: 20px;
+        }
+
+        .video-card {
+            padding: 10px;
+            background: #f8f4ef;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .video-card a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .video-card a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            <img src="images/logo.png" alt="" width="60">
+            <span>UTSAVYA</span>
+        </div>
+
+        <input type="checkbox" id="nav-toggle" class="nav-toggle">
+        <label for="nav-toggle" class="nav-toggle-label">☰</label>
+
+        <nav class="nav-menu">
+            <a href="dashboard.html">Home</a>
+            <a href="vendor_schedule.html">Schedule</a>
+            <a href="vendor_memories.html" class="active">Memories</a>
+        </nav>
+
+        <div class="profile">
+            Hello Deepanshu
+            <img src="images/profile.png">
+            <button class="notifications-btn">🔔</button>
+        </div>
+
+    </header>
+
+    <!-- HERO SECTION -->
+
+    <section class="hero">
+
+        <div class="hero-overlay"></div>
+        <div class="bokeh">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+        </div>
+
+        <div class="hero-content">
+
+            <h1>
+                Add and View <span>Memories in One Place</span>
+            </h1>
+
+            <div class="search-box">
+
+                <select id="eventSelect">
+                    <option value="">Select Event</option>
+                    <option value="wedding">Wedding</option>
+                    <option value="birthday">Birthday</option>
+                    <option value="festival">Festival</option>
+                    <option value="corporate">Corporate</option>
+                </select>
+
+                <input type="text" id="videoURL" placeholder="Paste video URL...">
+
+                <button id="addVideoBtn">Add Video</button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- VIDEO DISPLAY SECTION -->
+
+    <div class="main-container">
+
+        <main class="video-section">
+            <h2>Event Videos</h2>
+            <div class="video-list" id="videoList">
+                <!-- Videos will appear here -->
+            </div>
+        </main>
+
+    </div>
+
+    <footer>
+        <p>© 2026 Utsavya</p>
+    </footer>
+
+    <script>
+        const addVideoBtn = document.getElementById('addVideoBtn');
+        const eventSelect = document.getElementById('eventSelect');
+        const videoURL = document.getElementById('videoURL');
+        const videoList = document.getElementById('videoList');
+
+        let videos = []; // To store video info
+
+        addVideoBtn.addEventListener('click', () => {
+            const eventName = eventSelect.value;
+            const url = videoURL.value.trim();
+
+            if (!eventName) {
+                alert("Please select an event.");
+                return;
+            }
+
+            if (!url) {
+                alert("Please enter a video URL.");
+                return;
+            }
+
+            // Add to array
+            videos.push({ event: eventName, url: url });
+
+            // Clear input
+            videoURL.value = "";
+
+            // Refresh display
+            renderVideos();
+        });
+
+        function renderVideos() {
+            videoList.innerHTML = "";
+            videos.forEach((video, index) => {
+                const div = document.createElement('div');
+                div.classList.add('video-card');
+                div.innerHTML = `
+                    <strong>${video.event}</strong>: 
+                    <a href="${video.url}" target="_blank">${video.url}</a>
+                `;
+                videoList.appendChild(div);
+            });
+        }
+    </script>
+
+</body>
+
+</html>

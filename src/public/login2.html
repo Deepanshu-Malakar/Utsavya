@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CactiGuard Login</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top, #fdf7e8, #e9dcc5);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 1100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pillars {
+            display: flex;
+            gap: 60px;
+        }
+
+        /* PILLAR */
+        .pillar {
+            width: 80px;
+            height: 270px;
+            border-radius: 50px;
+            background: linear-gradient(to right, #d8caa8, #fff, #d8caa8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        /* FLOAT */
+        .pillar:nth-child(1) {
+            animation: float 4s infinite;
+        }
+
+        .pillar:nth-child(2) {
+            animation: float 5s infinite;
+        }
+
+        .pillar:nth-child(3) {
+            animation: float 4.5s infinite;
+        }
+
+        .pillar:nth-child(4) {
+            animation: float 5.5s infinite;
+        }
+
+        @keyframes float {
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        /* LEAN */
+        .aww.pillar {
+            transform: translateY(-10px) scale(1.05) rotate(-3deg);
+        }
+
+        /* PUGDI */
+        .pugdi {
+            width: 120px;
+            height: 35px;
+            margin-top: -20px;
+            background: repeating-linear-gradient(45deg, #d32f2f, #b71c1c 15px);
+            border-radius: 50% 50% 40% 40%;
+        }
+
+        /* EYES */
+        .eyes {
+            display: flex;
+            gap: 10px;
+            margin-top: 80px;
+        }
+
+        .eye {
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pupil {
+            width: 9px;
+            height: 9px;
+            background: black;
+            border-radius: 50%;
+            transition: transform .1s;
+        }
+
+        /* AWW EYES */
+        .aww .eye {
+            transform: scale(1.2);
+        }
+
+        .aww .pupil {
+            transform: translate(0px, 3px);
+        }
+
+        /* CLOSED */
+        .closed-eye {
+            height: 4px;
+            background: black;
+        }
+
+        /* MOUTH */
+        .mouth {
+            width: 30px;
+            height: 15px;
+            border-bottom: 3px solid #333;
+            border-radius: 0 0 20px 20px;
+            margin-top: 12px;
+            transition: all 0.25s ease;
+        }
+
+        /* AWW OPEN MOUTH 😮 */
+        .aww-mouth {
+            width: 22px;
+            height: 22px;
+            background: #333;
+            border-radius: 50%;
+            border: none;
+            animation: wobble 0.4s infinite alternate;
+        }
+
+        @keyframes wobble {
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.15);
+            }
+        }
+
+        /* SHY */
+        .shy {
+            border-bottom: none;
+            border-top: 3px solid #333;
+        }
+
+        /* BLUSH ❤️ */
+        .blush {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: pink;
+            border-radius: 50%;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .blush.left {
+            left: 10px;
+            top: 150px;
+        }
+
+        .blush.right {
+            right: 10px;
+            top: 150px;
+        }
+
+        .aww .blush {
+            opacity: 1;
+        }
+
+        /* CARD */
+        .card {
+            width: 380px;
+            padding: 40px;
+            border-radius: 25px;
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-top: 12px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+        }
+
+        .password {
+            position: relative;
+        }
+
+        .toggle {
+            position: absolute;
+            right: 10px;
+            top: 16px;
+            cursor: pointer;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, #a6845d, #8f6e4c);
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="pillars">
+
+            <!-- pillars -->
+
+            <div class="pillar">
+                <div class="pugdi"></div>
+                <div class="eyes">
+                    <div class="eye">
+                        <div class="pupil"></div>
+                    </div>
+                    <div class="eye">
+                        <div class="pupil"></div>
+                    </div>
+                </div>
+                <div class="blush left"></div>
+                <div class="blush right"></div>
+                <div class="mouth"></div>
+            </div>
+
+            <div class="pillar">
+                <div class="pugdi"></div>
+                <div class="eyes">
+                    <div class="eye">
+                        <div class="pupil"></div>
+                    </div>
+                    <div class="eye">
+                        <div class="pupil"></div>
+                    </div>
+                </div>
+                <div class="blush left"></div>
+                <div class="blush right"></div>
+                <div class="mouth"></div>
+            </div>
+
+            <div class="pillar">
+                <div class="pugdi"></div>
+                <div class="eyes">
+                    <div class="eye">
+                        <div class="pupil"></div>
+                    </div>
+                    <div class="eye">
+                        <div class="pupil"></div>
+                    </div>
+                </div>
+                <div class="blush left"></div>
+                <div class="blush right"></div>
+                <div class="mouth"></div>
+            </div>
+
+            <div class="pillar">
+                <div class="pugdi"></div>
+                <div class="eyes">
+                    <div class="eye">
+                        <div class="pupil"></div>
+                    </div>
+                    <div class="eye">
+                        <div class="pupil"></div>
+                    </div>
+                </div>
+                <div class="blush left"></div>
+                <div class="blush right"></div>
+                <div class="mouth"></div>
+            </div>
+
+        </div>
+
+        <div class="card">
+            <form id="loginForm">
+
+                <h2>Welcome Back</h2>
+
+                <input type="email" name="email" required placeholder="your@email.com">
+
+                <div class="password">
+                    <input type="password" id="password" name="password" required placeholder="Enter password">
+                    <span id="toggle" class="toggle">👁</span>
+                </div>
+
+                <button type="submit">Sign In</button>
+
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        const pupils = document.querySelectorAll(".pupil");
+        const eyes = document.querySelectorAll(".eye");
+        const mouths = document.querySelectorAll(".mouth");
+        const pillars = document.querySelectorAll(".pillar");
+
+        const password = document.getElementById("password");
+        const toggle = document.getElementById("toggle");
+
+        /* CURSOR TRACK */
+        document.addEventListener("mousemove", (e) => {
+            pupils.forEach(pupil => {
+                const rect = pupil.parentElement.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2;
+
+                const angle = Math.atan2(e.clientY - y, e.clientX - x);
+                pupil.style.transform = `translate(${Math.cos(angle) * 5}px,${Math.sin(angle) * 5}px)`;
+            });
+        });
+
+        /* AWW WHEN TYPING */
+        password.addEventListener("input", () => {
+
+            if (password.type === "password" && password.value.length > 0) {
+
+                pillars.forEach(p => p.classList.add("aww"));
+                mouths.forEach(m => m.classList.add("aww-mouth"));
+
+            } else {
+
+                pillars.forEach(p => p.classList.remove("aww"));
+                mouths.forEach(m => m.classList.remove("aww-mouth"));
+
+            }
+
+        });
+
+        /* TOGGLE */
+        toggle.onclick = () => {
+
+            if (password.type === "password") {
+
+                password.type = "text";
+
+                pupils.forEach(p => p.style.display = "none");
+                eyes.forEach(e => e.classList.add("closed-eye"));
+
+                pillars.forEach(p => p.classList.remove("aww"));
+
+                mouths.forEach(m => {
+                    m.classList.remove("aww-mouth");
+                    m.classList.add("shy");
+                });
+
+            } else {
+
+                password.type = "password";
+
+                pupils.forEach(p => p.style.display = "block");
+                eyes.forEach(e => e.classList.remove("closed-eye"));
+
+                mouths.forEach(m => m.classList.remove("shy"));
+            }
+        };
+
+        /* BACKEND (UNCHANGED) */
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+
+            const res = await fetch('/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(formData)
+            });
+
+            if (res.ok) {
+                const { accessToken } = await res.json();
+                localStorage.setItem("accessToken", accessToken);
+                localStorage.setItem("authToken", accessToken); // old-key compatibility
+
+                // Determine role from JWT payload for redirect
+                const payload = JSON.parse(atob(accessToken.split('.')[1]));
+                const role = payload.role;
+
+                alert("Logged in successfully!");
+
+                if (role === 'admin') {
+                    window.location.href = "/admin/dashboard";
+                } else if (role === 'vendor') {
+                    window.location.href = "vendor_home.html";
+                } else {
+                    window.location.href = "dashboard.html";
+                }
+            } else {
+                const error = await res.json();
+                console.log('Login error:', error); // Add debugging
+                alert(`Login failed: ${error.message}`);
+            }
+
+        });
+    </script>
+
+</body>
+
+</html>

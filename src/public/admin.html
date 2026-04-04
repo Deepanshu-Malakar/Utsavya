@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - Utsavya</title>
+
+    <link rel="stylesheet" href="/css/admin.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            <img src="/images/logo.png" alt="" width="60">
+            <span>UTSAVYA</span>
+        </div>
+
+        <input type="checkbox" id="nav-toggle" class="nav-toggle">
+        <label for="nav-toggle" class="nav-toggle-label">☰</label>
+
+        <nav class="nav-menu">
+            <a href="dashboard.html">Home</a>
+            <a href="events_page.html">Events</a>
+            <a href="vendors_page.html">Vendors</a>
+            <a href="memories_page.html">Memories</a>
+            <a>Admin Panel</a>
+        </nav>
+
+        <div class="profile">
+            Admin
+            <img src="images/profile.png">
+            <button class="vendor-signup-btn" onclick="logout()">Logout</button>
+        </div>
+
+    </header>
+
+    <!-- HERO SECTION -->
+
+    <section class="hero">
+
+        <div class="hero-overlay"></div>
+        <div class="bokeh">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+        </div>
+
+        <div class="hero-content">
+
+            <h1>
+                Admin <span>Dashboard</span>
+            </h1>
+
+            <div class="stats" id="adminStats">
+                <!-- Stats will be loaded here -->
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- PENDING VENDOR REQUESTS -->
+
+    <section class="section reveal">
+
+        <h2>Pending Vendor Requests</h2>
+
+        <div class="card-grid" id="pendingRequests">
+            <!-- Requests will be loaded here -->
+        </div>
+
+    </section>
+
+    <script>
+        const token = localStorage.getItem("accessToken");
+
+        async function verifyAdmin() {
+            if (!token) {
+                window.location.href = "/login2.html";
+                return;
+            }
+
+            const res = await fetch("/admin/check", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!res.ok) {
+                alert("Session expired or not admin. Redirecting to login.");
+                localStorage.removeItem("accessToken");
+                window.location.href = "/login2.html";
+                return;
+            }
+        }
+
+        async function loadStats() {
+            const res = await fetch("/admin/stats", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (res.ok) {
+                const stats = await res.json();
+                document.getElementById("adminStats").innerHTML = `
+                    <div>
+                        <h3>${stats.totalUsers}+</h3>
+                        <p>Users</p>
+                    </div>
+                    <div>
+                        <h3>${stats.totalVendors}+</h3>
+                        <p>Vendors</p>
+                    </div>
+                    <div>
+                        <h3>${stats.pendingRequests}</h3>
+                        <p>Pending Requests</p>
+                    </div>
+                    <div>
+                        <h3>${stats.totalBookings}+</h3>
+                        <p>Bookings</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadPendingRequests() {
+            const res = await fetch("/admin/pending-requests", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (res.ok) {
+                const requests = await res.json();
+                const container = document.getElementById("pendingRequests");
+                container.innerHTML = requests.map(req => `
+                    <div class="card">
+                        <h3>${req.business_name}</h3>
+                        <p>${req.business_description}</p>
+                        <p>City: ${req.city}</p>
+                        <p>User: ${req.user_name} (${req.email})</p>
+                        <button onclick="reviewRequest('${req.id}', 'approved')">Approve</button>
+                        <button onclick="reviewRequest('${req.id}', 'rejected')">Reject</button>
+                    </div>
+                `).join("");
+            }
+        }
+
+        async function reviewRequest(id, status) {
+            console.log('Reviewing request', id, status);
+            const admin_note = prompt("Enter a note (optional):") || "";
+            console.log('Admin note:', admin_note);
+            const res = await fetch(`/vendors/${id}/review`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ status, admin_note })
+            });
+            console.log('Response status:', res.status);
+            if (res.ok) {
+                alert(`Request ${status}`);
+                loadPendingRequests(); // Reload
+            } else {
+                const error = await res.text();
+                console.log('Error:', error);
+                alert("Error updating request: " + error);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("accessToken");
+            window.location.href = "/login2.html";
+        }
+
+        // Reveal animation
+        function reveal() {
+            const reveals = document.querySelectorAll(".reveal");
+            reveals.forEach(el => {
+                const windowHeight = window.innerHeight;
+                const elementTop = el.getBoundingClientRect().top;
+                const elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    el.classList.add("active");
+                }
+            });
+        }
+        window.addEventListener("scroll", reveal);
+
+        // Init
+        verifyAdmin();
+        loadStats();
+        loadPendingRequests();
+    </script>
+
+</body>
+
+</html>

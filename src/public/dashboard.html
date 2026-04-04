@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Utsavya</title>
+
+    <link rel="stylesheet" href="css/dashboard.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            <img src="images/logo.png" alt="" width="60">
+            <span>UTSAVYA</span>
+        </div>
+
+        <input type="checkbox" id="nav-toggle" class="nav-toggle">
+        <label for="nav-toggle" class="nav-toggle-label">☰</label>
+
+        <nav class="nav-menu">
+            <a class="active">Home</a>
+            <a href="events_page.html">Events</a>
+            <a href="vendors_page.html">Vendors</a>
+            <a href="memories_page.html">Memories</a>
+            <a>Schedule</a>
+        </nav>
+
+        <div class="profile">
+            
+            Hello Deepanshu
+            <img src="images/profile.png">
+            <button class="notifications-btn">🔔</button>
+            <button class="vendor-signup-btn" onclick="location.href='vendor_signup.html'">Signup as Vendor</button>
+        </div>
+
+    </header>
+
+    <!-- HERO SECTION -->
+
+    <section class="hero">
+
+        <div class="hero-overlay"></div>
+        <div class="bokeh">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+        </div>
+
+        <div class="hero-content">
+
+            <h1>
+                Karo Har Event <span>Perfectly Planned</span>
+            </h1>
+
+            <div class="search-box">
+
+                <select>
+                    <option>Event Type</option>
+                    <option>Wedding</option>
+                    <option>Birthday</option>
+                    <option>Festival</option>
+                </select>
+
+                <select>
+                    <option>Location</option>
+                </select>
+
+                <input type="date">
+
+                <button>Find Vendors</button>
+
+            </div>
+
+            <div class="stats">
+
+                <div>
+                    <h3>1000+</h3>
+                    <p>Vendors</p>
+                </div>
+
+                <div>
+                    <h3>50+</h3>
+                    <p>Cities</p>
+                </div>
+
+                <div>
+                    <h3>25000+</h3>
+                    <p>Events Planned</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- EVENT CATEGORIES -->
+
+    <section class="section reveal">
+
+        <h2>Event Categories</h2>
+
+        <div class="card-grid">
+
+            <div class="card">
+                <img src="images/wedding.png">
+                <h3>Wedding</h3>
+                <p>2500+ vendors</p>
+            </div>
+
+            <div class="card">
+                <img src="images/birthday.jpg">
+                <h3>Birthday</h3>
+                <p>1800+ vendors</p>
+            </div>
+
+            <div class="card">
+                <img src="images/festival.jpg">
+                <h3>Festival</h3>
+                <p>250+ vendors</p>
+            </div>
+
+            <div class="card">
+                <img src="images/corporate.jpeg">
+                <h3>Corporate</h3>
+                <p>900+ vendors</p>
+            </div>
+
+            <div class="card">
+                <img src="images/catering.jpg">
+                <h3>Catering</h3>
+                <p>3000+ vendors</p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- TRENDING EVENTS -->
+
+    <section class="section alt reveal">
+
+        <h2>Trending Events</h2>
+
+        <div class="card-grid">
+
+            <div class="card large">
+                <img src="images/ganesh chaturthi.png">
+                <h3>Ganesh Chaturthi</h3>
+                <p>Pandal Decoration</p>
+            </div>
+
+            <div class="card large">
+                <img src="images/druga pooja.png">
+                <h3>Durga Pooja</h3>
+                <p>Pandal Decoration</p>
+            </div>
+
+            <div class="card large">
+                <img src="images/dushera.png">
+                <h3>Dussehra</h3>
+                <p>Ravan Puta Creation</p>
+            </div>
+
+            <div class="card large">
+                <img src="images/my wedding.jpg">
+                <h3>Wedding</h3>
+                <p>Decor + Catering</p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- BEST VENDORS -->
+
+    <section class="section reveal">
+
+        <h2>Best Vendors</h2>
+
+        <div class="card-grid">
+
+            <div class="vendor-card">
+
+                <img src="images/royal decorators.jpg">
+
+                <div class="vendor-info">
+                    <h3>Royal Decorators</h3>
+                    <p>Decoration</p>
+                    <span class="price">₹25000</span>
+                </div>
+
+            </div>
+
+            <div class="vendor-card">
+
+                <img src="images/mehendi.jpeg">
+
+                <div class="vendor-info">
+                    <h3>Mehndi by Priya</h3>
+                    <p>Makeup</p>
+                    <span class="price">₹15000</span>
+                </div>
+
+            </div>
+
+            <div class="vendor-card">
+
+                <img src="images/photography.jpg">
+
+                <div class="vendor-info">
+                    <h3>Lens & Lighting</h3>
+                    <p>Photography</p>
+                    <span class="price">₹40000</span>
+                </div>
+
+            </div>
+
+            <div class="vendor-card">
+
+                <img src="images/catering.jpg">
+
+                <div class="vendor-info">
+                    <h3>Shubh Caterers</h3>
+                    <p>Catering</p>
+                    <span class="price">₹500/plate</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <footer>
+
+        <p>© 2026 Utsavya</p>
+
+    </footer>
+
+    <script>
+        function reveal() {
+            let reveals = document.querySelectorAll(".reveal");
+            for (let i = 0; i < reveals.length; i++) {
+                let windowHeight = window.innerHeight;
+                let elementTop = reveals[i].getBoundingClientRect().top;
+                let visible = 120;
+                if (elementTop < windowHeight - visible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+
+        // Parallax scrolling
+        const hero = document.querySelector(".hero");
+        window.addEventListener("scroll", () => {
+            requestAnimationFrame(() => {
+                const scroll = window.scrollY;
+                hero.style.backgroundPosition = `center ${scroll * 0.4}px`;
+            });
+        });
+    </script>
+
+</body>
+
+</html>
