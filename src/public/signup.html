@@ -201,7 +201,11 @@
                 alert('OTP sent to your email!');
             } else {
                 const error = await res.json();
-                alert(error.message);
+                if (error.errors && error.errors.length > 0) {
+                    alert('Validation Error: ' + error.errors.map(err => `${err.param}: ${err.msg}`).join(', '));
+                } else {
+                    alert(error.message || 'Signup failed');
+                }
             }
         });
 
@@ -225,13 +229,14 @@
                 window.location.href = 'dashboard.html';
             } else {
                 const error = await res.json();
-                alert('Invalid OTP: ' + error.message);
+                alert('Invalid OTP: ' + (error.message || 'Verification failed'));
             }
 
         });
 
     </script>
 
+<script src="js/navbar.js"></script>
 </body>
 
 </html>

@@ -19,19 +19,7 @@ async function loadBookingDetails() {
     if (!selectedBookingId) return;
 
     try {
-        const token = localStorage.getItem('accessToken') || localStorage.getItem('authToken');
-        if (!token) {
-            window.location.href = 'login.html';
-            return;
-        }
-
-        const response = await fetch(`/bookings/${selectedBookingId}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
+        const response = await window.fetchWithAuth(`/bookings/${selectedBookingId}`);
         if (response.ok) {
             const booking = await response.json();
             updateHeroWithBooking(booking);
@@ -57,12 +45,6 @@ function updateHeroWithBooking(booking) {
 
 async function loadVendors() {
     try {
-        const token = localStorage.getItem('accessToken') || localStorage.getItem('authToken');
-        if (!token) {
-            window.location.href = 'login.html';
-            return;
-        }
-
         // Fetch DOM filters if evaluating
         const categoryVal = document.querySelector('input[name="category"]:checked')?.value || 'all';
         const budgetVal = document.getElementById('budgetSlider')?.value || 100000;
@@ -73,12 +55,7 @@ async function loadVendors() {
         if (budgetVal < 100000) url.searchParams.append('max_price', budgetVal);
         if (searchTerm) url.searchParams.append('city', searchTerm); // matching text to city or service name based on API support
 
-        const response = await fetch(url.pathname + url.search, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
+        const response = await window.fetchWithAuth(url.pathname + url.search);
 
         if (!response.ok) {
             throw new Error('Failed to load vendors');
@@ -118,23 +95,61 @@ function renderVendors(vendors) {
         return;
     }
 
-    container.innerHTML = vendors.map(vendor => `
-        <div class="vendor-card" data-vendor-id="${vendor.id}">
-            <div class="vendor-image">
-                <img src="images/default-vendor.jpg" alt="${vendor.full_name}" onerror="this.src='images/default-vendor.jpg'">
-            </div>
-            <div class="vendor-details">
-                <h3>${vendor.full_name}</h3>
-                <p class="category">${vendor.services && vendor.services.length > 0 ? vendor.services.join(', ') : 'Event Services'}</p>
-                <p class="location">📍 Available for Events</p>
-                <div class="vendor-rating">
-                    ⭐⭐⭐⭐☆ (${vendor.average_rating || 0})
+    container.innerHTML = vendors.map(vendor => {
+        const rating = parseFloat(vendor.average_rating) || 0;
+        const fullStars = Math.round(rating);
+        const starsHtml = '★'.repeat(fullStars) + '☆'.repeat(5 - fullStars);
+        const reviewCount = parseInt(vendor.total_reviews) || 0;
+
+        // Get starting price from first service
+        const services = vendor.services || [];
+        const minPrice = services.length > 0
+            ? Math.min(...services.map(s => parseFloat(s.price) || 0))
+            : 0;
+        const priceDisplay = minPrice > 0
+            ? `₹${minPrice.toLocaleString('en-IN')}+`
+            : 'Contact for price';
+
+        const city = vendor.city || (services[0]?.city) || '';
+        const categories = services.length > 0
+            ? services.slice(0, 2).map(s => s.category || s.title).filter(Boolean).join(', ')
+            : 'Event Services';
+
+        const profileImg = vendor.profile_image || 'images/default-vendor.jpg';
+
+        return `
+            <div class="vendor-card" data-vendor-id="${vendor.id}">
+                <div class="vendor-image" onclick="openVendorProfile('${vendor.id}')" style="cursor:pointer;" title="View ${vendor.full_name}'s profile">
+                    <img src="${profileImg}" alt="${vendor.full_name}" onerror="this.src='images/default-vendor.jpg'">
+                    <div class="vendor-image-overlay">
+                        <span>View Profile →</span>
+                    </div>
+                </div>
+                <div class="vendor-details">
+                    <h3 onclick="openVendorProfile('${vendor.id}')" style="cursor:pointer;">${vendor.full_name}</h3>
+                    <p class="category">🏷️ ${categories}</p>
+                    ${city ? `<p class="location">📍 ${city}</p>` : ''}
+                    <div class="vendor-rating" style="color:#f39c12; font-size:14px; margin: 6px 0;">
+                        ${starsHtml}
+                        <span style="color:#999; font-size:12px; margin-left:5px;">${rating > 0 ? rating.toFixed(1) : 'No rating'} (${reviewCount})</span>
+                    </div>
+                    <div class="vendor-price" style="font-size:16px; font-weight:700; color:#27ae60; margin: 5px 0;">
+                        ${priceDisplay}
+                    </div>
+                </div>
+                <div class="vendor-card-actions" style="padding: 12px 20px 16px; display:flex; gap:8px; border-top:1px solid #f5f5f5;">
+                    <button class="view-profile-btn" onclick="openVendorProfile('${vendor.id}')" style="flex:1; padding:9px; border:2px solid #e53935; background:transparent; color:#e53935; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600; transition:0.3s;" onmouseover="this.style.background='#e53935';this.style.color='white'" onmouseout="this.style.background='transparent';this.style.color='#e53935'">👁 Profile</button>
+                    <button class="add-btn" onclick="addToCart(this)" style="flex:1;">+ Add</button>
                 </div>
             </div>
-            <button class="add-btn" onclick="addToCart(this)">+ Add to Event</button>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
+
+function openVendorProfile(id) {
+    window.location.href = `vendor_profile.html?id=${id}`;
+}
+
 
 async function addToCart(button) {
     if (!selectedBookingId) {
@@ -158,8 +173,7 @@ async function addToCart(button) {
 
         try {
             // Fetch vendor profile to get a valid service_id
-            const token = localStorage.getItem('accessToken') || localStorage.getItem('authToken');
-            const response = await fetch(`/vendors/${vendorId}`);
+            const response = await window.fetchWithAuth(`/vendors/${vendorId}`);
             const profile = await response.json();
             
             let serviceId = null;
@@ -311,27 +325,15 @@ async function sendVendorRequests() {
     }
 
     try {
-        const token = localStorage.getItem('accessToken') || localStorage.getItem('authToken');
-        if (!token) {
-            window.location.href = 'login.html';
-            return;
-        }
-
         // Send requests for each vendor in cart
         const promises = cart.map(async (item) => {
-            const requestData = {
-                booking_id: selectedBookingId,
-                vendor_id: item.vendorId,
-                service_id: item.serviceId
-            };
-
-            const response = await fetch('/bookings/items', {
+            const response = await window.fetchWithAuth('/bookings/items', {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestData)
+                body: JSON.stringify({
+                    booking_id: selectedBookingId,
+                    vendor_id: item.vendorId,
+                    service_id: item.serviceId
+                })
             });
 
             if (!response.ok) {
@@ -362,13 +364,8 @@ async function proceedToPayment() {
     const totalAmt = cart.reduce((acc, item) => acc + item.price, 0);
 
     try {
-        const token = localStorage.getItem('accessToken');
-        const res = await fetch('/payments', {
+        const res = await window.fetchWithAuth('/payments', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
             body: JSON.stringify({
                 booking_id: selectedBookingId,
                 amount: totalAmt
@@ -407,6 +404,52 @@ function showNotification(message, type = 'success') {
             notification.remove();
         }
     }, 3000);
+}
+
+async function showVendorReviews(vendorId, vendorName) {
+    try {
+        const res = await fetch(`/reviews/vendors/${vendorId}/reviews`);
+        const data = await res.json();
+        const reviews = data.reviews || [];
+
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: flex; align-items: center;
+            justify-content: center; z-index: 2000; font-family: 'Poppins', sans-serif;
+        `;
+
+        let reviewsHtml = reviews.length === 0 ? '<p>No reviews yet.</p>' : reviews.map(r => `
+            <div style="border-bottom: 1px solid #eee; padding: 15px 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong>${r.customer_name}</strong>
+                    <span style="color: #f39c12;">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span>
+                </div>
+                <p style="font-size: 14px; color: #555; margin: 10px 0;">${r.comment || 'No comment provided.'}</p>
+                <div style="display: flex; gap: 5px;">
+                    ${(r.media || []).map(m => `
+                        <img src="${m.url}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                    `).join('')}
+                </div>
+                <small style="color: #999;">${new Date(r.created_at).toLocaleDateString()}</small>
+            </div>
+        `).join('');
+
+        modal.innerHTML = `
+            <div style="background: white; padding: 30px; border-radius: 15px; width: 500px; max-height: 80vh; overflow-y: auto; position: relative;">
+                <button onclick="this.closest('.modal-overlay').remove()" style="position: absolute; top: 15px; right: 15px; border: none; background: none; font-size: 20px; cursor: pointer;">&times;</button>
+                <h3 style="margin-top: 0;">Reviews for ${vendorName}</h3>
+                <div style="margin-top: 20px;">${reviewsHtml}</div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+        modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+    } catch (err) {
+        console.error(err);
+        showNotification("Failed to load reviews.", "error");
+    }
 }
 
 // Keep the existing functions for backward compatibility

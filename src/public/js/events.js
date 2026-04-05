@@ -68,19 +68,7 @@ async function loadUserEvents() {
     isLoading = true;
 
     try {
-        const token = localStorage.getItem('accessToken') || localStorage.getItem('authToken');
-
-        if (!token) {
-            window.location.href = 'login.html';
-            return;
-        }
-
-        const response = await fetch('/bookings', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
+        const response = await window.fetchWithAuth('/bookings');
 
         if (!response.ok) throw new Error('Failed to load');
 
@@ -285,10 +273,7 @@ function viewEventDetails(id) {
 // ============== REVIEWS ==============
 async function showReviewModal(bookingId) {
     try {
-        const token = localStorage.getItem('accessToken');
-        const res = await fetch(`/bookings/${bookingId}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
+        const res = await window.fetchWithAuth(`/bookings/${bookingId}`);
         const booking = await res.json();
         
         if (!booking.items || booking.items.length === 0) {
@@ -310,6 +295,10 @@ async function showReviewModal(bookingId) {
                 <div class="form-group">
                     <label>Comment</label>
                     <textarea id="comment-${item.id}" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Add Media (Images/Videos, Max 5)</label>
+                    <input type="file" id="media-${item.id}" multiple accept="image/*,video/*">
                 </div>
                 <button type="button" onclick="submitReview('${item.id}')" style="background:#f39c12; color:white; padding:8px 15px; border:none; border-radius:5px; cursor:pointer;">Submit Review</button>
             </div>
@@ -345,12 +334,10 @@ async function submitReview(itemId) {
     if(!rating || rating < 1 || rating > 5) return showError("Please provide a rating between 1 and 5.");
 
     try {
-        const token = localStorage.getItem('accessToken');
-        const res = await fetch('/reviews', {
-            method: 'POST',
+        const res = await window.fetchWithAuth(`/bookings/items/${itemId}/complete`, {
+            method: 'PATCH',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 booking_item_id: itemId,
@@ -359,12 +346,36 @@ async function submitReview(itemId) {
             })
         });
 
-        if (!res.ok) throw new Error();
+        if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.message || 'Failed to submit review');
+        }
+        
+        const review = await res.json();
+        const reviewId = review.id;
+
+        // Handle Media Upload if selected
+        const mediaInput = document.getElementById(`media-${itemId}`);
+        if(mediaInput && mediaInput.files.length > 0) {
+            const mediaFormData = new FormData();
+            for(let i=0; i < Math.min(mediaInput.files.length, 5); i++) {
+                mediaFormData.append('files', mediaInput.files[i]);
+            }
+
+            const mediaRes = await window.fetchWithAuth(`/reviews/${reviewId}/media`, {
+                method: 'POST',
+                body: mediaFormData
+            });
+
+            if(!mediaRes.ok) {
+                showError("Review saved, but media upload failed.");
+            }
+        }
         
         showSuccess("Review submitted successfully!");
         document.getElementById(`rating-${itemId}`).closest('div').innerHTML = '<p style="color:green">Review Submitted ✅</p>';
     } catch(e) {
-        showError("Failed to submit review. Have you already reviewed this vendor?");
+        showError(e.message || "Failed to submit review. Have you already reviewed this vendor?");
     }
 }
 // =====================================
@@ -404,10 +415,9 @@ async function showEditDatesModal(bookingId) {
         const fd = new FormData(e.target);
         
         try {
-            const token = localStorage.getItem('accessToken');
-            const res = await fetch(`/bookings/${bookingId}`, {
+            const res = await window.fetchWithAuth(`/bookings/${bookingId}`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     event_start: fd.get('event_start'),
                     event_end: fd.get('event_end')
@@ -492,6 +502,10 @@ function showCreateEventModal() {
                     <label>Location</label>
                     <input type="text" name="location">
                 </div>
+                <div class="form-group">
+                    <label>Guest Count</label>
+                    <input type="number" name="guest_count" min="1" value="0">
+                </div>
                 <div class="form-actions">
                     <button type="button" id="cancelBtn">Cancel</button>
                     <button type="submit">Create Event</button>
@@ -513,39 +527,56 @@ function showCreateEventModal() {
 
     modal.querySelector('form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        await createEvent(new FormData(e.target));
+        const fd = new FormData(e.target);
+        
+        // Manual validation before sending
+        const start = new Date(fd.get('event_start'));
+        const end = new Date(fd.get('event_end'));
+        
+        if (end <= start) {
+            return showError("Event end time must be after the start time.");
+        }
+
+        await createEvent(fd);
         close();
     });
 }
 
 async function createEvent(formData) {
     try {
-        const token = localStorage.getItem('accessToken') || localStorage.getItem('authToken');
-
         const data = {
             title: formData.get('title'),
             event_start: formData.get('event_start'),
             event_end: formData.get('event_end'),
-            location: formData.get('location')
+            location: formData.get('location'),
+            guest_count: parseInt(formData.get('guest_count')) || 0
         };
 
-        const res = await fetch('/bookings', {
+        const res = await window.fetchWithAuth('/bookings', {
             method: 'POST',
             headers: {
-                Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         });
 
-        if (!res.ok) throw new Error();
+        if (!res.ok) {
+            const error = await res.json();
+            if (res.status === 401) {
+                throw new Error("Session expired. Please login again.");
+            }
+            if (error.message.includes('bookings_check')) {
+                throw new Error("Validation Error: Event end time must be after the start time.");
+            }
+            throw new Error(error.message || "Failed to create event");
+        }
 
         showSuccess("Event created!");
 
         loadUserEvents();
 
-    } catch {
-        showError("Failed to create event");
+    } catch (err) {
+        showError(err.message || "Failed to create event");
     }
 }
 

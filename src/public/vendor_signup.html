@@ -183,11 +183,13 @@
 
                 if (response.ok) {
                     alert("Vendor application submitted successfully!");
-                    // Optionally redirect
-                    // window.location.href = "dashboard.html";
                 } else {
                     const error = await response.json();
-                    alert("Error: " + (error.message || "Failed to submit application"));
+                    if (error.errors && error.errors.length > 0) {
+                        alert("Validation Error: " + error.errors.map(err => err.msg).join(", "));
+                    } else {
+                        alert("Error: " + (error.message || "Failed to submit application"));
+                    }
                 }
             } catch (err) {
                 alert("Network error. Please try again.");
@@ -195,5 +197,6 @@
         });
     </script>
 
+<script src="js/navbar.js"></script>
 </body>
 </html>

@@ -460,6 +460,27 @@ nav a.active::after {
     transform: scale(1.1);
 }
 
+.vendor-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(229, 57, 53, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: 0.3s;
+}
+.vendor-image-overlay span {
+    color: white;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+}
+.vendor-image:hover .vendor-image-overlay {
+    opacity: 1;
+}
+
+
 .vendor-details {
     padding: 20px;
     flex: 1;

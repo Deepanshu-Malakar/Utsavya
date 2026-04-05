@@ -5,13 +5,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Vendors - Utsavya</title>
+    <title>Vendor Schedule - Utsavya</title>
 
     <link rel="stylesheet" href="css/schedule_vendor.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
+    <style>
+        .sidebar-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 14px; font-weight: 500; }
+        .form-group input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit; }
+        .btn-primary { 
+            width: 100%; padding: 12px; border-radius: 8px; border: none; 
+            background: #a6845d; color: #fff; font-weight: 600; cursor: pointer;
+        }
+        .blocked-item {
+            padding: 10px; border-bottom: 1px solid #eee; font-size: 13px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .btn-delete { color: #dc3545; cursor: pointer; background: none; border: none; font-size: 16px; }
+        .event-card .status-badge {
+            display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 10px;
+        }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-accepted { background: #d4edda; color: #155724; }
+        .status-completed { background: #e2e3e5; color: #383d41; }
+        .action-btn { 
+            margin-top: 15px; padding: 8px 15px; border-radius: 6px; border: none; 
+            background: #28a745; color: #fff; cursor: pointer; font-size: 14px;
+        }
+    </style>
 </head>
 
 <body>
@@ -35,8 +66,7 @@
         </nav>
 
         <div class="profile">
-            
-            Hello Deepanshu
+            Hello Vendor
             <img src="images/profile.png">
             <button class="notifications-btn">🔔</button>
         </div>
@@ -54,27 +84,17 @@
         </div>
 
         <div class="hero-content">
-
-            <h1>
-                Monitor Your <span>Reviews, Complaints, and Bookings</span> 
-            </h1>
-
+            <h1>Monitor Your <span>Reviews, Complaints, and Bookings</span></h1>
             <div class="search-box">
-
-                <select id="eventSelect">
-                    <option value="all">Select Event</option>
-                    <option value="wedding">Wedding</option>
-                    <option value="birthday">Birthday</option>
-                    <option value="festival">Festival</option>
-                    <option value="corporate">Corporate</option>
+                <select id="statusFilter">
+                    <option value="all">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="accepted">Accepted</option>
+                    <option value="completed">Completed</option>
                 </select>
-
-                <input type="text" placeholder="Search Events...">
-
-                <button>Search</button>
-
+                <input type="text" id="searchInput" placeholder="Search events...">
+                <button id="searchBtn">Filter</button>
             </div>
-
         </div>
 
     </section>
@@ -84,139 +104,48 @@
     <div class="main-container">
 
         <main class="vendors-section">
-
             <div class="vendors-grid" id="vendorsGrid">
-
-                    <div class="event-card">
-                    <div class="event-header">
-                        <h3>Wedding: Sharma & Co.</h3>
-                        <span class="event-datetime">12 Apr 2026, 5:00 PM</span>
-                    </div>
-                    <div class="event-details">
-                        <p><strong>Location:</strong> Hotel Grand Palace</p>
-                        <p><strong>Budget:</strong> ₹2,50,000</p>
-                    </div>
-                    
-                    <!-- Complaints Section -->
-                    <div class="complaints">
-                        <h4>Complaints:</h4>
-                        <ul>
-                            <li>Delay in arrival of staff.</li>
-                            <li>Decor items missing.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Reviews Section -->
-                    <div class="reviews">
-                        <h4>Vendor Reviews:</h4>
-                        <div class="review">
-                            <span class="reviewer">Rohit K.</span>
-                            <span class="stars">★★★★☆</span>
-                            <p>Very professional and timely!</p>
-                        </div>
-                        <div class="review">
-                            <span class="reviewer">Anita S.</span>
-                            <span class="stars">★★★☆☆</span>
-                            <p>Good service but decoration was average.</p>
-                        </div>
-                    </div>
+                <p>Loading your schedule...</p>
             </div>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <h3>Birthday: Mehta Family</h3>
-                        <span class="event-datetime">18 Apr 2026, 3:00 PM</span>
-                    </div>
-                    <div class="event-details">
-                        <p><strong>Location:</strong> Sunshine Banquet Hall</p>
-                        <p><strong>Budget:</strong> ₹80,000</p>
-                    </div>
-                    
-                    <!-- Complaints Section -->
-                    <div class="complaints">
-                        <h4>Complaints:</h4>
-                        <ul>
-                            <li>Cake arrived late.</li>
-                            <li>Photographer missed some shots.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Reviews Section -->
-                    <div class="reviews">
-                        <h4>Vendor Reviews:</h4>
-                        <div class="review">
-                            <span class="reviewer">Neha P.</span>
-                            <span class="stars">★★★★★</span>
-                            <p>Everything went smoothly. Excellent service!</p>
-                        </div>
-                        <div class="review">
-                            <span class="reviewer">Ramesh T.</span>
-                            <span class="stars">★★★★☆</span>
-                            <p>Good team, a little delay in setup.</p>
-                        </div>
-                    </div>
-                </div>
-
-                 <div class="event-card">
-                        <div class="event-header">
-                            <h3>Corporate: TechFest 2026</h3>
-                            <span class="event-datetime">25 Apr 2026, 10:00 AM</span>
-                        </div>
-                        <div class="event-details">
-                            <p><strong>Location:</strong> IT Convention Center</p>
-                            <p><strong>Budget:</strong> ₹5,00,000</p>
-                        </div>
-                        
-                        <!-- Complaints Section -->
-                        <div class="complaints">
-                            <h4>Complaints:</h4>
-                            <ul>
-                                <li>Audio system had issues.</li>
-                                <li>Lunch service was delayed.</li>
-                            </ul>
-                        </div>
-
-                        <!-- Reviews Section -->
-                        <div class="reviews">
-                            <h4>Vendor Reviews:</h4>
-                            <div class="review">
-                                <span class="reviewer">Sanjay M.</span>
-                                <span class="stars">★★★★☆</span>
-                                <p>Professional staff, smooth event overall.</p>
-                            </div>
-                            <div class="review">
-                                <span class="reviewer">Priya K.</span>
-                                <span class="stars">★★★☆☆</span>
-                                <p>Good organization, but AV setup needs improvement.</p>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-
         </main>
+
+        <aside class="right-sidebar">
+            <div class="sidebar-card">
+                <h3>Manage Availability</h3>
+                <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Block dates when you are away.</p>
+                <form id="availabilityForm">
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="datetime-local" id="blockStart" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="datetime-local" id="blockEnd" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Reason</label>
+                        <input type="text" id="blockReason" placeholder="Vacation, etc.">
+                    </div>
+                    <button type="submit" class="btn-primary">Block Dates</button>
+                </form>
+            </div>
+
+            <div class="sidebar-card">
+                <h3>Blocked Dates</h3>
+                <div id="blockedDatesList">
+                    <p style="font-size: 13px; color: #888;">No dates blocked.</p>
+                </div>
+            </div>
+        </aside>
 
     </div>
 
-    <!-- RIGHT SIDEBAR - CART & STATUS -->
-
-    <aside class="right-sidebar">
-
-    
-
-    </aside>
-
-    <!-- MODAL FOR REQUEST STATUS SIMULATION -->
-
-
     <footer>
-
         <p>© 2026 Utsavya</p>
-
     </footer>
 
-    <script src="js/vendors.js"></script>
-
-
+    <script src="js/vendor_schedule.js"></script>
+    <script src="js/navbar.js"></script>
 </body>
 
 </html>

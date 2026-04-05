@@ -1390,3 +1390,199 @@ footer {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+/* ===== PROFILE CARD EDITOR ===== */
+
+.profile-card-editor {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.card-preview-wrapper,
+.card-editor-controls {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.editor-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f8f4ef;
+}
+
+/* Preview card mirrors the real vendor-card */
+.vendor-card-preview {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+    max-width: 280px;
+    margin: 0 auto;
+}
+.vendor-card-preview .vendor-image {
+    height: 180px;
+    overflow: hidden;
+    position: relative;
+}
+.vendor-card-preview .vendor-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.vendor-card-preview .vendor-details {
+    padding: 16px;
+}
+.vendor-card-preview .vendor-details h3 {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 4px;
+}
+.vendor-card-preview .category {
+    font-size: 13px;
+    color: #e53935;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+.vendor-card-preview .location {
+    font-size: 12px;
+    color: #888;
+}
+
+/* Editor form groups */
+.edit-group {
+    margin-bottom: 20px;
+}
+.edit-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 7px;
+}
+.edit-group input[type="text"],
+.edit-group input[type="url"] {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #eee;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    transition: 0.3s;
+    background: #fafafa;
+}
+.edit-group input[type="text"]:focus,
+.edit-group input[type="url"]:focus {
+    outline: none;
+    border-color: #e53935;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(229,57,53,0.08);
+}
+.edit-group input[type="file"] {
+    font-size: 13px;
+    color: #555;
+    padding: 8px 0;
+}
+.edit-group small {
+    display: block;
+    font-size: 11px;
+    color: #aaa;
+    margin-top: 5px;
+}
+
+.save-card-btn {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, #e53935, #c62828);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Poppins', sans-serif;
+}
+.save-card-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(229,57,53,0.35);
+}
+.save-card-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Three-tab layout */
+.tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 30px;
+    background: white;
+    border-bottom: 2px solid #f0e6da;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.tab-btn {
+    padding: 16px 24px;
+    border: none;
+    background: transparent;
+    color: #888;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: -2px;
+}
+.tab-btn:hover {
+    color: #e53935;
+}
+.tab-btn.active {
+    color: #e53935;
+    border-bottom-color: #e53935;
+    font-weight: 600;
+}
+
+/* Tab content */
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+
+/* Vendor image overlay on preview */
+.vendor-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(229,57,53,0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: 0.3s;
+    pointer-events: none;
+}
+.vendor-image-overlay span {
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+@media (max-width: 800px) {
+    .profile-card-editor {
+        grid-template-columns: 1fr;
+    }
+    .vendor-card-preview {
+        max-width: 100%;
+    }
+}

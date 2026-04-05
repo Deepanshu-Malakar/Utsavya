@@ -1,187 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Vendors - Utsavya</title>
-
+    <title>Vendor Home – Utsavya</title>
     <link rel="stylesheet" href="css/vendor_home.css">
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
     <!-- NAVBAR -->
-
     <header class="navbar">
-
         <div class="logo">
             <img src="images/logo.png" alt="" width="60">
             <span>UTSAVYA</span>
         </div>
-
         <input type="checkbox" id="nav-toggle" class="nav-toggle">
         <label for="nav-toggle" class="nav-toggle-label">☰</label>
-
         <nav class="nav-menu">
             <a href="dashboard.html">Home</a>
-            <a href="schedule_vendor.html">Schedules</a>
-            <a href="memories_vendor.html">Memories</a>
-            <a href="#" onclick="showServicesTab()" id="servicesTab">Services</a>
+            <a href="vendor_schedule.html">Schedules</a>
+            <a href="vendor_memories.html">Memories</a>
         </nav>
-
         <div class="profile">
-            
-            Hello Deepanshu
-            <img src="images/profile.png">
+            Hello <span id="navUserName">Vendor</span>
+            <img src="images/profile.png" id="profilePic">
             <button class="notifications-btn">🔔</button>
         </div>
-
     </header>
 
     <!-- HERO SECTION -->
-
     <section class="hero">
-
         <div class="hero-overlay"></div>
         <div class="bokeh">
             <span></span><span></span><span></span>
             <span></span><span></span><span></span>
         </div>
-
         <div class="hero-content">
-
-            <h1>
-                Start Growing Your <span>Business Today</span>
-            </h1>
-
-            <div class="search-box">
-
-                <select id="eventSelect">
-                    <option value="all">Select Event</option>
-                    <option value="wedding">Wedding</option>
-                    <option value="birthday">Birthday</option>
-                    <option value="festival">Festival</option>
-                    <option value="corporate">Corporate</option>
-                </select>
-
-                <input type="text" placeholder="Search Events...">
-
-                <button>Search</button>
-
-            </div>
-
+            <h1>Start Growing Your <span>Business Today</span></h1>
         </div>
-
     </section>
 
     <!-- TABS -->
-
     <div class="tabs">
-        <button class="tab-btn active" onclick="showRequestsTab()">Booking Requests</button>
-        <button class="tab-btn" onclick="showServicesTab()">My Services</button>
+        <button class="tab-btn active" id="tabRequests" onclick="showRequestsTab()">📋 Booking Requests</button>
+        <button class="tab-btn" id="tabServices" onclick="showServicesTab()">🛠 My Services</button>
+        <button class="tab-btn" id="tabProfileCard" onclick="showProfileCardTab()">🎨 My Profile Card</button>
     </div>
 
     <!-- REQUESTS SECTION -->
-
     <div id="requestsSection" class="tab-content active">
-
-        <!-- VENDORS GRID -->
-
         <main class="vendors-section">
-
-            
-
             <div class="vendors-grid" id="vendorsGrid">
-
-                <!-- REQUEST CARDS -->
-
-                
-                <!-- VENDOR CARDS WILL BE GENERATED HERE -->
-                
                 <div class="calendar-container">
                     <div class="calendar-header">
                         <button onclick="prevMonth()">◀</button>
                         <h2 id="monthYear"></h2>
                         <button onclick="nextMonth()">▶</button>
                     </div>
-                    
                     <div class="calendar-days">
                         <div>Sun</div><div>Mon</div><div>Tue</div>
                         <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
                     </div>
-                    
                     <div class="calendar-dates" id="calendarDates"></div>
                 </div>
-                
                 <div id="requestCardsContainer">
                     <div class="loading">Loading requests...</div>
                 </div>
             </div>
-            
         </main>
-
     </div>
 
     <!-- SERVICES SECTION -->
-
     <div id="servicesSection" class="tab-content">
-
         <main class="services-section">
-
             <div class="services-header">
                 <h2>My Services</h2>
                 <button class="add-service-btn" onclick="showAddServiceModal()">+ Add New Service</button>
             </div>
-
             <div class="services-grid" id="servicesGrid">
-                <!-- Services will be loaded here -->
                 <div class="loading">Loading services...</div>
             </div>
-
         </main>
-
     </div>
 
+    <!-- PROFILE CARD CUSTOMISER -->
+    <div id="profileCardSection" class="tab-content">
+        <main class="services-section" style="max-width:1100px; margin:30px auto; padding:0 20px;">
+
+            <div class="services-header">
+                <h2>🎨 My Profile Card</h2>
+            </div>
+            <p style="font-size:14px;color:#888;margin-bottom:30px;">This is exactly how customers see your card in the vendor listing. Customise it to attract more bookings.</p>
+
+            <div class="profile-card-editor">
+
+                <!-- LIVE PREVIEW -->
+                <div class="card-preview-wrapper">
+                    <h3 class="editor-label">Live Preview</h3>
+                    <div class="vendor-card vendor-card-preview" id="cardPreview">
+                        <div class="vendor-image">
+                            <img id="previewImage" src="images/default-vendor.jpg" alt="Preview">
+                            <div class="vendor-image-overlay" style="position:absolute;inset:0;background:rgba(229,57,53,0.7);display:flex;align-items:center;justify-content:center;opacity:0;transition:0.3s;pointer-events:none;">
+                                <span style="color:white;font-weight:700;">View Profile →</span>
+                            </div>
+                        </div>
+                        <div class="vendor-details">
+                            <h3 id="previewName">Your Name</h3>
+                            <p class="category" id="previewCategory">🏷️ Your Services</p>
+                            <p class="location" id="previewCity">📍 Your City</p>
+                            <p id="previewTagline" style="font-size:12px;color:#888;font-style:italic;margin-top:4px;">Your tagline...</p>
+                            <div style="color:#f39c12;font-size:14px;margin:6px 0;">★★★★☆</div>
+                            <div id="previewPrice" style="font-size:16px;font-weight:700;color:#27ae60;">₹–</div>
+                        </div>
+                        <div style="padding:12px 20px 16px;display:flex;gap:8px;border-top:1px solid #f5f5f5;">
+                            <button style="flex:1;padding:9px;border:2px solid #e53935;background:transparent;color:#e53935;border-radius:6px;font-size:13px;font-weight:600;">👁 Profile</button>
+                            <button style="flex:1;padding:9px;background:#e53935;color:white;border:none;border-radius:6px;font-size:13px;font-weight:600;">+ Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTROLS -->
+                <div class="card-editor-controls">
+                    <h3 class="editor-label">Edit Your Card</h3>
+
+                    <div class="edit-group">
+                        <label>Profile Tagline <small style="color:#aaa;font-weight:400;">(80 chars max)</small></label>
+                        <input type="text" id="editTagline" placeholder="e.g. Making every moment magical ✨" maxlength="80" oninput="document.getElementById('previewTagline').textContent=this.value||'Your tagline...'">
+                    </div>
+
+                    <div class="edit-group">
+                        <label>Upload Profile Photo</label>
+                        <input type="file" id="editProfileImageFile" accept="image/*" onchange="previewUploadedImage(this)">
+                        <small>Recommended: square image, at least 300×300 px</small>
+                    </div>
+
+                    <div class="edit-group">
+                        <label>Profile Photo URL <small style="color:#aaa;font-weight:400;">(alternative)</small></label>
+                        <input type="url" id="editProfileImage" placeholder="https://..." oninput="if(this.value)document.getElementById('previewImage').src=this.value">
+                    </div>
+
+                    <button class="save-card-btn" onclick="saveProfileCard()">💾 Save Changes</button>
+                    <p id="saveCardStatus" style="font-size:12px;color:#aaa;margin-top:8px;"></p>
+                </div>
+
+            </div>
+        </main>
     </div>
-
-        </div>
-
-    </aside>
 
     <!-- ADD SERVICE MODAL -->
-
     <div id="addServiceModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeAddServiceModal()">&times;</span>
             <h2>Add New Service</h2>
-            
             <form id="addServiceForm">
                 <div class="form-group">
                     <label for="serviceTitle">Service Title *</label>
                     <input type="text" id="serviceTitle" required placeholder="e.g., Wedding Photography">
                 </div>
-                
                 <div class="form-group">
                     <label for="serviceDescription">Description *</label>
                     <textarea id="serviceDescription" required placeholder="Describe your service..."></textarea>
                 </div>
-                
                 <div class="form-group">
                     <label for="serviceCity">City *</label>
                     <input type="text" id="serviceCity" required placeholder="e.g., Delhi">
                 </div>
-                
                 <div class="form-group">
-                    <label for="servicePrice">Price *</label>
+                    <label for="servicePrice">Price (₹) *</label>
                     <input type="number" id="servicePrice" required placeholder="50000">
                 </div>
-                
                 <div class="form-group">
                     <label for="priceType">Price Type *</label>
                     <select id="priceType" required>
@@ -189,21 +177,16 @@
                         <option value="per_person">Per Person</option>
                     </select>
                 </div>
-                
                 <button type="submit" class="submit-btn">Add Service</button>
             </form>
         </div>
     </div>
 
     <footer>
-
         <p>© 2026 Utsavya</p>
-
     </footer>
 
     <script src="js/vendor_home.js"></script>
-
-
+    <script src="js/navbar.js"></script>
 </body>
-
 </html>

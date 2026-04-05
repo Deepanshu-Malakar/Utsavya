@@ -33,11 +33,16 @@ app.use(helmet());
 // Use Morgan to log HTTP requests in the console
 app.use(morgan("dev"));
 
-// Apply a global rate limiter to all api requests
+// Apply a global rate limiter to API requests only (skip static files)
 const globalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: process.env.NODE_ENV === "test" ? 1000 : 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-    message: { message: "Too many requests from this IP, please try again after 15 minutes" }
+    max: process.env.NODE_ENV === "test" ? 1000 : 500, // Raised to 500 to support multi-step flows (signup, file uploads, etc.)
+    message: { message: "Too many requests from this IP, please try again after 15 minutes" },
+    skip: (req) => {
+        // Don't rate-limit requests for static HTML, CSS, JS, images
+        const staticExts = ['.html', '.css', '.js', '.png', '.jpg', '.jpeg', '.svg', '.ico', '.webp', '.woff', '.woff2'];
+        return staticExts.some(ext => req.path.endsWith(ext));
+    }
 });
 app.use(globalLimiter);
 
@@ -50,6 +55,7 @@ app.use(cors({
 app.post("/payments/webhook", express.raw({ type: "application/json" }), stripeWebhookController);
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/auth", authRoutes);
 app.use("/vendors", vendorRoutes);

@@ -1,0 +1,87 @@
+d:\python\github\Utsavya\src\controllers\admin.controller.js:2: * --- FRONTEND INTEGRATION GUIDE: Admin Controllers ---
+d:\python\github\Utsavya\src\controllers\admin.controller.js:10: // --- FRONTEND INTEGRATION GUIDE: Dashboard Stats ---
+d:\python\github\Utsavya\src\controllers\admin.controller.js:28: // --- FRONTEND INTEGRATION GUIDE: Pending Vendor Requests ---
+d:\python\github\Utsavya\src\controllers\admin.controller.js:58: // --- FRONTEND INTEGRATION GUIDE: Review Vendor Request ---
+d:\python\github\Utsavya\src\controllers\auth.controller.js:2: * --- FRONTEND INTEGRATION GUIDE: Auth Overview ---
+d:\python\github\Utsavya\src\controllers\auth.controller.js:28: // --- FRONTEND INTEGRATION GUIDE: Registration ---
+d:\python\github\Utsavya\src\controllers\auth.controller.js:37: // --- FRONTEND INTEGRATION GUIDE: OTP Verification ---
+d:\python\github\Utsavya\src\controllers\auth.controller.js:48: // --- FRONTEND INTEGRATION GUIDE: Manual Login ---
+d:\python\github\Utsavya\src\controllers\auth.controller.js:58: // --- FRONTEND INTEGRATION GUIDE: Google OAuth ---
+d:\python\github\Utsavya\src\controllers\auth.controller.js:71: // --- FRONTEND INTEGRATION GUIDE: Silent Refresh ---
+d:\python\github\Utsavya\src\controllers\booking.controller.js:2: * --- FRONTEND INTEGRATION GUIDE: Booking Controllers ---
+d:\python\github\Utsavya\src\controllers\booking.controller.js:24: // --- FRONTEND INTEGRATION GUIDE: Create Event ---
+d:\python\github\Utsavya\src\controllers\booking.controller.js:66: // --- FRONTEND INTEGRATION GUIDE: Request Vendor Service ---
+d:\python\github\Utsavya\src\controllers\booking.controller.js:98: // --- FRONTEND INTEGRATION GUIDE: Get Full Event Details ---
+d:\python\github\Utsavya\src\controllers\booking.controller.js:109: // --- FRONTEND INTEGRATION GUIDE: Mark Service as Done ---
+d:\python\github\Utsavya\src\controllers\notification.controller.js:2: * --- FRONTEND INTEGRATION GUIDE: Notification Controllers ---
+d:\python\github\Utsavya\src\controllers\notification.controller.js:9: // --- FRONTEND INTEGRATION GUIDE: Get My Notifications ---
+d:\python\github\Utsavya\src\controllers\notification.controller.js:28: // --- FRONTEND INTEGRATION GUIDE: Mark Notification as Read ---
+d:\python\github\Utsavya\src\controllers\passwordReset.controller.js:2: * --- FRONTEND INTEGRATION GUIDE: Password Recovery ---
+d:\python\github\Utsavya\src\controllers\passwordReset.controller.js:9: // --- FRONTEND INTEGRATION GUIDE: Forgot Password ---
+d:\python\github\Utsavya\src\controllers\passwordReset.controller.js:22: // --- FRONTEND INTEGRATION GUIDE: Reset Password ---
+d:\python\github\Utsavya\src\controllers\payment.controller.js:2: * --- FRONTEND INTEGRATION GUIDE: Payment Controllers ---
+d:\python\github\Utsavya\src\controllers\payment.controller.js:12: // --- FRONTEND INTEGRATION GUIDE: Initiate Payment ---
+d:\python\github\Utsavya\src\controllers\profile.controller.js:2: * --- FRONTEND INTEGRATION GUIDE: Profile Management ---
+d:\python\github\Utsavya\src\controllers\profile.controller.js:9: // --- FRONTEND INTEGRATION GUIDE: Update Profile ---
+d:\python\github\Utsavya\src\controllers\profile.controller.js:28: // --- FRONTEND INTEGRATION GUIDE: Delete Account ---
+d:\python\github\Utsavya\src\controllers\review.controller.js:2: * --- FRONTEND INTEGRATION GUIDE: Review Controllers ---
+d:\python\github\Utsavya\src\controllers\review.controller.js:12: // --- FRONTEND INTEGRATION GUIDE: Create Review ---
+d:\python\github\Utsavya\src\controllers\review.controller.js:21: // --- FRONTEND INTEGRATION GUIDE: Vendor Ratings ---
+d:\python\github\Utsavya\src\controllers\review.controller.js:29: // --- FRONTEND INTEGRATION GUIDE: Vendor Reviews ---
+d:\python\github\Utsavya\src\controllers\review.controller.js:39: // --- FRONTEND INTEGRATION GUIDE: Upload Review Media ---
+d:\python\github\Utsavya\src\controllers\service.controller.js:2: * --- FRONTEND INTEGRATION GUIDE: Service Controllers ---
+d:\python\github\Utsavya\src\controllers\service.controller.js:14: // --- FRONTEND INTEGRATION GUIDE: Create Service ---
+d:\python\github\Utsavya\src\controllers\service.controller.js:25: // --- FRONTEND INTEGRATION GUIDE: My Services (Vendor Own) ---
+d:\python\github\Utsavya\src\controllers\service.controller.js:33: // --- FRONTEND INTEGRATION GUIDE: Browse Services ---
+d:\python\github\Utsavya\src\controllers\service.controller.js:40: // --- FRONTEND INTEGRATION GUIDE: Service Details ---
+d:\python\github\Utsavya\src\controllers\serviceMedia.controller.js:2: * --- FRONTEND INTEGRATION GUIDE: Service Media Controllers ---
+d:\python\github\Utsavya\src\controllers\serviceMedia.controller.js:13: // --- FRONTEND INTEGRATION GUIDE: Upload Service Media ---
+d:\python\github\Utsavya\src\controllers\serviceMedia.controller.js:30: // --- FRONTEND INTEGRATION GUIDE: Remove Service Media ---
+d:\python\github\Utsavya\src\controllers\vendor.controller.js:2: * --- FRONTEND INTEGRATION GUIDE: Vendor Controllers ---
+d:\python\github\Utsavya\src\controllers\vendor.controller.js:9: // --- FRONTEND INTEGRATION GUIDE: Become a Vendor ---
+d:\python\github\Utsavya\src\controllers\vendor.controller.js:29: // --- FRONTEND INTEGRATION GUIDE: Get Vendor Details ---
+d:\python\github\Utsavya\src\controllers\vendor.controller.js:37: // --- FRONTEND INTEGRATION GUIDE: Browse Vendors ---
+d:\python\github\Utsavya\src\controllers\vendorAvailability.controller.js:2: * --- FRONTEND INTEGRATION GUIDE: Vendor Availability ---
+d:\python\github\Utsavya\src\controllers\vendorAvailability.controller.js:13: // --- FRONTEND INTEGRATION GUIDE: Block Unavailable Dates ---
+d:\python\github\Utsavya\src\controllers\vendorAvailability.controller.js:35: // --- FRONTEND INTEGRATION GUIDE: Get Vendor Availability ---
+d:\python\github\Utsavya\src\routes\admin.routes.js:2: * --- FRONTEND INTEGRATION GUIDE: Admin Dashboard ---
+d:\python\github\Utsavya\src\routes\admin.routes.js:25: // --- FRONTEND INTEGRATION GUIDE: Admin Stats ---
+d:\python\github\Utsavya\src\routes\admin.routes.js:29: // --- FRONTEND INTEGRATION GUIDE: Pending Vendor Requests ---
+d:\python\github\Utsavya\src\routes\admin.routes.js:35: // --- FRONTEND INTEGRATION GUIDE: Review Vendor Request ---
+d:\python\github\Utsavya\src\routes\auth.routes.js:2: * --- FRONTEND INTEGRATION GUIDE ---
+d:\python\github\Utsavya\src\routes\auth.routes.js:67: // --- FRONTEND INTEGRATION GUIDE: Registration ---
+d:\python\github\Utsavya\src\routes\auth.routes.js:71: // --- FRONTEND INTEGRATION GUIDE: Email Verification ---
+d:\python\github\Utsavya\src\routes\auth.routes.js:76: // --- FRONTEND INTEGRATION GUIDE: Manual Login ---
+d:\python\github\Utsavya\src\routes\auth.routes.js:81: // --- FRONTEND INTEGRATION GUIDE: Google OAuth Login ---
+d:\python\github\Utsavya\src\routes\auth.routes.js:87: // --- FRONTEND INTEGRATION GUIDE: Token Refresh ---
+d:\python\github\Utsavya\src\routes\auth.routes.js:92: // --- FRONTEND INTEGRATION GUIDE: Logout ---
+d:\python\github\Utsavya\src\routes\auth.routes.js:97: // --- FRONTEND INTEGRATION GUIDE: Profile Management ---
+d:\python\github\Utsavya\src\routes\auth.routes.js:102: // --- FRONTEND INTEGRATION GUIDE: Delete Account ---
+d:\python\github\Utsavya\src\routes\auth.routes.js:106: // --- FRONTEND INTEGRATION GUIDE: Password Recovery ---
+d:\python\github\Utsavya\src\routes\booking.routes.js:2: * --- FRONTEND INTEGRATION GUIDE: Bookings ---
+d:\python\github\Utsavya\src\routes\booking.routes.js:44: // --- FRONTEND INTEGRATION GUIDE: Create Event Booking ---
+d:\python\github\Utsavya\src\routes\booking.routes.js:49: // --- FRONTEND INTEGRATION GUIDE: List My Bookings ---
+d:\python\github\Utsavya\src\routes\booking.routes.js:56: // --- FRONTEND INTEGRATION GUIDE: Request Service for Booking ---
+d:\python\github\Utsavya\src\routes\booking.routes.js:61: // --- FRONTEND INTEGRATION GUIDE: Vendor Price Quote ---
+d:\python\github\Utsavya\src\routes\booking.routes.js:81: // --- FRONTEND INTEGRATION GUIDE: Get Full Booking Details ---
+d:\python\github\Utsavya\src\routes\booking.routes.js:90: // --- FRONTEND INTEGRATION GUIDE: Mark Service as Complete ---
+d:\python\github\Utsavya\src\routes\booking.routes.js:99: // --- FRONTEND INTEGRATION GUIDE: Cancel Service ---
+d:\python\github\Utsavya\src\routes\notification.routes.js:2: * --- FRONTEND INTEGRATION GUIDE: Notifications ---
+d:\python\github\Utsavya\src\routes\notification.routes.js:17: // --- FRONTEND INTEGRATION GUIDE: Get My Notifications ---
+d:\python\github\Utsavya\src\routes\notification.routes.js:20: // --- FRONTEND INTEGRATION GUIDE: Mark Notification as Read ---
+d:\python\github\Utsavya\src\routes\payment.routes.js:2: * --- FRONTEND INTEGRATION GUIDE: Payments (Stripe) ---
+d:\python\github\Utsavya\src\routes\payment.routes.js:24: // --- FRONTEND INTEGRATION GUIDE: Initiate Payment ---
+d:\python\github\Utsavya\src\routes\review.routes.js:2: * --- FRONTEND INTEGRATION GUIDE: Reviews & Ratings ---
+d:\python\github\Utsavya\src\routes\review.routes.js:26: // --- FRONTEND INTEGRATION GUIDE: Create Review ---
+d:\python\github\Utsavya\src\routes\review.routes.js:30: // --- FRONTEND INTEGRATION GUIDE: Get Vendor Ratings ---
+d:\python\github\Utsavya\src\routes\review.routes.js:34: // --- FRONTEND INTEGRATION GUIDE: Get Vendor Reviews ---
+d:\python\github\Utsavya\src\routes\review.routes.js:37: // --- FRONTEND INTEGRATION GUIDE: Upload Review Media ---
+d:\python\github\Utsavya\src\routes\service.routes.js:2: * --- FRONTEND INTEGRATION GUIDE: Services ---
+d:\python\github\Utsavya\src\routes\service.routes.js:22: // --- FRONTEND INTEGRATION GUIDE: My Services (Vendor Only) ---
+d:\python\github\Utsavya\src\routes\service.routes.js:33: // --- FRONTEND INTEGRATION GUIDE: Browse All Services ---
+d:\python\github\Utsavya\src\routes\service.routes.js:56: // --- FRONTEND INTEGRATION GUIDE: Create Service (Vendor) ---
+d:\python\github\Utsavya\src\routes\service.routes.js:85: // --- FRONTEND INTEGRATION GUIDE: Upload Service Media ---
+d:\python\github\Utsavya\src\routes\vendor.routes.js:2: * --- FRONTEND INTEGRATION GUIDE: Vendor Management ---
+d:\python\github\Utsavya\src\routes\vendor.routes.js:37: // --- FRONTEND INTEGRATION GUIDE: Become a Vendor ---
+d:\python\github\Utsavya\src\routes\vendor.routes.js:75: // --- FRONTEND INTEGRATION GUIDE: Get Vendor Details ---
+d:\python\github\Utsavya\src\routes\vendor.routes.js:80: // --- FRONTEND INTEGRATION GUIDE: Manage Availability ---

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>CactiGuard Login</title>
+    <title>Utsavya Login</title>
 
     <style>
         body {
@@ -311,6 +311,10 @@
                     </button>
                 </div>
 
+                <div style="margin-top: 15px; text-align: center;">
+                    <a href="forgot_password.html" style="color: #a6845d; text-decoration: none; font-size: 14px;">Forgot Password?</a>
+                </div>
+
             </form>
         </div>
 
@@ -415,8 +419,12 @@
                 }
             } else {
                 const error = await res.json();
-                console.log('Login error:', error); // Add debugging
-                alert(`Login failed: ${error.message}`);
+                console.log('Login error:', error);
+                if (error.errors && error.errors.length > 0) {
+                    alert('Login failed: ' + error.errors.map(err => err.msg).join(', '));
+                } else {
+                    alert(`Login failed: ${error.message || 'Incorrect credentials'}`);
+                }
             }
 
         });
@@ -452,6 +460,7 @@
         });
     </script>
 
+<script src="js/navbar.js"></script>
 </body>
 
 </html>

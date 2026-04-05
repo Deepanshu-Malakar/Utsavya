@@ -272,48 +272,47 @@
             });
         });
 
-        // ------------------ PROFILE PICTURE UPLOAD ------------------
-        const profileImg = document.getElementById('profileImg');
-        const profileInput = document.getElementById('profileUploadInput');
+        // Profile picture upload logic will be handled by navbar.js via the generic Profile Dropdown.
+        const profileInputOriginal = document.getElementById('profileUploadInput');
+        if(profileInputOriginal) {
+            profileInputOriginal.addEventListener('change', async (e) => {
+                if (!e.target.files.length) return;
+                const file = e.target.files[0];
 
-        profileImg.addEventListener('click', () => {
-            profileInput.click();
-        });
+                const formData = new FormData();
+                formData.append('profile_image', file);
 
-        profileInput.addEventListener('change', async (e) => {
-            if (!e.target.files.length) return;
-            const file = e.target.files[0];
+                try {
+                    const token = localStorage.getItem('accessToken') || localStorage.getItem('authToken');
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = document.getElementById('profileImg');
+                        if(img) img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
 
-            const formData = new FormData();
-            formData.append('profile_image', file);
+                    const response = await fetch('/auth/profile', {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: formData
+                    });
 
-            try {
-                const token = localStorage.getItem('accessToken') || localStorage.getItem('authToken');
-                // Optional: Update image locally first
-                const reader = new FileReader();
-                reader.onload = (e) => profileImg.src = e.target.result;
-                reader.readAsDataURL(file);
-
-                const response = await fetch('/auth/profile', {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: formData
-                });
-
-                if (response.ok) {
-                    alert('Profile picture updated successfully!');
-                } else {
-                    const data = await response.json();
-                    alert('Failed to update picture: ' + data.message);
+                    if (response.ok) {
+                        alert('Profile picture updated successfully!');
+                    } else {
+                        const data = await response.json();
+                        alert('Failed to update picture: ' + data.message);
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Error uploading profile picture');
                 }
-            } catch (err) {
-                console.error(err);
-                alert('Error uploading profile picture');
-            }
-        });
+            });
+        }
     </script>
+
 
 </body>
 

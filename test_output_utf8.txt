@@ -1,0 +1,3113 @@
+﻿  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ΓÜí∩╕Å secrets for agents: https://dotenvx.com/as2
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ≡ƒ¢á∩╕Å  run anywhere with `dotenvx run -- yourcommand`
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ΓÜí∩╕Å secrets for agents: https://dotenvx.com/as2
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ≡ƒöÉ encrypt with Dotenvx: https://dotenvx.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ≡ƒñû agentic secret storage: https://dotenvx.com/as2
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ΓÜÖ∩╕Å  write to custom object with { processEnv: myObject }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ≡ƒ¢á∩╕Å  run anywhere with `dotenvx run -- yourcommand`
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ≡ƒ¢í∩╕Å auth for agents: https://vestauth.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ΓÜÖ∩╕Å  override existing env vars with { override: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ΓÜÖ∩╕Å  load multiple .env files with { path: ['.env.local', '.env'] }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ΓÜÖ∩╕Å  override existing env vars with { override: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ≡ƒ¢í∩╕Å auth for agents: https://vestauth.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ≡ƒöÉ prevent committing .env to code: https://dotenvx.com/precommit
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ≡ƒ¢í∩╕Å auth for agents: https://vestauth.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ≡ƒñû agentic secret storage: https://dotenvx.com/as2
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ≡ƒöÉ prevent committing .env to code: https://dotenvx.com/precommit
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ≡ƒöÉ encrypt with Dotenvx: https://dotenvx.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ≡ƒ¢á∩╕Å  run anywhere with `dotenvx run -- yourcommand`
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ≡ƒñû agentic secret storage: https://dotenvx.com/as2
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  enable debug logging with { debug: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  write to custom object with { processEnv: myObject }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  enable debug logging with { debug: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+[0mPOST /auth/register [32m201[0m 1221.556 ms - 76[0m
+  console.error
+    Error: User not found
+        at verifyOtp (D:\python\github\Utsavya\src\services\auth.services.js:135:19)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\auth.controller.js:42:43
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPOST /auth/verify-otp [33m400[0m 255.672 ms - 28[0m
+[0mPOST /auth/register [32m201[0m 1061.541 ms - 76[0m
+[0mPOST /auth/register [32m201[0m 924.159 ms - 76[0m
+[0mPOST /auth/register [32m201[0m 1044.062 ms - 76[0m
+[0mPOST /auth/register [32m201[0m 946.998 ms - 76[0m
+[0mPOST /auth/register [32m201[0m 545.258 ms - 76[0m
+[0mPOST /auth/register [32m201[0m 1007.538 ms - 76[0m
+[0mPOST /auth/register [32m201[0m 1038.062 ms - 76[0m
+npx : FAIL tests/integrati
+on/review.test.js (8.153 
+s)
+At line:1 char:1
++ npx jest --verbose > 
+test_output.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (F  
+  AIL tests/inte...st.j   
+ s (8.153 s):String) [    
+], RemoteException
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+  Review System Test
+    ├ù setup: create 
+booking + vendor + 
+service (6 ms)
+    ├ù Γ¥î cannot review 
+before completion
+    ├ù Γ£ö vendor marks 
+complete
+    ├ù Γ£ö customer can 
+review after completion
+    ├ù Γ¥î duplicate 
+review blocked
+
+  ΓùÅ Review System Test 
+ΓÇ║ setup: create booking 
++ vendor + service
+
+    error: deadlock 
+detected
+
+    [0m [90m 15 |[39m
+     [90m 16 |[39m 
+beforeAll([36masync[39m 
+() [33m=>[39m {
+    
+[31m[1m>[22m[39m[90m 
+17 |[39m     
+[36mawait[39m pool[33m.
+[39mquery([32m`[39m
+     [90m    |[39m     
+[31m[1m^[22m[39m
+     [90m 18 |[39m 
+[32m        TRUNCATE 
+TABLE [39m
+     [90m 19 |[39m 
+[32m        reviews,[39m
+     [90m 20 |[39m 
+[32m        
+booking_items,[39m[0m
+
+      at node_modules/pg-p
+ool/index.js:45:11
+      at 
+Object.<anonymous> (tests/
+integration/review.test.js
+:17:5)
+
+  ΓùÅ Review System Test 
+ΓÇ║ Γ¥î cannot review 
+before completion
+
+    error: deadlock 
+detected
+
+    [0m [90m 15 |[39m
+     [90m 16 |[39m 
+beforeAll([36masync[39m 
+() [33m=>[39m {
+    
+[31m[1m>[22m[39m[90m 
+17 |[39m     
+[36mawait[39m pool[33m.
+[39mquery([32m`[39m
+     [90m    |[39m     
+[31m[1m^[22m[39m
+     [90m 18 |[39m 
+[32m        TRUNCATE 
+TABLE [39m
+     [90m 19 |[39m 
+[32m        reviews,[39m
+     [90m 20 |[39m 
+[32m        
+booking_items,[39m[0m
+
+      at node_modules/pg-p
+ool/index.js:45:11
+      at 
+Object.<anonymous> (tests/
+integration/review.test.js
+:17:5)
+
+  ΓùÅ Review System Test 
+ΓÇ║ Γ£ö vendor marks 
+complete
+
+    error: deadlock 
+detected
+
+    [0m [90m 15 |[39m
+     [90m 16 |[39m 
+beforeAll([36masync[39m 
+() [33m=>[39m {
+    
+[31m[1m>[22m[39m[90m 
+17 |[39m     
+[36mawait[39m pool[33m.
+[39mquery([32m`[39m
+     [90m    |[39m     
+[31m[1m^[22m[39m
+     [90m 18 |[39m 
+[32m        TRUNCATE 
+TABLE [39m
+     [90m 19 |[39m 
+[32m        reviews,[39m
+     [90m 20 |[39m 
+[32m        
+booking_items,[39m[0m
+
+      at node_modules/pg-p
+ool/index.js:45:11
+      at 
+Object.<anonymous> (tests/
+integration/review.test.js
+:17:5)
+
+  ΓùÅ Review System Test 
+ΓÇ║ Γ£ö customer can 
+review after completion
+
+    error: deadlock 
+detected
+
+    [0m [90m 15 |[39m
+     [90m 16 |[39m 
+beforeAll([36masync[39m 
+() [33m=>[39m {
+    
+[31m[1m>[22m[39m[90m 
+17 |[39m     
+[36mawait[39m pool[33m.
+[39mquery([32m`[39m
+     [90m    |[39m     
+[31m[1m^[22m[39m
+     [90m 18 |[39m 
+[32m        TRUNCATE 
+TABLE [39m
+     [90m 19 |[39m 
+[32m        reviews,[39m
+     [90m 20 |[39m 
+[32m        
+booking_items,[39m[0m
+
+      at node_modules/pg-p
+ool/index.js:45:11
+      at 
+Object.<anonymous> (tests/
+integration/review.test.js
+:17:5)
+
+  ΓùÅ Review System Test 
+ΓÇ║ Γ¥î duplicate review 
+blocked
+
+    error: deadlock 
+detected
+
+    [0m [90m 15 |[39m
+     [90m 16 |[39m 
+beforeAll([36masync[39m 
+() [33m=>[39m {
+    
+[31m[1m>[22m[39m[90m 
+17 |[39m     
+[36mawait[39m pool[33m.
+[39mquery([32m`[39m
+     [90m    |[39m     
+[31m[1m^[22m[39m
+     [90m 18 |[39m 
+[32m        TRUNCATE 
+TABLE [39m
+     [90m 19 |[39m 
+[32m        reviews,[39m
+     [90m 20 |[39m 
+[32m        
+booking_items,[39m[0m
+
+      at node_modules/pg-p
+ool/index.js:45:11
+      at 
+Object.<anonymous> (tests/
+integration/review.test.js
+:17:5)
+
+  console.error
+    Error: User not found
+        at verifyOtp (D:\python\github\Utsavya\src\services\auth.services.js:135:19)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\auth.controller.js:42:43
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+  console.error
+    Error: User not found
+        at verifyOtp (D:\python\github\Utsavya\src\services\auth.services.js:135:19)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\auth.controller.js:42:43
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPOST /auth/verify-otp [33m400[0m 955.024 ms - 28[0m
+[0mPOST /auth/verify-otp [33m400[0m 932.503 ms - 28[0m
+  console.error
+    Error: User not found
+        at verifyOtp (D:\python\github\Utsavya\src\services\auth.services.js:135:19)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\auth.controller.js:42:43
+FAIL tests/integration/rot
+ation.test.js (8.386 s)
+  Refresh Token Rotation 
+Integration
+    ├ù Γ£ö Should 
+successfully rotate 
+tokens (9 ms)
+
+  ΓùÅ Refresh Token 
+Rotation Integration ΓÇ║ 
+Γ£ö Should successfully 
+rotate tokens
+
+    OTP verification 
+failed: {"message":"User 
+not found"}
+
+    [0m [90m 22 |[39m  
+               
+otp[33m:[39m reg[33m.[
+39mbody[33m.[39mtestOtp
+     [90m 23 |[39m      
+       })[33m;[39m
+    
+[31m[1m>[22m[39m[90m 
+24 |[39m             
+[36mif[39m (verify[33m.
+[39mstatusCode 
+[33m!==[39m 
+[35m200[39m) 
+[36mthrow[39m 
+[36mnew[39m 
+[33mError[39m([32m`OTP 
+verification failed: ${JSO
+N.stringify(verify.body)}`
+[39m)[33m;[39m
+     [90m    |[39m      
+                          
+                  
+[31m[1m^[22m[39m
+     [90m 25 |[39m
+     [90m 26 |[39m      
+       [90m// 2. Login 
+to get initial refresh 
+token[39m
+     [90m 27 |[39m      
+       [36mconst[39m 
+login [33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39mpost([32m"/a
+uth/login"[39m)[33m.[39
+msend({[0m
+
+      at 
+Object.<anonymous> (tests/
+integration/rotation.test.
+js:24:50)
+
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+  console.error
+    Error: User not found
+        at verifyOtp (D:\python\github\Utsavya\src\services\auth.services.js:135:19)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\auth.controller.js:42:43
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPOST /auth/verify-otp [33m400[0m 940.138 ms - 28[0m
+[0mPOST /auth/verify-otp [33m400[0m 960.576 ms - 28[0m
+  console.error
+    Error: User not found
+        at verifyOtp (D:\python\github\Utsavya\src\services\auth.services.js:135:19)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\auth.controller.js:42:43
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+  console.error
+    SETUP FAILURE: OTP verification failed: {"message":"User not found"}
+
+    [0m [90m 36 |[39m             refreshToken [33m=[39m cookies[[35m0[39m][33m.[39msplit([32m';'[39m)[[35m0[39m][33m.[39msplit([32m'='[39m)[[35m1[39m][33m;[39m
+     [90m 37 |[39m         } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 38 |[39m             console[33m.[39merror([32m"SETUP FAILURE:"[39m[33m,[39m error[33m.[39mmessage)[33m;[39m
+     [90m    |[39m                     [31m[1m^[22m[39m
+     [90m 39 |[39m             [36mthrow[39m error[33m;[39m
+     [90m 40 |[39m         }
+     [90m 41 |[39m     })[33m;[39m[0m
+
+      at Object.error (tests/integration/rotation.test.js:38:21)
+
+  console.error
+    Error: Invalid credentials
+        at loginUser (D:\python\github\Utsavya\src\services\auth.services.js:229:15)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\auth.controller.js:52:43
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPOST /auth/login [33m400[0m 20.177 ms - 33[0m
+  console.error
+    Error: User not found
+        at verifyOtp (D:\python\github\Utsavya\src\services\auth.services.js:135:19)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\auth.controller.js:42:43
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPOST /auth/verify-otp [33m400[0m 983.570 ms - 28[0m
+[0mPOST /bookings [33m401[0m 3.483 ms - 38[0m
+  console.log
+    BOOKING CREATED: { message: 'Invalid or expired token' }
+
+      at Object.log (tests/integration/payment.test.js:72:17)
+
+[0mPOST /payments [33m401[0m 1.967 ms - 38[0m
+  console.log
+    CREATE PAYMENT: { message: 'Invalid or expired token' }
+
+      at Object.log (tests/integration/payment.test.js:85:17)
+
+  console.error
+    Error: Invalid credentials
+        at loginUser (D:\python\github\Utsavya\src\services\auth.services.js:229:15)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\auth.controller.js:52:43
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPOST /auth/login [33m400[0m 18.061 ms - 33[0m
+[0mGET /test/auth [33m401[0m 3.133 ms - 38[0m
+  console.error
+    Error: User not found
+        at verifyOtp (D:\python\github\Utsavya\src\services\auth.services.js:135:19)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\auth.controller.js:42:43
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPOST /auth/verify-otp [33m400[0m 993.413 ms - 28[0m
+  console.error
+FAIL tests/integration/pay
+ment.test.js (8.43 s)
+    Error: Invalid credentials
+        at loginUser (D:\python\github\Utsavya\src\services\auth.services.js:229:15)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\auth.controller.js:52:43
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPOST /auth/login [33m400[0m 17.019 ms - 33[0m
+  console.error
+    Error: Invalid credentials
+        at loginUser (D:\python\github\Utsavya\src\services\auth.services.js:229:15)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\auth.controller.js:52:43
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPOST /auth/login [33m400[0m 38.609 ms - 33[0m
+  Payment System Test
+    ΓêÜ setup: create 
+user + booking (1612 ms)
+    ├ù Γ£ö create payment 
+(39 ms)
+    ΓêÜ Γ£ö mark payment 
+successful via Webhook 
+(30 ms)
+    ├ù Γ£ö verify DB 
+updated (5 ms)
+    ΓêÜ Γ¥î unauthorized 
+user cannot create 
+payment (15 ms)
+
+  ΓùÅ Payment System Test 
+ΓÇ║ Γ£ö create payment
+
+    expect(received).toBe(
+expected) // Object.is 
+equality
+
+    Expected: 201
+    Received: 401
+
+    [0m [90m 85 |[39m  
+       console[33m.[39ml
+og([32m"CREATE 
+PAYMENT:"[39m[33m,[39m 
+res[33m.[39mbody)[33m;
+[39m
+     [90m 86 |[39m
+    
+[31m[1m>[22m[39m[90m 
+87 |[39m         expect(r
+es[33m.[39mstatusCode)[
+33m.[39mtoBe([35m201[39
+m)[33m;[39m
+     [90m    |[39m      
+                          
+[31m[1m^[22m[39m
+     [90m 88 |[39m      
+   expect(res[33m.[39mbo
+dy[33m.[39mcheckout_url)
+[33m.[39mtoBe([32m"http
+s://checkout.stripe.com/mo
+ck"[39m)[33m;[39m
+     [90m 89 |[39m
+     [90m 90 |[39m      
+   paymentId [33m=[39m r
+es[33m.[39mbody[33m.[3
+9mpayment[33m.[39mid[33
+m;[39m[0m
+
+      at Object.toBe (test
+s/integration/payment.test
+.js:87:32)
+
+  ΓùÅ Payment System Test 
+ΓÇ║ Γ£ö verify DB updated
+
+    TypeError: Cannot 
+read properties of 
+undefined (reading 
+'status')
+
+    [0m [90m 124 |[39m 
+        console[33m.[39m
+log([32m"DB PAYMENT 
+STATUS:"[39m[33m,[39m r
+esult[33m.[39mrows[[35m
+0[39m])[33m;[39m
+     [90m 125 |[39m
+    
+[31m[1m>[22m[39m[90m 
+126 |[39m         expect(
+result[33m.[39mrows[[35
+m0[39m][33m.[39mstatus)
+[33m.[39mtoBe([32m"succ
+essful"[39m)[33m;[39m
+     [90m     |[39m     
+                          
+[31m[1m^[22m[39m
+     [90m 127 |[39m     
+})[33m;[39m
+     [90m 128 |[39m
+     [90m 129 |[39m     
+test([32m"Γ¥î 
+unauthorized user cannot 
+create 
+payment"[39m[33m,[39m 
+[36masync[39m () 
+[33m=>[39m {[0m
+
+      at Object.status (te
+sts/integration/payment.te
+st.js:126:31)
+
+FAIL tests/integration/adm
+in.dashboard.test.js 
+(8.677 s)
+  Admin Dashboard 
+Integration
+    ├ù Γ£ö Admin can view 
+Dashboard Stats (9 ms)
+    ├ù Γ£ö Admin can view 
+Verification Queue
+    ├ù Γ£ö Customer can 
+report a vendor and Admin 
+sees it in Moderation (1 
+ms)
+    ├ù Γ¥î Non-admins 
+cannot access dashboard
+    ├ù Γ£ö Admin can 
+block a user
+
+  ΓùÅ Admin Dashboard 
+Integration ΓÇ║ Γ£ö Admin 
+can view Dashboard Stats
+
+    TypeError: Cannot 
+read properties of 
+undefined (reading 
+'userId')
+
+    [0m [90m 26 |[39m  
+       
+     [90m 27 |[39m      
+   [36mconst[39m 
+aProfile [33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39m[36mget[39m
+([32m"/test/auth"[39m)[
+33m.[39m[36mset[39m([3
+2m"Authorization"[39m[33
+m,[39m [32m`Bearer ${adm
+inToken}`[39m)[33m;[39m
+    
+[31m[1m>[22m[39m[90m 
+28 |[39m         
+[36mawait[39m pool[33m.
+[39mquery([32m"UPDATE 
+users SET role = 'admin' 
+WHERE id = 
+$1"[39m[33m,[39m [aProf
+ile[33m.[39mbody[33m.[
+39muser[33m.[39muserId])
+[33m;[39m
+     [90m    |[39m      
+                          
+                          
+                          
+           
+[31m[1m^[22m[39m
+     [90m 29 |[39m      
+   [90m// Refresh token 
+role[39m
+     [90m 30 |[39m      
+   [36mconst[39m 
+aLogin2 [33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39mpost([32m"/a
+uth/login"[39m)[33m.[39
+msend({ email[33m:[39m 
+adminEmail[33m,[39m 
+password[33m:[39m 
+[32m"password123"[39m 
+})[33m;[39m
+     [90m 31 |[39m      
+   adminToken [33m=[39m 
+aLogin2[33m.[39mbody[33
+m.[39maccessToken[33m;[
+39m[0m
+
+      at Object.userId (te
+sts/integration/admin.dash
+board.test.js:28:95)
+
+  ΓùÅ Admin Dashboard 
+Integration ΓÇ║ Γ£ö Admin 
+can view Verification 
+Queue
+
+    TypeError: Cannot 
+read properties of 
+undefined (reading 
+'userId')
+
+    [0m [90m 26 |[39m  
+       
+     [90m 27 |[39m      
+   [36mconst[39m 
+aProfile [33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39m[36mget[39m
+([32m"/test/auth"[39m)[
+33m.[39m[36mset[39m([3
+2m"Authorization"[39m[33
+m,[39m [32m`Bearer ${adm
+inToken}`[39m)[33m;[39m
+    
+[31m[1m>[22m[39m[90m 
+28 |[39m         
+[36mawait[39m pool[33m.
+[39mquery([32m"UPDATE 
+users SET role = 'admin' 
+WHERE id = 
+$1"[39m[33m,[39m [aProf
+ile[33m.[39mbody[33m.[
+39muser[33m.[39muserId])
+[33m;[39m
+     [90m    |[39m      
+                          
+                          
+                          
+           
+[31m[1m^[22m[39m
+     [90m 29 |[39m      
+   [90m// Refresh token 
+role[39m
+     [90m 30 |[39m      
+   [36mconst[39m 
+aLogin2 [33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39mpost([32m"/a
+uth/login"[39m)[33m.[39
+msend({ email[33m:[39m 
+adminEmail[33m,[39m 
+password[33m:[39m 
+[32m"password123"[39m 
+})[33m;[39m
+     [90m 31 |[39m      
+   adminToken [33m=[39m 
+aLogin2[33m.[39mbody[33
+m.[39maccessToken[33m;[
+39m[0m
+
+      at Object.userId (te
+sts/integration/admin.dash
+board.test.js:28:95)
+
+  ΓùÅ Admin Dashboard 
+Integration ΓÇ║ Γ£ö 
+Customer can report a 
+vendor and Admin sees it 
+in Moderation
+
+    TypeError: Cannot 
+read properties of 
+undefined (reading 
+'userId')
+
+    [0m [90m 26 |[39m  
+       
+     [90m 27 |[39m      
+   [36mconst[39m 
+aProfile [33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39m[36mget[39m
+([32m"/test/auth"[39m)[
+33m.[39m[36mset[39m([3
+2m"Authorization"[39m[33
+m,[39m [32m`Bearer ${adm
+inToken}`[39m)[33m;[39m
+    
+[31m[1m>[22m[39m[90m 
+28 |[39m         
+[36mawait[39m pool[33m.
+[39mquery([32m"UPDATE 
+users SET role = 'admin' 
+WHERE id = 
+$1"[39m[33m,[39m [aProf
+ile[33m.[39mbody[33m.[
+39muser[33m.[39muserId])
+[33m;[39m
+     [90m    |[39m      
+                          
+                          
+                          
+           
+[31m[1m^[22m[39m
+     [90m 29 |[39m      
+   [90m// Refresh token 
+role[39m
+     [90m 30 |[39m      
+   [36mconst[39m 
+aLogin2 [33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39mpost([32m"/a
+uth/login"[39m)[33m.[39
+msend({ email[33m:[39m 
+adminEmail[33m,[39m 
+password[33m:[39m 
+[32m"password123"[39m 
+})[33m;[39m
+     [90m 31 |[39m      
+   adminToken [33m=[39m 
+aLogin2[33m.[39mbody[33
+m.[39maccessToken[33m;[
+39m[0m
+
+      at Object.userId (te
+sts/integration/admin.dash
+board.test.js:28:95)
+
+  ΓùÅ Admin Dashboard 
+Integration ΓÇ║ Γ¥î 
+Non-admins cannot access 
+dashboard
+
+    TypeError: Cannot 
+read properties of 
+undefined (reading 
+'userId')
+
+    [0m [90m 26 |[39m  
+       
+     [90m 27 |[39m      
+   [36mconst[39m 
+aProfile [33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39m[36mget[39m
+([32m"/test/auth"[39m)[
+33m.[39m[36mset[39m([3
+2m"Authorization"[39m[33
+m,[39m [32m`Bearer ${adm
+inToken}`[39m)[33m;[39m
+    
+[31m[1m>[22m[39m[90m 
+28 |[39m         
+[36mawait[39m pool[33m.
+[39mquery([32m"UPDATE 
+users SET role = 'admin' 
+WHERE id = 
+$1"[39m[33m,[39m [aProf
+ile[33m.[39mbody[33m.[
+39muser[33m.[39muserId])
+[33m;[39m
+     [90m    |[39m      
+                          
+                          
+                          
+           
+[31m[1m^[22m[39m
+     [90m 29 |[39m      
+   [90m// Refresh token 
+role[39m
+     [90m 30 |[39m      
+   [36mconst[39m 
+aLogin2 [33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39mpost([32m"/a
+uth/login"[39m)[33m.[39
+msend({ email[33m:[39m 
+adminEmail[33m,[39m 
+password[33m:[39m 
+[32m"password123"[39m 
+})[33m;[39m
+     [90m 31 |[39m      
+   adminToken [33m=[39m 
+aLogin2[33m.[39mbody[33
+m.[39maccessToken[33m;[
+39m[0m
+
+      at Object.userId (te
+sts/integration/admin.dash
+board.test.js:28:95)
+
+  ΓùÅ Admin Dashboard 
+Integration ΓÇ║ Γ£ö Admin 
+can block a user
+
+    TypeError: Cannot 
+read properties of 
+undefined (reading 
+'userId')
+
+    [0m [90m 26 |[39m  
+       
+     [90m 27 |[39m      
+   [36mconst[39m 
+aProfile [33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39m[36mget[39m
+([32m"/test/auth"[39m)[
+33m.[39m[36mset[39m([3
+2m"Authorization"[39m[33
+m,[39m [32m`Bearer ${adm
+inToken}`[39m)[33m;[39m
+    
+[31m[1m>[22m[39m[90m 
+28 |[39m         
+[36mawait[39m pool[33m.
+[39mquery([32m"UPDATE 
+users SET role = 'admin' 
+WHERE id = 
+$1"[39m[33m,[39m [aProf
+ile[33m.[39mbody[33m.[
+39muser[33m.[39muserId])
+[33m;[39m
+     [90m    |[39m      
+                          
+                          
+                          
+           
+[31m[1m^[22m[39m
+     [90m 29 |[39m      
+   [90m// Refresh token 
+role[39m
+     [90m 30 |[39m      
+   [36mconst[39m 
+aLogin2 [33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39mpost([32m"/a
+uth/login"[39m)[33m.[39
+msend({ email[33m:[39m 
+adminEmail[33m,[39m 
+password[33m:[39m 
+[32m"password123"[39m 
+})[33m;[39m
+     [90m 31 |[39m      
+   adminToken [33m=[39m 
+aLogin2[33m.[39mbody[33
+m.[39maccessToken[33m;[
+39m[0m
+
+      at Object.userId (te
+sts/integration/admin.dash
+board.test.js:28:95)
+
+FAIL tests/integration/mas
+ter.feature.test.js 
+(8.778 s)
+  Master Phase 2 Feature 
+Integration Test
+    ├ù Γ£ö Flow 1: Search 
+with Budget Filters (10 
+ms)
+    ├ù Γ£ö Flow 2: 
+Refresh Token Rotation (1 
+ms)
+    ├ù Γ£ö Flow 3: 
+Booking Edit Conflict & 
+Smart Recommendations
+    ├ù Γ£ö Flow 4: 
+Account Deletion with 
+Audit Logging (1 ms)
+
+  ΓùÅ Master Phase 2 
+Feature Integration Test 
+ΓÇ║ Γ£ö Flow 1: Search 
+with Budget Filters
+
+    TypeError: Cannot 
+read properties of 
+undefined (reading '0')
+
+    [0m [90m 15 |[39m  
+       [36mconst[39m 
+cLogin [33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39mpost([32m"/a
+uth/login"[39m)[33m.[39
+msend({ email[33m:[39m 
+customerEmail[33m,[39m 
+password[33m:[39m 
+[32m"Pass123!"[39m 
+})[33m;[39m
+     [90m 16 |[39m      
+   customerToken 
+[33m=[39m cLogin[33m.[
+39mbody[33m.[39maccessTo
+ken[33m;[39m
+    
+[31m[1m>[22m[39m[90m 
+17 |[39m         
+customerRefreshToken 
+[33m=[39m cLogin[33m.[
+39mheaders[[32m'set-cooki
+e'[39m][[35m0[39m][33m
+.[39msplit([32m';'[39m)
+[[35m0[39m][33m.[39msp
+lit([32m'='[39m)[[35m1
+[39m][33m;[39m
+     [90m    |[39m      
+                          
+                          
+  [31m[1m^[22m[39m
+     [90m 18 |[39m
+     [90m 19 |[39m      
+   [90m// 2. Create 
+Vendor A (Main)[39m
+     [90m 20 |[39m      
+   [36mconst[39m vaReg 
+[33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39mpost([32m"/a
+uth/register"[39m)[33m.
+[39msend({ 
+full_name[33m:[39m 
+[32m"Vendor A (Catering)"
+[39m[33m,[39m 
+email[33m:[39m 
+vendorAEmail[33m,[39m 
+password[33m:[39m 
+[32m"Pass123!"[39m 
+})[33m;[39m[0m
+
+      at 
+Object.<anonymous> (tests/
+integration/master.feature
+.test.js:17:60)
+
+  ΓùÅ Master Phase 2 
+Feature Integration Test 
+ΓÇ║ Γ£ö Flow 2: Refresh 
+Token Rotation
+
+    TypeError: Cannot 
+read properties of 
+undefined (reading '0')
+
+    [0m [90m 15 |[39m  
+       [36mconst[39m 
+cLogin [33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39mpost([32m"/a
+uth/login"[39m)[33m.[39
+msend({ email[33m:[39m 
+customerEmail[33m,[39m 
+password[33m:[39m 
+[32m"Pass123!"[39m 
+})[33m;[39m
+     [90m 16 |[39m      
+   customerToken 
+[33m=[39m cLogin[33m.[
+39mbody[33m.[39maccessTo
+ken[33m;[39m
+    
+[31m[1m>[22m[39m[90m 
+17 |[39m         
+customerRefreshToken 
+[33m=[39m cLogin[33m.[
+39mheaders[[32m'set-cooki
+e'[39m][[35m0[39m][33m
+.[39msplit([32m';'[39m)
+[[35m0[39m][33m.[39msp
+lit([32m'='[39m)[[35m1
+[39m][33m;[39m
+     [90m    |[39m      
+                          
+                          
+  [31m[1m^[22m[39m
+     [90m 18 |[39m
+     [90m 19 |[39m      
+   [90m// 2. Create 
+Vendor A (Main)[39m
+     [90m 20 |[39m      
+   [36mconst[39m vaReg 
+[33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39mpost([32m"/a
+uth/register"[39m)[33m.
+[39msend({ 
+full_name[33m:[39m 
+[32m"Vendor A (Catering)"
+[39m[33m,[39m 
+email[33m:[39m 
+vendorAEmail[33m,[39m 
+password[33m:[39m 
+[32m"Pass123!"[39m 
+})[33m;[39m[0m
+
+      at 
+Object.<anonymous> (tests/
+integration/master.feature
+.test.js:17:60)
+
+  ΓùÅ Master Phase 2 
+Feature Integration Test 
+ΓÇ║ Γ£ö Flow 3: Booking 
+Edit Conflict & Smart 
+Recommendations
+
+    TypeError: Cannot 
+read properties of 
+undefined (reading '0')
+
+    [0m [90m 15 |[39m  
+       [36mconst[39m 
+cLogin [33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39mpost([32m"/a
+uth/login"[39m)[33m.[39
+msend({ email[33m:[39m 
+customerEmail[33m,[39m 
+password[33m:[39m 
+[32m"Pass123!"[39m 
+})[33m;[39m
+     [90m 16 |[39m      
+   customerToken 
+[33m=[39m cLogin[33m.[
+39mbody[33m.[39maccessTo
+ken[33m;[39m
+    
+[31m[1m>[22m[39m[90m 
+17 |[39m         
+customerRefreshToken 
+[33m=[39m cLogin[33m.[
+39mheaders[[32m'set-cooki
+e'[39m][[35m0[39m][33m
+.[39msplit([32m';'[39m)
+[[35m0[39m][33m.[39msp
+lit([32m'='[39m)[[35m1
+[39m][33m;[39m
+     [90m    |[39m      
+                          
+                          
+  [31m[1m^[22m[39m
+     [90m 18 |[39m
+     [90m 19 |[39m      
+   [90m// 2. Create 
+Vendor A (Main)[39m
+     [90m 20 |[39m      
+   [36mconst[39m vaReg 
+[33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39mpost([32m"/a
+uth/register"[39m)[33m.
+[39msend({ 
+full_name[33m:[39m 
+[32m"Vendor A (Catering)"
+[39m[33m,[39m 
+email[33m:[39m 
+vendorAEmail[33m,[39m 
+password[33m:[39m 
+[32m"Pass123!"[39m 
+})[33m;[39m[0m
+
+      at 
+Object.<anonymous> (tests/
+integration/master.feature
+.test.js:17:60)
+
+  ΓùÅ Master Phase 2 
+Feature Integration Test 
+ΓÇ║ Γ£ö Flow 4: Account 
+Deletion with Audit 
+Logging
+
+    TypeError: Cannot 
+read properties of 
+undefined (reading '0')
+
+    [0m [90m 15 |[39m  
+       [36mconst[39m 
+cLogin [33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39mpost([32m"/a
+uth/login"[39m)[33m.[39
+msend({ email[33m:[39m 
+customerEmail[33m,[39m 
+password[33m:[39m 
+[32m"Pass123!"[39m 
+})[33m;[39m
+     [90m 16 |[39m      
+   customerToken 
+[33m=[39m cLogin[33m.[
+39mbody[33m.[39maccessTo
+ken[33m;[39m
+    
+[31m[1m>[22m[39m[90m 
+17 |[39m         
+customerRefreshToken 
+[33m=[39m cLogin[33m.[
+39mheaders[[32m'set-cooki
+e'[39m][[35m0[39m][33m
+.[39msplit([32m';'[39m)
+[[35m0[39m][33m.[39msp
+lit([32m'='[39m)[[35m1
+[39m][33m;[39m
+     [90m    |[39m      
+                          
+                          
+  [31m[1m^[22m[39m
+     [90m 18 |[39m
+     [90m 19 |[39m      
+   [90m// 2. Create 
+Vendor A (Main)[39m
+     [90m 20 |[39m      
+   [36mconst[39m vaReg 
+[33m=[39m 
+[36mawait[39m request(ap
+p)[33m.[39mpost([32m"/a
+uth/register"[39m)[33m.
+[39msend({ 
+full_name[33m:[39m 
+[32m"Vendor A (Catering)"
+[39m[33m,[39m 
+email[33m:[39m 
+vendorAEmail[33m,[39m 
+password[33m:[39m 
+[32m"Pass123!"[39m 
+})[33m;[39m[0m
+
+      at 
+Object.<anonymous> (tests/
+integration/master.feature
+.test.js:17:60)
+
+[0mPOST /auth/verify-otp [33m400[0m 976.785 ms - 28[0m
+[0mPOST /vendors/request [33m401[0m 3.161 ms - 38[0m
+[0mPOST /payments/webhook [32m200[0m 10.096 ms - 17[0m
+  console.log
+    PAYMENT SUCCESS: { received: true }
+
+      at Object.log (tests/integration/payment.test.js:111:17)
+
+  console.log
+    DB PAYMENT STATUS: undefined
+
+      at Object.log (tests/integration/payment.test.js:124:17)
+
+[0mPOST /payments [33m401[0m 2.379 ms - 37[0m
+  console.log
+    UNAUTHORIZED RESPONSE: { message: 'Authentication required' }
+
+      at Object.log (tests/integration/payment.test.js:138:17)
+
+[0mPOST /auth/register [32m201[0m 1478.255 ms - 76[0m
+[0mPOST /auth/register [32m201[0m 1399.428 ms - 76[0m
+[0mPOST /auth/register [32m201[0m 302.478 ms - 76[0m
+[0mPOST /auth/register [32m201[0m 313.094 ms - 76[0m
+[0mPOST /auth/register [32m201[0m 323.883 ms - 76[0m
+[0mPOST /auth/verify-otp [32m200[0m 299.664 ms - 231[0m
+[0mGET /test/auth [32m200[0m 4.186 ms - 74[0m
+[0mPOST /bookings [33m401[0m 2.101 ms - 38[0m
+[0mPOST /auth/verify-otp [32m200[0m 322.161 ms - 234[0m
+[0mPOST /bookings/items [33m401[0m 4.465 ms - 38[0m
+[0mPOST /auth/verify-otp [32m200[0m 335.386 ms - 234[0m
+[0mGET /test/auth [32m200[0m 3.657 ms - 76[0m
+  console.error
+    error: invalid input syntax for type uuid: "undefined"
+        at D:\python\github\Utsavya\node_modules\pg-pool\index.js:45:11
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at updateBookingItemStatus (D:\python\github\Utsavya\src\services\booking.services.js:160:22)
+        at D:\python\github\Utsavya\src\controllers\booking.controller.js:81:21
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPATCH /bookings/items/undefined/status [33m400[0m 37.946 ms - 63[0m
+[0mPOST /auth/verify-otp [32m200[0m 328.864 ms - 234[0m
+[0mPOST /auth/verify-otp [32m200[0m 370.693 ms - 234[0m
+FAIL tests/integration/pro
+file.security.test.js 
+(9.217 s)
+  Profile & Security 
+Integration
+    ├ù Γ£ö Customer can 
+update their personal 
+name (8 ms)
+    ├ù Γ£ö Vendor can 
+update personal details 
+but NOT business name (1 
+ms)
+    ├ù Γ£ö Password Reset 
+Flow
+    ├ù Γ£ö Notifications 
+flow (1 ms)
+
+  ΓùÅ Profile & Security 
+Integration ΓÇ║ Γ£ö 
+Customer can update their 
+personal name
+
+    error: column 
+"business_name" of 
+relation "users" does not 
+exist
+
+    [0m [90m 33 |[39m  
+       
+     [90m 34 |[39m      
+   [90m// Promote to 
+vendor with business 
+details[39m
+    
+[31m[1m>[22m[39m[90m 
+35 |[39m         
+[36mawait[39m 
+pool[33m.[39mquery(
+     [90m    |[39m      
+   [31m[1m^[22m[39m
+     [90m 36 |[39m      
+       [32m"UPDATE users 
+SET role = 'vendor', 
+business_name = 'Original 
+Corp', business_city = 
+'New York' WHERE id = 
+$1"[39m[33m,[39m
+     [90m 37 |[39m      
+       [vendorId]
+     [90m 38 |[39m      
+   )[33m;[39m[0m
+
+      at node_modules/pg-p
+ool/index.js:45:11
+      at 
+Object.<anonymous> (tests/
+integration/profile.securi
+ty.test.js:35:9)
+
+  ΓùÅ Profile & Security 
+Integration ΓÇ║ Γ£ö 
+Vendor can update 
+personal details but NOT 
+business name
+
+    error: column 
+"business_name" of 
+relation "users" does not 
+exist
+
+    [0m [90m 33 |[39m  
+       
+     [90m 34 |[39m      
+   [90m// Promote to 
+vendor with business 
+details[39m
+    
+[31m[1m>[22m[39m[90m 
+35 |[39m         
+[36mawait[39m 
+pool[33m.[39mquery(
+     [90m    |[39m      
+   [31m[1m^[22m[39m
+     [90m 36 |[39m      
+       [32m"UPDATE users 
+SET role = 'vendor', 
+business_name = 'Original 
+Corp', business_city = 
+'New York' WHERE id = 
+$1"[39m[33m,[39m
+     [90m 37 |[39m      
+       [vendorId]
+     [90m 38 |[39m      
+   )[33m;[39m[0m
+
+      at node_modules/pg-p
+ool/index.js:45:11
+      at 
+Object.<anonymous> (tests/
+integration/profile.securi
+ty.test.js:35:9)
+
+  ΓùÅ Profile & Security 
+Integration ΓÇ║ Γ£ö 
+Password Reset Flow
+
+    error: column 
+"business_name" of 
+relation "users" does not 
+exist
+
+    [0m [90m 33 |[39m  
+       
+     [90m 34 |[39m      
+   [90m// Promote to 
+vendor with business 
+details[39m
+    
+[31m[1m>[22m[39m[90m 
+35 |[39m         
+[36mawait[39m 
+pool[33m.[39mquery(
+     [90m    |[39m      
+   [31m[1m^[22m[39m
+     [90m 36 |[39m      
+       [32m"UPDATE users 
+SET role = 'vendor', 
+business_name = 'Original 
+Corp', business_city = 
+'New York' WHERE id = 
+$1"[39m[33m,[39m
+     [90m 37 |[39m      
+       [vendorId]
+     [90m 38 |[39m      
+   )[33m;[39m[0m
+
+      at node_modules/pg-p
+ool/index.js:45:11
+      at 
+Object.<anonymous> (tests/
+integration/profile.securi
+ty.test.js:35:9)
+
+  ΓùÅ Profile & Security 
+Integration ΓÇ║ Γ£ö 
+Notifications flow
+
+    error: column 
+"business_name" of 
+relation "users" does not 
+exist
+
+    [0m [90m 33 |[39m  
+       
+     [90m 34 |[39m      
+   [90m// Promote to 
+vendor with business 
+details[39m
+    
+[31m[1m>[22m[39m[90m 
+35 |[39m         
+[36mawait[39m 
+pool[33m.[39mquery(
+     [90m    |[39m      
+   [31m[1m^[22m[39m
+     [90m 36 |[39m      
+       [32m"UPDATE users 
+SET role = 'vendor', 
+business_name = 'Original 
+Corp', business_city = 
+'New York' WHERE id = 
+$1"[39m[33m,[39m
+     [90m 37 |[39m      
+       [vendorId]
+     [90m 38 |[39m      
+   )[33m;[39m[0m
+
+      at node_modules/pg-p
+ool/index.js:45:11
+      at 
+Object.<anonymous> (tests/
+integration/profile.securi
+ty.test.js:35:9)
+
+[0mPOST /auth/register [32m201[0m 401.059 ms - 76[0m
+[0mPATCH /bookings/items/undefined/cancel [33m401[0m 3.696 ms - 38[0m
+[0mPOST /auth/register [32m201[0m 373.651 ms - 76[0m
+FAIL tests/integration/ref
+und.notify.test.js (9.088 
+s)
+  Refunds & Notifications 
+Integration
+    ├ù Γ£ö New Request 
+triggers email to Vendor 
+(14 ms)
+    ├ù Γ£ö Vendor Accept 
+triggers email to 
+Customer (51 ms)
+    ├ù Γ£ö Vendor Cancel 
+on PAID booking triggers 
+100% refund (125 ms)
+    ├ù Γ£ö Customer 
+Cancel on PAID booking 
+triggers 95% refund (131 
+ms)
+
+  ΓùÅ Refunds & 
+Notifications Integration 
+ΓÇ║ Γ£ö New Request 
+triggers email to Vendor
+
+    expect(jest.fn()).toHa
+veBeenCalledWith(...expect
+ed)
+
+    Expected: 
+Any<String>, "New Booking 
+Request", Any<String>, 
+Any<String>
+
+    Number of calls: 0
+
+    [0m [90m 61 |[39m
+     [90m 62 |[39m     
+test([32m"Γ£ö New 
+Request triggers email to 
+Vendor"[39m[33m,[39m 
+() [33m=>[39m {
+    
+[31m[1m>[22m[39m[90m 
+63 |[39m         expect(s
+endNoticeEmail)[33m.[39m
+toHaveBeenCalledWith(expec
+t[33m.[39many([33mStrin
+g[39m)[33m,[39m 
+[32m"New Booking 
+Request"[39m[33m,[39m e
+xpect[33m.[39many([33mS
+tring[39m)[33m,[39m exp
+ect[33m.[39many([33mStr
+ing[39m))[33m;[39m
+     [90m    |[39m      
+                          
+ [31m[1m^[22m[39m
+     [90m 64 |[39m     
+})[33m;[39m
+     [90m 65 |[39m
+     [90m 66 |[39m     
+test([32m"Γ£ö Vendor 
+Accept triggers email to 
+Customer"[39m[33m,[39m 
+[36masync[39m () 
+[33m=>[39m {[0m
+
+      at Object.toHaveBeen
+CalledWith (tests/integrat
+ion/refund.notify.test.js:
+63:33)
+
+  ΓùÅ Refunds & 
+Notifications Integration 
+ΓÇ║ Γ£ö Vendor Accept 
+triggers email to Customer
+
+    expect(jest.fn()).toHa
+veBeenCalledWith(...expect
+ed)
+
+    Expected: 
+Any<String>, "Booking 
+ACCEPTED", Any<String>, 
+Any<String>
+
+    Number of calls: 0
+
+    [0m [90m 67 |[39m  
+       sendNoticeEmail[33
+m.[39mmockClear()[33m;[
+39m
+     [90m 68 |[39m      
+   [36mawait[39m request
+(app)[33m.[39mpatch([32
+m`/bookings/items/${itemId
+}/status`[39m)[33m.[39m
+[36mset[39m([32m"Author
+ization"[39m[33m,[39m 
+[32m`Bearer ${vendorToken
+}`[39m)[33m.[39msend({ 
+status[33m:[39m [32m"ac
+cepted"[39m[33m,[39m 
+price_quote[33m:[39m 
+[35m1000[39m 
+})[33m;[39m
+    
+[31m[1m>[22m[39m[90m 
+69 |[39m         expect(s
+endNoticeEmail)[33m.[39m
+toHaveBeenCalledWith(expec
+t[33m.[39many([33mStrin
+g[39m)[33m,[39m 
+[32m"Booking 
+ACCEPTED"[39m[33m,[39m 
+expect[33m.[39many([33m
+String[39m)[33m,[39m ex
+pect[33m.[39many([33mSt
+ring[39m))[33m;[39m
+     [90m    |[39m      
+                          
+ [31m[1m^[22m[39m
+     [90m 70 |[39m     
+})[33m;[39m
+     [90m 71 |[39m
+     [90m 72 |[39m     
+test([32m"Γ£ö Vendor 
+Cancel on PAID booking 
+triggers 100% 
+refund"[39m[33m,[39m 
+[36masync[39m () 
+[33m=>[39m {[0m
+
+      at Object.toHaveBeen
+CalledWith (tests/integrat
+ion/refund.notify.test.js:
+69:33)
+
+  ΓùÅ Refunds & 
+Notifications Integration 
+ΓÇ║ Γ£ö Vendor Cancel on 
+PAID booking triggers 
+100% refund
+
+    error: null value in 
+column "booking_id" of 
+relation "payments" 
+violates not-null 
+constraint
+
+    [0m [90m 72 |[39m  
+   test([32m"Γ£ö Vendor 
+Cancel on PAID booking 
+triggers 100% 
+refund"[39m[33m,[39m 
+[36masync[39m () 
+[33m=>[39m {
+     [90m 73 |[39m      
+   [90m// Setup a 
+simulated 'paid' 
+state[39m
+    
+[31m[1m>[22m[39m[90m 
+74 |[39m         
+[36mconst[39m pRes 
+[33m=[39m 
+[36mawait[39m pool[33m.
+[39mquery([32m"INSERT 
+INTO payments 
+(booking_id, amount, 
+status, 
+payment_intent_id) VALUES 
+($1, 1000, 'successful', 
+'pi_123') RETURNING 
+id"[39m[33m,[39m 
+[bookingId])[33m;[39m
+     [90m    |[39m      
+                
+[31m[1m^[22m[39m
+     [90m 75 |[39m      
+   
+     [90m 76 |[39m      
+   [36mawait[39m request
+(app)[33m.[39mpatch([32
+m`/bookings/items/${itemId
+}/cancel`[39m)[33m.[39m
+[36mset[39m([32m"Author
+ization"[39m[33m,[39m 
+[32m`Bearer ${vendorToken
+}`[39m)[33m.[39msend({ 
+reason[33m:[39m 
+[32m"Busy"[39m 
+})[33m;[39m
+     [90m 77 |[39m      
+   [0m
+
+      at node_modules/pg-p
+ool/index.js:45:11
+      at 
+Object.<anonymous> (tests/
+integration/refund.notify.
+test.js:74:22)
+
+  ΓùÅ Refunds & 
+Notifications Integration 
+ΓÇ║ Γ£ö Customer Cancel 
+on PAID booking triggers 
+95% refund
+
+    expect(jest.fn()).toHa
+veBeenCalledWith(...expect
+ed)
+
+    Expected: 
+ObjectContaining 
+{"amount": 95000}
+
+    Number of calls: 0
+
+    [0m [90m 88 |[39m  
+       
+     [90m 89 |[39m      
+   [90m// 95% of 1000 = 
+950[39m
+    
+[31m[1m>[22m[39m[90m 
+90 |[39m         expect(s
+tripe[33m.[39mrefunds[3
+3m.[39mcreate)[33m.[39m
+toHaveBeenCalledWith(expec
+t[33m.[39mobjectContaini
+ng({ amount[33m:[39m 
+[35m95000[39m 
+}))[33m;[39m
+     [90m    |[39m      
+                          
+       
+[31m[1m^[22m[39m
+     [90m 91 |[39m     
+})[33m;[39m
+     [90m 92 |[39m 
+})[33m;[39m
+     [90m 93 |[39m[0m
+
+      at Object.toHaveBeen
+CalledWith (tests/integrat
+ion/refund.notify.test.js:
+90:39)
+
+[0mPOST /auth/login [32m200[0m 316.128 ms - 230[0m
+[0mPOST /auth/login [32m200[0m 343.215 ms - 234[0m
+[0mPATCH /vendors/undefined/review [33m401[0m 2.935 ms - 38[0m
+[0mPOST /bookings [33m401[0m 3.861 ms - 38[0m
+[0mPOST /bookings/items [33m401[0m 2.949 ms - 38[0m
+  console.error
+    error: invalid input syntax for type uuid: "undefined"
+        at D:\python\github\Utsavya\node_modules\pg-pool\index.js:45:11
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at getVendorRequestById (D:\python\github\Utsavya\src\models\vendor.model.js:38:22)
+        at reviewVendorRequest (D:\python\github\Utsavya\src\services\vendor.services.js:34:21)
+        at D:\python\github\Utsavya\src\controllers\vendor.controller.js:20:21
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPATCH /vendors/undefined/review [33m400[0m 34.689 ms - 63[0m
+[0mPATCH /bookings/undefined [33m401[0m 3.076 ms - 38[0m
+[0mPATCH /bookings/undefined [33m401[0m 3.654 ms - 38[0m
+[0mPOST /auth/verify-otp [32m200[0m 368.462 ms - 234[0m
+[0mPOST /bookings [32m201[0m 19.503 ms - 378[0m
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ≡ƒöÉ prevent committing .env to code: https://dotenvx.com/precommit
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ≡ƒ¢í∩╕Å auth for agents: https://vestauth.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.error
+    error: invalid input syntax for type uuid: "undefined"
+        at D:\python\github\Utsavya\node_modules\pg-pool\index.js:45:11
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at getVendorRequestById (D:\python\github\Utsavya\src\models\vendor.model.js:38:22)
+        at reviewVendorRequest (D:\python\github\Utsavya\src\services\vendor.services.js:34:21)
+        at D:\python\github\Utsavya\src\controllers\vendor.controller.js:20:21
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPATCH /vendors/undefined/review [33m400[0m 131.692 ms - 63[0m
+FAIL tests/integration/boo
+king.edit.test.js (9.883 
+s)
+  Booking Overall Edit 
+System Integration
+    ├ù Γ£ö Customer can 
+update non-critical 
+details (Title/Location) 
+(69 ms)
+    ├ù Γ£ö Critical 
+update (Guest Count) 
+resets item status to 
+pending (25 ms)
+
+  ΓùÅ Booking Overall 
+Edit System Integration 
+ΓÇ║ Γ£ö Customer can 
+update non-critical 
+details (Title/Location)
+
+    expect(received).toBe(
+expected) // Object.is 
+equality
+
+    Expected: 200
+    Received: 401
+
+    [0m [90m 59 |[39m  
+           
+[33m.[39msend({ 
+title[33m:[39m 
+[32m"Updated Event 
+Title"[39m })[33m;[39m
+     [90m 60 |[39m      
+   
+    
+[31m[1m>[22m[39m[90m 
+61 |[39m         expect(r
+es[33m.[39mstatusCode)[
+33m.[39mtoBe([35m200[39
+m)[33m;[39m
+     [90m    |[39m      
+                          
+[31m[1m^[22m[39m
+     [90m 62 |[39m      
+   expect(res[33m.[39mbo
+dy[33m.[39mdata[33m.[3
+9mtitle)[33m.[39mtoBe([
+32m"Updated Event 
+Title"[39m)[33m;[39m
+     [90m 63 |[39m     
+})[33m;[39m
+     [90m 64 |[39m[0m
+
+      at Object.toBe (test
+s/integration/booking.edit
+.test.js:61:32)
+
+  ΓùÅ Booking Overall 
+Edit System Integration 
+ΓÇ║ Γ£ö Critical update 
+(Guest Count) resets item 
+status to pending
+
+    expect(received).toBe(
+expected) // Object.is 
+equality
+
+    Expected: 200
+    Received: 401
+
+    [0m [90m 72 |[39m  
+           
+[33m.[39msend({ 
+guest_count[33m:[39m 
+[35m500[39m 
+})[33m;[39m
+     [90m 73 |[39m      
+   
+    
+[31m[1m>[22m[39m[90m 
+74 |[39m         expect(r
+es[33m.[39mstatusCode)[
+33m.[39mtoBe([35m200[39
+m)[33m;[39m
+     [90m    |[39m      
+                          
+[31m[1m^[22m[39m
+     [90m 75 |[39m      
+   
+     [90m 76 |[39m      
+   [90m// Check DB: 
+is_selected should be 
+FALSE and status should 
+be 'pending'[39m
+     [90m 77 |[39m      
+   [36mconst[39m 
+itemRes [33m=[39m 
+[36mawait[39m pool[33m.
+[39mquery([32m"SELECT 
+status, is_selected FROM 
+booking_items WHERE id = 
+$1"[39m[33m,[39m 
+[itemId])[33m;[39m[0m
+
+      at Object.toBe (test
+s/integration/booking.edit
+.test.js:74:32)
+
+[0mPOST /auth/verify-otp [32m200[0m 315.478 ms - 234[0m
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ≡ƒöÉ prevent building .env in docker: https://dotenvx.com/prebuild
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ΓÜÖ∩╕Å  enable debug logging with { debug: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+FAIL tests/integration/ven
+dor.review.test.js (9.836 
+s)
+  Vendor Review API
+    ├ù customer cannot 
+review vendor request (29 
+ms)
+    ├ù admin can approve 
+vendor request (56 ms)
+    ΓêÜ request cannot be 
+reviewed twice (174 ms)
+
+  ΓùÅ Vendor Review API 
+ΓÇ║ customer cannot 
+review vendor request
+
+    expect(received).toBe(
+expected) // Object.is 
+equality
+
+    Expected: 403
+    Received: 401
+
+    [0m [90m  97 |[39m 
+            })[33m;[39m
+     [90m  98 |[39m
+    
+[31m[1m>[22m[39m[90m 
+ 99 |[39m         expect(
+res[33m.[39mstatusCode)
+[33m.[39mtoBe([35m403[3
+9m)[33m;[39m
+     [90m     |[39m     
+                          
+ [31m[1m^[22m[39m
+     [90m 100 |[39m     
+})[33m;[39m
+     [90m 101 |[39m
+     [90m 102 |[39m[0m
+
+      at Object.toBe (test
+s/integration/vendor.revie
+w.test.js:99:32)
+
+  ΓùÅ Vendor Review API 
+ΓÇ║ admin can approve 
+vendor request
+
+    expect(received).toBe(
+expected) // Object.is 
+equality
+
+    Expected: 200
+    Received: 400
+
+    [0m [90m 111 |[39m 
+            })[33m;[39m
+     [90m 112 |[39m
+    
+[31m[1m>[22m[39m[90m 
+113 |[39m         expect(
+res[33m.[39mstatusCode)
+[33m.[39mtoBe([35m200[3
+9m)[33m;[39m
+     [90m     |[39m     
+                          
+ [31m[1m^[22m[39m
+     [90m 114 |[39m     
+    expect(res[33m.[39mb
+ody[33m.[39mstatus)[33m
+.[39mtoBe([32m"approved"
+[39m)[33m;[39m
+     [90m 115 |[39m     
+})[33m;[39m
+     [90m 116 |[39m[0m
+
+      at Object.toBe (test
+s/integration/vendor.revie
+w.test.js:113:32)
+
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ≡ƒñû agentic secret storage: https://dotenvx.com/as2
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+[0mPOST /auth/register [32m201[0m 307.576 ms - 76[0m
+[0mPOST /auth/login [32m200[0m 324.753 ms - 231[0m
+[0mPOST /bookings [32m201[0m 14.937 ms - 374[0m
+[0mPOST /services [32m201[0m 10.618 ms - 310[0m
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  enable debug logging with { debug: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+[0mPOST /auth/verify-otp [32m200[0m 296.363 ms - 234[0m
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ≡ƒ¢í∩╕Å auth for agents: https://vestauth.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  load multiple .env files with { path: ['.env.local', '.env'] }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (17) from .env -- tip: ΓÜÖ∩╕Å  override existing env vars with { override: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ΓÜí∩╕Å secrets for agents: https://dotenvx.com/as2
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.error
+    error: insert or update on table "user_sessions" violates foreign key constraint "user_sessions_user_id_fkey"
+        at D:\python\github\Utsavya\node_modules\pg-pool\index.js:45:11
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at loginUser (D:\python\github\Utsavya\src\services\auth.services.js:258:5)
+        at D:\python\github\Utsavya\src\controllers\auth.controller.js:52:43
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPOST /auth/login [33m400[0m 308.805 ms - 120[0m
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  enable debug logging with { debug: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+[0mPOST /auth/register [32m201[0m 404.691 ms - 76[0m
+[0mPOST /bookings/items [33m400[0m 5.944 ms - 393[0m
+[0mPATCH /vendors/booking-requests/undefined [33m401[0m 3.603 ms - 38[0m
+  console.error
+    error: invalid input syntax for type uuid: "undefined"
+        at D:\python\github\Utsavya\node_modules\pg\lib\client.js:631:17
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at selectVendorForService (D:\python\github\Utsavya\src\services\booking.services.js:200:28)
+        at D:\python\github\Utsavya\src\controllers\booking.controller.js:90:20
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPATCH /bookings/items/undefined/select [33m400[0m 38.367 ms - 63[0m
+[0mPOST /auth/register [32m201[0m 415.844 ms - 76[0m
+  console.error
+    Error: Booking not found
+        at getBookingDetails (D:\python\github\Utsavya\src\services\booking.services.js:274:15)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\booking.controller.js:101:20
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mGET /bookings/2a24268a-db9c-46c0-87c0-d39bc8adec36 [33m400[0m 19.415 ms - 31[0m
+  console.log
+    { message: 'Booking not found' }
+
+      at Object.log (tests/integration/booking.flow.test.js:244:13)
+
+[0mPOST /auth/register [32m201[0m 406.037 ms - 76[0m
+[0mPOST /auth/register [32m201[0m 313.073 ms - 76[0m
+[0mPOST /auth/verify-otp [32m200[0m 275.228 ms - 234[0m
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  suppress all logs with { quiet: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+[0mPOST /auth/register [32m201[0m 400.572 ms - 76[0m
+[0mPOST /auth/verify-otp [32m200[0m 269.918 ms - 234[0m
+[0mPOST /auth/register [32m201[0m 257.098 ms - 76[0m
+[0mPOST /auth/verify-otp [32m200[0m 260.784 ms - 234[0m
+[0mPOST /vendors/request [32m201[0m 10.621 ms - 397[0m
+  console.log
+    Vendor request response: {
+      id: '3659162c-f189-4255-aee0-7acdc3ccedec',
+      user_id: '6924f07c-199a-4894-a693-f36f4d2d7537',
+      business_name: 'Dream Weddings',
+      business_description: 'Premium wedding planners',
+      city: 'Delhi',
+      documents_url: 'https://cloudinary.com/docs.pdf',
+      status: 'pending',
+      admin_note: null,
+      reviewed_by: null,
+      reviewed_at: null,
+      created_at: '2026-04-05T11:18:41.520Z',
+      updated_at: '2026-04-05T11:18:41.520Z'
+    }
+
+      at Object.log (tests/integration/vendor.request.test.js:44:17)
+
+[0mPOST /auth/verify-otp [32m200[0m 266.548 ms - 234[0m
+  console.log
+    VERIFY RESPONSE: {
+      accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzZTQzMjg1NC1hMjE1LTQ3NmYtYWVkMS03YzMyYTYwZWFlNGEiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3NzUzODc5MjEsImV4cCI6MTc3NTM4ODgyMX0.xUD9DNWV4Rs1RkZh3MS9O5AdcIJBGte_iM8XpoGmqjk'
+    }
+
+      at Object.log (tests/integration/auth.test.js:41:17)
+
+[0mPOST /vendors/request [33m401[0m 2.462 ms - 37[0m
+  console.log
+    Vendor request response: { message: 'Authentication required' }
+
+      at Object.log (tests/integration/vendor.request.test.js:59:17)
+
+[0mPOST /auth/login [32m200[0m 256.114 ms - 231[0m
+PASS tests/integration/ven
+dor.request.test.js
+  Vendor Request API
+    ΓêÜ customer can 
+submit vendor request (25 
+ms)
+    ΓêÜ unauthenticated 
+user cannot submit 
+request (13 ms)
+
+[0mPOST /services [32m201[0m 16.144 ms - 341[0m
+PASS tests/integration/ser
+vice.media.test.js
+  Service Media API
+    ΓêÜ vendor uploads 
+service media (58 ms)
+    ΓêÜ public can view 
+service media (16 ms)
+    ΓêÜ vendor can delete 
+own media (16 ms)
+
+[0mPOST /services/6a7be839-f03e-481a-bcea-e4aa79d5b17b/media [32m201[0m 30.609 ms - 264[0m
+  console.log
+    Service Media Response: {
+      id: '49955acf-138c-4628-980f-8fd5a82e48d8',
+      service_id: '6a7be839-f03e-481a-bcea-e4aa79d5b17b',
+      media_url: 'https://mocked-cloudinary.com/test.jpg',
+      media_type: 'image',
+      uploaded_by: 'f07517d7-c829-4e43-b861-eb62d7e142ed',
+      created_at: '2026-04-05T11:18:41.616Z'
+    }
+
+      at Object.log (tests/integration/service.media.test.js:82:17)
+
+[0mPOST /bookings/items [32m201[0m 1173.395 ms - 399[0m
+[0mGET /services/6a7be839-f03e-481a-bcea-e4aa79d5b17b/media [32m200[0m 5.066 ms - 266[0m
+  console.log
+    View Media Response: [
+      {
+        id: '49955acf-138c-4628-980f-8fd5a82e48d8',
+        service_id: '6a7be839-f03e-481a-bcea-e4aa79d5b17b',
+        media_url: 'https://mocked-cloudinary.com/test.jpg',
+        media_type: 'image',
+        uploaded_by: 'f07517d7-c829-4e43-b861-eb62d7e142ed',
+        created_at: '2026-04-05T11:18:41.616Z'
+      }
+    ]
+
+      at Object.log (tests/integration/service.media.test.js:95:17)
+
+[0mPOST /auth/verify-otp [32m200[0m 268.903 ms - 234[0m
+[0mDELETE /services/media/49955acf-138c-4628-980f-8fd5a82e48d8 [32m200[0m 6.464 ms - 264[0m
+  console.log
+    Delete Media Response: {
+      id: '49955acf-138c-4628-980f-8fd5a82e48d8',
+      service_id: '6a7be839-f03e-481a-bcea-e4aa79d5b17b',
+      media_url: 'https://mocked-cloudinary.com/test.jpg',
+      media_type: 'image',
+      uploaded_by: 'f07517d7-c829-4e43-b861-eb62d7e142ed',
+      created_at: '2026-04-05T11:18:41.616Z'
+    }
+
+      at Object.log (tests/integration/service.media.test.js:107:17)
+
+  console.error
+    Error: Request not found or unauthorized
+        at updateBookingItemStatus (D:\python\github\Utsavya\src\services\booking.services.js:163:15)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\booking.controller.js:81:21
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPATCH /vendors/booking-requests/dd5b893a-f27d-454a-a44d-eef4319eb664 [33m400[0m 42.550 ms - 47[0m
+  console.error
+    Error: Booking item not found
+        at selectVendorForService (D:\python\github\Utsavya\src\services\booking.services.js:206:19)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\booking.controller.js:90:20
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mPATCH /bookings/items/dd5b893a-f27d-454a-a44d-eef4319eb664/select [33m400[0m 20.432 ms - 36[0m
+[0mPOST /auth/verify-otp [32m200[0m 307.475 ms - 234[0m
+[0mPOST /auth/register [32m201[0m 429.914 ms - 76[0m
+  console.error
+    Error: Booking not found
+        at getBookingDetails (D:\python\github\Utsavya\src\services\booking.services.js:274:15)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\booking.controller.js:101:20
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mGET /bookings/2a24268a-db9c-46c0-87c0-d39bc8adec36 [33m400[0m 12.274 ms - 31[0m
+  console.log
+    { message: 'Booking not found' }
+
+      at Object.log (tests/integration/booking.flow.test.js:283:13)
+
+[0mPOST /auth/login [32m200[0m 338.645 ms - 234[0m
+  console.log
+    RATINGS: { average_rating: 0, total_reviews: 0 }
+
+      at log (src/controllers/review.controller.js:24:13)
+
+[0mGET /reviews/vendors/0e919a1e-8f89-4393-b98e-98a5e0864834/ratings [32m200[0m 148.759 ms - 38[0m
+  console.log
+    RATING RESPONSE: { average_rating: 0, total_reviews: 0 }
+
+      at Object.log (tests/integration/vendor.rating.test.js:177:17)
+
+FAIL tests/integration/boo
+king.flow.test.js (11.399 
+s)
+  ├ù customer can fetch 
+booking details (34 ms)
+  ΓêÜ another user cannot 
+access booking (603 ms)
+  Booking Flow 
+Integration Test
+    ΓêÜ register + login 
+customer (827 ms)
+    ΓêÜ create booking 
+(34 ms)
+    ├ù create vendors + 
+service (1056 ms)
+    ├ù customer requests 
+service from 2 vendors 
+(26 ms)
+    ├ù vendor accepts 
+request (16 ms)
+    ├ù customer selects 
+vendor (49 ms)
+    ├ù verify only one 
+vendor selected (11 ms)
+
+  ΓùÅ Booking Flow 
+Integration Test ΓÇ║ 
+create vendors + service
+
+    TypeError: Cannot 
+read properties of 
+undefined (reading 'id')
+
+    [0m [90m 112 |[39m 
+        )[33m;[39m
+     [90m 113 |[39m
+    
+[31m[1m>[22m[39m[90m 
+114 |[39m         
+vendorId [33m=[39m user1
+[33m.[39mrows[[35m0[39
+m][33m.[39mid[33m;[39m
+     [90m     |[39m     
+                          
+   [31m[1m^[22m[39m
+     [90m 115 |[39m
+     [90m 116 |[39m     
+    [90m// create 
+service (by vendor1)[39m
+     [90m 117 |[39m     
+    [36mconst[39m 
+service [33m=[39m 
+[36mawait[39m 
+request(app)[0m
+
+      at Object.id (tests/
+integration/booking.flow.t
+est.js:114:34)
+
+  ΓùÅ Booking Flow 
+Integration Test ΓÇ║ 
+customer requests service 
+from 2 vendors
+
+    expect(received).toBe(
+expected) // Object.is 
+equality
+
+    Expected: 201
+    Received: 400
+
+    [0m [90m 181 |[39m 
+            })[33m;[39m
+     [90m 182 |[39m
+    
+[31m[1m>[22m[39m[90m 
+183 |[39m         expect(
+res1[33m.[39mstatusCode)
+[33m.[39mtoBe([35m201[
+39m)[33m;[39m
+     [90m     |[39m     
+                          
+  [31m[1m^[22m[39m
+     [90m 184 |[39m     
+    item1 [33m=[39m res1
+[33m.[39mbody[33m.[39m
+id[33m;[39m
+     [90m 185 |[39m
+     [90m 186 |[39m     
+    [90m// vendor 
+2[39m[0m
+
+      at Object.toBe (test
+s/integration/booking.flow
+.test.js:183:33)
+
+  ΓùÅ Booking Flow 
+Integration Test ΓÇ║ 
+vendor accepts request
+
+    expect(received).toBe(
+expected) // Object.is 
+equality
+
+    Expected: 200
+    Received: 401
+
+    [0m [90m 208 |[39m 
+            })[33m;[39m
+     [90m 209 |[39m
+    
+[31m[1m>[22m[39m[90m 
+210 |[39m         expect(
+res[33m.[39mstatusCode)
+[33m.[39mtoBe([35m200[3
+9m)[33m;[39m
+     [90m     |[39m     
+                          
+ [31m[1m^[22m[39m
+     [90m 211 |[39m     
+})[33m;[39m
+     [90m 212 |[39m
+     [90m 213 |[39m     
+test([32m"customer 
+selects 
+vendor"[39m[33m,[39m 
+[36masync[39m () 
+[33m=>[39m {[0m
+
+      at Object.toBe (test
+s/integration/booking.flow
+.test.js:210:32)
+
+  ΓùÅ Booking Flow 
+Integration Test ΓÇ║ 
+customer selects vendor
+
+    expect(received).toBe(
+expected) // Object.is 
+equality
+
+    Expected: 200
+    Received: 400
+
+    [0m [90m 217 |[39m 
+            [33m.[39m[3
+6mset[39m([32m"Authoriza
+tion"[39m[33m,[39m 
+[32m`Bearer ${customerTok
+en}`[39m)[33m;[39m
+     [90m 218 |[39m
+    
+[31m[1m>[22m[39m[90m 
+219 |[39m         expect(
+res[33m.[39mstatusCode)
+[33m.[39mtoBe([35m200[3
+9m)[33m;[39m
+     [90m     |[39m     
+                          
+ [31m[1m^[22m[39m
+     [90m 220 |[39m     
+})[33m;[39m
+     [90m 221 |[39m
+     [90m 222 |[39m     
+test([32m"verify only 
+one vendor 
+selected"[39m[33m,[39m 
+[36masync[39m () 
+[33m=>[39m {[0m
+
+      at Object.toBe (test
+s/integration/booking.flow
+.test.js:219:32)
+
+  ΓùÅ Booking Flow 
+Integration Test ΓÇ║ 
+verify only one vendor 
+selected
+
+    expect(received).toBe(
+expected) // Object.is 
+equality
+
+    Expected: 1
+    Received: 0
+
+    [0m [90m 230 |[39m 
+        [36mconst[39m 
+cancelled [33m=[39m resu
+lt[33m.[39mrows[33m.[3
+9mfilter(r [33m=>[39m 
+r[33m.[39mstatus 
+[33m===[39m [32m"cancel
+led"[39m)[33m;[39m
+     [90m 231 |[39m
+    
+[31m[1m>[22m[39m[90m 
+232 |[39m         expect(
+selected[33m.[39mlength)
+[33m.[39mtoBe([35m1[39
+m)[33m;[39m
+     [90m     |[39m     
+                          
+  [31m[1m^[22m[39m
+     [90m 233 |[39m     
+    expect(cancelled[33m.
+[39mlength)[33m.[39mtoB
+eGreaterThanOrEqual([35m1
+[39m)[33m;[39m
+     [90m 234 |[39m     
+})[33m;[39m
+     [90m 235 |[39m[0m
+
+      at Object.toBe (test
+s/integration/booking.flow
+.test.js:232:33)
+
+  ΓùÅ customer can fetch 
+booking details
+
+    expect(received).toBe(
+expected) // Object.is 
+equality
+
+    Expected: 200
+    Received: 400
+
+    [0m [90m 243 |[39m
+     [90m 244 |[39m     
+console[33m.[39mlog(res
+[33m.[39mbody)[33m;[39m
+    
+[31m[1m>[22m[39m[90m 
+245 |[39m     expect(res
+[33m.[39mstatusCode)[33m
+.[39mtoBe([35m200[39m)
+[33m;[39m
+     [90m     |[39m     
+                       
+[31m[1m^[22m[39m
+     [90m 246 |[39m
+     [90m 247 |[39m     
+expect(res[33m.[39mbody
+[33m.[39mid)[33m.[39mto
+Be(bookingId)[33m;[39m
+     [90m 248 |[39m[0m
+
+      at Object.toBe (test
+s/integration/booking.flow
+.test.js:245:28)
+
+  console.log
+    REVIEWS: []
+
+      at log (src/controllers/review.controller.js:35:13)
+
+[0mGET /reviews/vendors/0e919a1e-8f89-4393-b98e-98a5e0864834/reviews [32m200[0m 20.543 ms - 14[0m
+  console.log
+    REVIEWS RESPONSE: { reviews: [] }
+
+      at Object.log (tests/integration/vendor.rating.test.js:192:13)
+
+  console.log
+    REVIEWS: []
+
+      at log (src/controllers/review.controller.js:35:13)
+
+[0mGET /reviews/vendors/0e919a1e-8f89-4393-b98e-98a5e0864834/reviews?min_rating=5 [32m200[0m 7.307 ms - 14[0m
+  console.log
+    FILTERED REVIEWS: { reviews: [] }
+
+      at Object.log (tests/integration/vendor.rating.test.js:210:13)
+
+[0mPOST /auth/register [32m201[0m 303.426 ms - 76[0m
+  console.error
+    Error: Vendor not found
+        at getVendorProfile (D:\python\github\Utsavya\src\services\vendor.services.js:85:15)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at D:\python\github\Utsavya\src\controllers\vendor.controller.js:31:21
+
+    [0m [90m 81 |[39m [90m// Global Error Handler[39m
+     [90m 82 |[39m app[33m.[39muse((err[33m,[39m req[33m,[39m res[33m,[39m next) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror(err[33m.[39mstack)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m     [36mconst[39m status [33m=[39m err[33m.[39mstatus [33m||[39m [35m500[39m[33m;[39m
+     [90m 85 |[39m     [36mconst[39m message [33m=[39m err[33m.[39mmessage [33m||[39m [32m"Internal Server Error"[39m[33m;[39m
+     [90m 86 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ message })[33m;[39m[0m
+
+      at error (src/index.js:83:13)
+      at Layer.handleError (node_modules/router/lib/layer.js:116:17)
+      at trimPrefix (node_modules/router/index.js:340:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/router/index.js:688:15
+      at next (node_modules/router/index.js:276:14)
+      at next (node_modules/router/lib/route.js:132:14)
+      at next (src/utils/asyncHandler.js:9:9)
+
+[0mGET /vendors/0e919a1e-8f89-4393-b98e-98a5e0864834 [33m400[0m 18.991 ms - 30[0m
+  console.log
+    PROFILE RESPONSE: { message: 'Vendor not found' }
+
+      at Object.log (tests/integration/vendor.rating.test.js:224:13)
+
+  console.log
+    SEARCH RESULT: [
+      {
+        id: 'f07517d7-c829-4e43-b861-eb62d7e142ed',
+        full_name: 'Media Vendor',
+        average_rating: 0,
+        total_reviews: 0,
+        services: [ 'Wedding Photography' ],
+        is_available: true
+      }
+    ]
+
+      at log (src/controllers/vendor.controller.js:40:13)
+
+[0mGET /vendors [32m200[0m 16.319 ms - 178[0m
+  console.log
+    SEARCH RESPONSE: {
+      vendors: [
+        {
+          id: 'f07517d7-c829-4e43-b861-eb62d7e142ed',
+          full_name: 'Media Vendor',
+          average_rating: 0,
+          total_reviews: 0,
+          services: [Array],
+          is_available: true
+        }
+      ]
+    }
+
+      at Object.log (tests/integration/vendor.rating.test.js:240:13)
+
+FAIL tests/integration/ven
+dor.rating.test.js 
+(11.666 s)
+  ΓêÜ should get vendor 
+reviews (34 ms)
+  ΓêÜ should filter 
+reviews by rating (20 ms)
+  ├ù should get vendor 
+profile (34 ms)
+  ΓêÜ should search 
+vendors (29 ms)
+  Vendor Rating Test
+    ├ù setup complete 
+flow with review (4160 ms)
+    ├ù should get vendor 
+ratings (171 ms)
+
+  ΓùÅ Vendor Rating Test 
+ΓÇ║ setup complete flow 
+with review
+
+    error: insert or 
+update on table 
+"payments" violates 
+foreign key constraint 
+"payments_booking_id_fkey"
+
+    [0m [90m 147 |[39m
+     [90m 148 |[39m     
+    [90m// ---------- 
+Fake Payment 
+----------[39m
+    
+[31m[1m>[22m[39m[90m 
+149 |[39m         
+[36mawait[39m 
+pool[33m.[39mquery(
+     [90m     |[39m     
+    [31m[1m^[22m[39m
+     [90m 150 |[39m     
+        [32m`INSERT INTO 
+payments (booking_id, 
+amount, status) VALUES 
+($1, $2, 'successful')`[3
+9m[33m,[39m
+     [90m 151 |[39m     
+        
+[bookingId[33m,[39m 
+[35m10000[39m]
+     [90m 152 |[39m     
+    )[33m;[39m[0m
+
+      at node_modules/pg-p
+ool/index.js:45:11
+      at 
+Object.<anonymous> (tests/
+integration/vendor.rating.
+test.js:149:9)
+
+  ΓùÅ Vendor Rating Test 
+ΓÇ║ should get vendor 
+ratings
+
+    expect(received).toBe(
+expected) // Object.is 
+equality
+
+    Expected: 5
+    Received: 0
+
+    [0m [90m 179 |[39m 
+        expect(res[33m.[
+39mstatusCode)[33m.[39mt
+oBe([35m200[39m)[33m;[
+39m
+     [90m 180 |[39m
+    
+[31m[1m>[22m[39m[90m 
+181 |[39m         expect(
+res[33m.[39mbody[33m.[
+39maverage_rating)[33m.[
+39mtoBe([35m5[39m)[33m;
+[39m
+     [90m     |[39m     
+                          
+          
+[31m[1m^[22m[39m
+     [90m 182 |[39m     
+    expect(res[33m.[39mb
+ody[33m.[39mtotal_review
+s)[33m.[39mtoBe([35m1[
+39m)[33m;[39m
+     [90m 183 |[39m     
+})[33m;[39m
+     [90m 184 |[39m[0m
+
+      at Object.toBe (test
+s/integration/vendor.ratin
+g.test.js:181:41)
+
+  ΓùÅ should get vendor 
+profile
+
+    expect(received).toBe(
+expected) // Object.is 
+equality
+
+    Expected: 200
+    Received: 400
+
+    [0m [90m 224 |[39m 
+    console[33m.[39mlog(
+[32m"PROFILE RESPONSE:"[
+39m[33m,[39m res[33m.[
+39mbody)[33m;[39m
+     [90m 225 |[39m
+    
+[31m[1m>[22m[39m[90m 
+226 |[39m     expect(res
+[33m.[39mstatusCode)[33m
+.[39mtoBe([35m200[39m)
+[33m;[39m
+     [90m     |[39m     
+                       
+[31m[1m^[22m[39m
+     [90m 227 |[39m
+     [90m 228 |[39m     
+expect(res[33m.[39mbody)
+[33m.[39mtoHaveProperty(
+[32m"full_name"[39m)[33
+m;[39m
+     [90m 229 |[39m     
+expect(res[33m.[39mbody)
+[33m.[39mtoHaveProperty(
+[32m"rating"[39m)[33m;
+[39m[0m
+
+      at Object.toBe (test
+s/integration/vendor.ratin
+g.test.js:226:28)
+
+[0mPOST /auth/verify-otp [32m200[0m 331.884 ms - 234[0m
+[0mGET /test/auth [33m401[0m 2.173 ms - 37[0m
+[0mGET /test/auth [33m401[0m 1.585 ms - 38[0m
+[0mGET /test/auth [32m200[0m 4.330 ms - 76[0m
+PASS tests/integration/aut
+h.middleware.test.js
+  Auth Middleware Tests
+    ΓêÜ should fail 
+without token (20 ms)
+    ΓêÜ should fail with 
+invalid token (11 ms)
+    ΓêÜ should allow 
+access with valid token 
+(17 ms)
+
+[0mPOST /auth/login [32m200[0m 276.895 ms - 234[0m
+[0mPOST /auth/verify-otp [32m200[0m 268.227 ms - 234[0m
+[0mPOST /auth/refresh [32m200[0m 133.549 ms - 234[0m
+[0mDELETE /auth/profile [32m200[0m 1024.320 ms - 57[0m
+PASS tests/integration/del
+etion.test.js
+  Account Deletion 
+Verification
+    ΓêÜ DELETE /profile 
+should remove user and 
+cascaded data (1046 ms)
+
+[0mPOST /auth/login [32m200[0m 247.034 ms - 231[0m
+[0mPOST /services [32m201[0m 10.421 ms - 345[0m
+  console.log
+    SERVICE RESPONSE: {
+      id: '6522185f-e88f-42ca-9ced-cb3c5a0326ff',
+      vendor_id: '626c9924-2b4c-45bc-8f87-49316dd85bc9',
+      title: 'Wedding Planning',
+      description: 'Complete wedding planning service',
+      city: 'Delhi',
+      price: '150000.00',
+      price_type: 'fixed',
+      is_active: true,
+      category: 'other',
+      created_at: '2026-04-05T11:18:42.529Z',
+      updated_at: '2026-04-05T11:18:42.529Z'
+    }
+
+      at Object.log (tests/integration/vendor.service.test.js:88:17)
+
+[0mPOST /services [33m403[0m 4.028 ms - 49[0m
+[0mPOST /services [33m401[0m 1.210 ms - 37[0m
+PASS tests/integration/ven
+dor.service.test.js
+  Vendor Service API
+    ΓêÜ vendor can create 
+service (26 ms)
+    ΓêÜ customer cannot 
+create service (13 ms)
+    ΓêÜ unauthenticated 
+user blocked (9 ms)
+
+[0mPOST /auth/logout [32m200[0m 352.139 ms - 37[0m
+[0mPOST /auth/refresh [33m401[0m 6.803 ms - 47[0m
+PASS tests/integration/aut
+h.test.js
+  Auth Integration Tests
+    ΓêÜ should register a 
+user (346 ms)
+    ΓêÜ should verify OTP 
+and return access token 
+(285 ms)
+    ΓêÜ should login user 
+and return access token + 
+set refresh cookie (350 
+ms)
+    ΓêÜ should login user 
+and return access token + 
+set refresh cookie (286 
+ms)
+    ΓêÜ should refresh 
+access token using cookie 
+(145 ms)
+    ΓêÜ should logout 
+user and clear refresh 
+cookie (364 ms)
+    ΓêÜ should fail to 
+refresh after logout (14 
+ms)
+
+A worker process has 
+failed to exit gracefully 
+and has been force 
+exited. This is likely 
+caused by tests leaking 
+due to improper teardown. 
+Try running with 
+--detectOpenHandles to 
+find leaks. Active timers 
+can also cause this, 
+ensure that .unref() was 
+called on them.
+Test Suites: 11 failed, 6 
+passed, 17 total
+Tests:       38 failed, 
+29 passed, 67 total
+Snapshots:   0 total
+Time:        14.646 s
+Ran all test suites.

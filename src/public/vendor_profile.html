@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Profile – Utsavya</title>
+    <meta name="description" content="View vendor profile, portfolio, services and reviews on Utsavya.">
+    <link rel="stylesheet" href="css/vendor_profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <a class="logo" href="dashboard.html">
+            <img src="images/logo.png" alt="Utsavya Logo">
+            <span>UTSAVYA</span>
+        </a>
+        <button class="back-btn" onclick="history.back()">
+            ← Back to Vendors
+        </button>
+        <div class="profile">
+            <img src="images/profile.png" alt="Profile" id="profilePic">
+        </div>
+    </header>
+
+    <!-- HERO BANNER -->
+    <section class="vendor-hero" id="vendorHero">
+        <img class="vendor-hero-bg" id="heroBg" src="" alt="" onerror="this.style.display='none'">
+        <div class="vendor-hero-overlay"></div>
+        <div class="vendor-hero-content">
+            <img class="vendor-avatar" id="vendorAvatar" src="images/default-vendor.jpg" alt="Vendor">
+            <div class="vendor-hero-info">
+                <h1 id="vendorName">Loading...</h1>
+                <div class="vendor-meta">
+                    <span class="vendor-category-badge" id="vendorCategory">–</span>
+                    <span class="vendor-city" id="vendorCity">📍 –</span>
+                </div>
+                <div class="vendor-tagline" id="vendorTagline"></div>
+                <div class="hero-rating">
+                    <span class="hero-stars" id="heroStars">☆☆☆☆☆</span>
+                    <span class="hero-rating-text" id="heroRatingText">0 reviews</span>
+                </div>
+            </div>
+            <button class="hero-book-btn" onclick="scrollToBook()">📅 Book This Vendor</button>
+        </div>
+    </section>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-value" id="statRating">–</span>
+            <span class="stat-label">Avg Rating</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value" id="statReviews">–</span>
+            <span class="stat-label">Reviews</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value" id="statServices">–</span>
+            <span class="stat-label">Services</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value" id="statStartingPrice">–</span>
+            <span class="stat-label">Starting Price</span>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="profile-main">
+
+        <!-- LEFT COLUMN -->
+        <div class="left-col">
+
+            <!-- ABOUT -->
+            <div class="section-card" id="aboutSection">
+                <h2>About</h2>
+                <p id="vendorAbout" style="color:#555; font-size:14px; line-height:1.7;">Loading...</p>
+            </div>
+
+            <!-- SERVICES -->
+            <div class="section-card">
+                <h2>Services & Pricing</h2>
+                <div class="services-grid" id="servicesGrid">
+                    <p style="color:#aaa; font-size:14px;">Loading services...</p>
+                </div>
+            </div>
+
+            <!-- PORTFOLIO GALLERY -->
+            <div class="section-card">
+                <h2>Portfolio</h2>
+                <div class="portfolio-grid" id="portfolioGrid">
+                    <div class="portfolio-empty">
+                        <span class="portfolio-empty-icon">🖼️</span>
+                        Loading portfolio...
+                    </div>
+                </div>
+            </div>
+
+            <!-- REVIEWS -->
+            <div class="section-card">
+                <h2>Customer Reviews</h2>
+                <div class="reviews-list" id="reviewsList">
+                    <div class="no-reviews">Loading reviews...</div>
+                </div>
+            </div>
+
+            <!-- SUBMIT REVIEW -->
+            <div class="rating-form-card" id="reviewFormCard">
+                <h3>⭐ Leave a Review</h3>
+                <p>Share your experience with this vendor</p>
+                <div class="star-input" id="starInput">
+                    <span data-value="1">★</span>
+                    <span data-value="2">★</span>
+                    <span data-value="3">★</span>
+                    <span data-value="4">★</span>
+                    <span data-value="5">★</span>
+                </div>
+                <select id="reviewServiceSelect" style="width:100%; padding:10px; border:1px solid #eee; border-radius:8px; font-size:13px; margin-bottom:12px; font-family:Poppins; background:#fafafa;">
+                    <option value="">Select which service you used...</option>
+                </select>
+                <textarea id="reviewComment" placeholder="Tell others about your experience..."></textarea>
+                <button class="submit-review-btn" id="submitReviewBtn" onclick="submitReview()">Submit Review</button>
+                <p id="reviewNote" style="font-size:11px; color:#aaa; margin-top:8px;">You can only review vendors you've used for a completed booking.</p>
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDEBAR -->
+        <div class="sidebar-sticky">
+            <div class="book-card" id="bookCard">
+                <h3>Book This Vendor</h3>
+                <div class="price-tag" id="sidebarPrice">
+                    ₹– <small>onwards</small>
+                </div>
+                <button class="book-now-btn" id="bookNowBtn" onclick="addVendorToEvent()">
+                    ➕ Add to Event
+                </button>
+                <p class="book-meta">Select a service below, then click above to add to your active event cart.</p>
+            </div>
+
+            <div class="quick-info-card">
+                <h4>Quick Info</h4>
+                <div class="info-row">
+                    <span class="info-label">City</span>
+                    <span class="info-value" id="infoCity">–</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Category</span>
+                    <span class="info-value" id="infoCategory">–</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Services</span>
+                    <span class="info-value" id="infoServices">–</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Rating</span>
+                    <span class="info-value" id="infoRating">–</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+        <img id="lightboxImg" src="" alt="" style="display:none;">
+        <video id="lightboxVideo" controls style="display:none;"></video>
+    </div>
+
+    <footer style="text-align:center; padding:30px; color:#aaa; font-size:13px;">
+        © 2026 Utsavya
+    </footer>
+
+    <script src="js/vendor_profile.js"></script>
+    <script src="js/navbar.js"></script>
+</body>
+</html>
