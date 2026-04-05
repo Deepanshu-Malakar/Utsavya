@@ -11,7 +11,7 @@ CREATE TYPE booking_status AS ENUM (
 CREATE TYPE cancelled_by AS ENUM ('customer','vendor','admin');
 
 CREATE TYPE payment_status AS ENUM (
-    'initiated','successful','failed','refunded'
+    'pending','initiated','successful','failed','refunded'
 );
 
 CREATE TYPE media_type AS ENUM ('image','video');

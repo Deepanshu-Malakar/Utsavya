@@ -17,3 +17,23 @@ ALTER TABLE notifications OWNER TO bhaskar_projects;
 ALTER TABLE password_reset_otp OWNER TO bhaskar_projects;
 ALTER TABLE refunds OWNER TO bhaskar_projects;
 ALTER TABLE audit_logs OWNER TO bhaskar_projects;
+
+-- Enums Ownership
+ALTER TYPE user_role OWNER TO bhaskar_projects;
+ALTER TYPE price_type OWNER TO bhaskar_projects;
+ALTER TYPE booking_status OWNER TO bhaskar_projects;
+ALTER TYPE cancelled_by OWNER TO bhaskar_projects;
+ALTER TYPE payment_status OWNER TO bhaskar_projects;
+ALTER TYPE media_type OWNER TO bhaskar_projects;
+ALTER TYPE notification_type OWNER TO bhaskar_projects;
+ALTER TYPE dispute_status OWNER TO bhaskar_projects;
+ALTER TYPE vendor_request_status OWNER TO bhaskar_projects;
+ALTER TYPE auth_provider OWNER TO bhaskar_projects;
+ALTER TYPE event_status OWNER TO bhaskar_projects;
+ALTER TYPE collaborator_role OWNER TO bhaskar_projects;
+ALTER TYPE refund_status OWNER TO bhaskar_projects;
+ALTER TYPE service_category OWNER TO bhaskar_projects;
+ALTER TYPE audit_event_type OWNER TO bhaskar_projects;
+
+-- Functions Ownership
+ALTER FUNCTION update_updated_at_column() OWNER TO bhaskar_projects;
