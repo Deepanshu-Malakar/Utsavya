@@ -1,3 +1,7 @@
+/**
+ * --- FRONTEND INTEGRATION GUIDE: Vendor Management ---
+ * Base Path: /vendors
+ */
 const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
@@ -30,6 +34,10 @@ const vendorRequestValidation = [
 ];
 
 // Route to request becoming a vendor
+// --- FRONTEND INTEGRATION GUIDE: Become a Vendor ---
+// POST /vendors/request | Body: { business_name, city }
+// Required: Authorization: Bearer <accessToken>
+// Note: Only for users with "customer" role.
 router.post(
     "/request",
     authenticateUser,
@@ -45,6 +53,7 @@ router.patch(
     reviewVendorRequestController
 );
 
+// Vendor Update Booking Status
 router.patch(
     "/booking-requests/:id",
     authenticateUser,
@@ -52,6 +61,7 @@ router.patch(
     updateBookingItemStatusController
 );
 
+// View My Booking Requests
 router.get(
     "/booking-requests",
     authenticateUser,
@@ -61,9 +71,15 @@ router.get(
 
 router.get("/search", searchVendorsController); // Explicit search route
 router.get("/", searchVendorsController);
+
+// --- FRONTEND INTEGRATION GUIDE: Get Vendor Details ---
+// GET /vendors/:id
 router.get("/:id", getVendorProfileController);
 
 // Vendor Availability Routes
+// --- FRONTEND INTEGRATION GUIDE: Manage Availability ---
+// POST /vendors/:id/availability | Body: { start_date, end_date, reason }
+// Required: Authorization: Bearer <accessToken> (Vendor only)
 router.post(
     "/:id/availability",
     authenticateUser,

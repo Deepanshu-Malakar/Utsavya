@@ -1,7 +1,14 @@
+/**
+ * --- FRONTEND INTEGRATION GUIDE: Vendor Controllers ---
+ * Base Path: /vendors
+ */
 const { submitVendorRequest, reviewVendorRequest, getVendorProfile, searchVendors, reportVendor } = require("../services/vendor.services");
 const asyncHandler = require("../utils/asyncHandler");
 
 const requestVendor = asyncHandler(async (req, res) => {
+// --- FRONTEND INTEGRATION GUIDE: Become a Vendor ---
+// Request: POST /vendors/request | Body: { business_name, city }
+// Required: Authorization: Bearer <accessToken>
     const vendorRequest = await submitVendorRequest(
         req.user,
         req.body
@@ -19,12 +26,16 @@ const reviewVendorRequestController = asyncHandler(async (req, res) => {
 });
 
 const getVendorProfileController = asyncHandler(async (req, res) => {
+// --- FRONTEND INTEGRATION GUIDE: Get Vendor Details ---
+// GET /vendors/:id
     const profile = await getVendorProfile(req.params.id);
     console.log("VENDOR PROFILE:", profile);
     res.status(200).json(profile);
 });
 
 const searchVendorsController = asyncHandler(async (req, res) => {
+// --- FRONTEND INTEGRATION GUIDE: Browse Vendors ---
+// GET /vendors/search?city=...&category=...
     const vendors = await searchVendors(req.query);
     console.log("SEARCH RESULT:", vendors);
     res.status(200).json({ vendors });

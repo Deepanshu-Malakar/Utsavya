@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EMS G-OAuth Tester</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #f4f7f6; }
+        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        #response { margin-top: 1rem; padding: 1rem; background: #eee; border-radius: 4px; max-width: 400px; word-break: break-all; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>EMS Google Auth Tester</h2>
+        <p>1. Ensure GOOGLE_CLIENT_ID is in your .env<br>2. Ensure backend is running on port 5000</p>
+        
+        <div id="g_id_onload"
+             data-client_id="387789692-tmv5toa1khl0sqs2hfkkqrfl7k7kupd4.apps.googleusercontent.com"
+             data-context="signin"
+             data-ux_mode="popup"
+             data-callback="handleCredentialResponse"
+             data-auto_select="false"
+             data-itp_support="true">
+        </div>
+        <div class="g_id_signin" data-type="standard"></div>
+
+        <div id="response">Response will appear here...</div>
+    </div>
+
+    <script>
+        async function handleCredentialResponse(response) {
+            console.log("Encoded JWT ID token: " + response.credential);
+            document.getElementById('response').innerText = "Token Received! Sending to backend...";
+
+            try {
+                const res = await fetch('http://localhost:5000/auth/google', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ idToken: response.credential })
+                });
+                const data = await res.json();
+                document.getElementById('response').innerText = JSON.stringify(data, null, 2);
+            } catch (err) {
+                document.getElementById('response').innerText = "Error: " + err.message;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,3 +1,7 @@
+/**
+ * --- FRONTEND INTEGRATION GUIDE: Payment Controllers ---
+ * Base Path: /payments
+ */
 const {
     createPayment,
     verifyStripeWebhook
@@ -5,6 +9,10 @@ const {
 const asyncHandler = require("../utils/asyncHandler");
 
 const createPaymentController = asyncHandler(async (req, res) => {
+// --- FRONTEND INTEGRATION GUIDE: Initiate Payment ---
+// POST /payments | Body: { booking_id, amount }
+// Returns: { url: "https://checkout.stripe.com/..." }
+// FE ACTION: window.location.href = res.data.url;
     const { booking_id, amount } = req.body;
     const payment = await createPayment(booking_id, amount);
     console.log("PAYMENT CREATED:", payment);

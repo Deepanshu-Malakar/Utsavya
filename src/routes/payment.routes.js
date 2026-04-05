@@ -1,3 +1,7 @@
+/**
+ * --- FRONTEND INTEGRATION GUIDE: Payments (Stripe) ---
+ * Base Path: /payments
+ */
 const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
@@ -17,6 +21,11 @@ const createPaymentValidation = [
 ];
 
 // Route to initiate a payment
+// --- FRONTEND INTEGRATION GUIDE: Initiate Payment ---
+// POST /payments | Body: { booking_id, amount }
+// Required: Authorization: Bearer <accessToken>
+// Note: This returns a Stripe Checkout URL. The frontend should 
+// redirect the user to that URL.
 router.post("/", authenticateUser, createPaymentValidation, createPaymentController);
 
 // Webhook endpoint is mapped in src/index.js directly to avoid body-parser conflicts!

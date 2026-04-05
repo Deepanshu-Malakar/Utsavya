@@ -1,3 +1,10 @@
+/**
+ * --- FRONTEND INTEGRATION GUIDE: Bookings ---
+ * Base Path: /bookings
+ * 
+ * Note: A 'Booking' is an event (e.g. "Wedding"). 
+ * A 'Booking Item' is a specific service (e.g. "Catering") attached to that event.
+ */
 const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
@@ -34,14 +41,29 @@ const requestServiceBookingValidation = [
 ];
 
 // Route to create and manage bookings
+// --- FRONTEND INTEGRATION GUIDE: Create Event Booking ---
+// POST /bookings | Body: { title, event_start, event_end }
+// Required: Authorization: Bearer <accessToken>
 router.post("/", authenticateUser, createBookingValidation, createBookingController);
+
+// --- FRONTEND INTEGRATION GUIDE: List My Bookings ---
+// GET /bookings
+// Required: Authorization: Bearer <accessToken>
 router.get("/", authenticateUser, getBookingsController);
 router.patch("/:id", authenticateUser, updateBookingController); // NEW: Customer Edit
 
 // Route to manage booking items (services)
+// --- FRONTEND INTEGRATION GUIDE: Request Service for Booking ---
+// POST /bookings/items | Body: { service_id, booking_id, vendor_id }
+// Required: Authorization: Bearer <accessToken>
 router.post("/items", authenticateUser, requestServiceBookingValidation, requestServiceBookingController);
-router.patch("/items/:itemId/price", authenticateUser, updateBookingItemPriceController); // NEW: Vendor Price Edit
 
+// --- FRONTEND INTEGRATION GUIDE: Vendor Price Quote ---
+// PATCH /bookings/items/:itemId/price | Body: { price_quoted }
+// Required: Authorization: Bearer <accessToken> (Vendor only)
+router.patch("/items/:itemId/price", authenticateUser, updateBookingItemPriceController);
+
+// Select a vendor for a service
 router.patch(
     "/items/:id/select",
     authenticateUser,
@@ -49,24 +71,33 @@ router.patch(
 );
 
 
+// Update booking item status
 router.patch(
     "/items/:id/status",
     authenticateUser,
     updateBookingItemStatusController
 );
 
+// --- FRONTEND INTEGRATION GUIDE: Get Full Booking Details ---
+// GET /bookings/:id
+// Required: Authorization: Bearer <accessToken>
 router.get(
     "/:id",
     authenticateUser,
     getBookingDetailsController
 );
 
+// --- FRONTEND INTEGRATION GUIDE: Mark Service as Complete ---
+// PATCH /bookings/items/:id/complete
+// Note: This triggers the final payment/payout logic.
 router.patch(
     "/items/:id/complete",
     authenticateUser,
     completeBookingController
 );
 
+// --- FRONTEND INTEGRATION GUIDE: Cancel Service ---
+// PATCH /bookings/items/:id/cancel
 router.patch(
     "/items/:id/cancel",
     authenticateUser,

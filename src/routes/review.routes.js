@@ -1,3 +1,7 @@
+/**
+ * --- FRONTEND INTEGRATION GUIDE: Reviews & Ratings ---
+ * Base Path: /reviews
+ */
 const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
@@ -19,9 +23,20 @@ const createReviewValidation = [
 ];
 
 // Route to create a new review
+// --- FRONTEND INTEGRATION GUIDE: Create Review ---
+// POST /reviews | Body: { booking_item_id, rating, comment }
+// Required: Authorization: Bearer <accessToken>
 router.post("/", authenticateUser, createReviewValidation, createReviewController);
+// --- FRONTEND INTEGRATION GUIDE: Get Vendor Ratings ---
+// GET /reviews/vendors/:id/ratings
 router.get("/vendors/:id/ratings", getVendorRatingsController);
+
+// --- FRONTEND INTEGRATION GUIDE: Get Vendor Reviews ---
+// GET /reviews/vendors/:id/reviews
 router.get("/vendors/:id/reviews", getVendorReviewsController);
+// --- FRONTEND INTEGRATION GUIDE: Upload Review Media ---
+// POST /reviews/:id/media | Body: FormData { files: [<image/video>, ...] }
+// Note: Maximum 5 files allowed.
 router.post("/:id/media", authenticateUser, upload.array("files", 5), uploadReviewMediaController);
 
 module.exports = router;

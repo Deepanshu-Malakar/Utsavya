@@ -1,3 +1,9 @@
+/**
+ * --- FRONTEND INTEGRATION GUIDE: Auth Overview ---
+ * 1. The backend uses 'HttpOnly' cookies for the refreshToken (Security Best Practice).
+ * 2. The frontend MUST store the 'accessToken' in memory/application state.
+ * 3. Include accessToken in headers for protected routes: { Authorization: 'Bearer <token>' }
+ */
 const {
     registerUser,
     verifyOtp,
@@ -19,12 +25,19 @@ const setRefreshCookie = (res, refreshToken) => {
 };
 
 // REGISTER
+// --- FRONTEND INTEGRATION GUIDE: Registration ---
+// POST /auth/register
+// Result: { message: "OTP sent to your email" }
 const register = asyncHandler(async (req, res) => {
     const result = await registerUser(req.body);
     res.status(201).json(result);
 });
 
 // VERIFY OTP
+// --- FRONTEND INTEGRATION GUIDE: OTP Verification ---
+// POST /auth/verify-otp | Body: { email, otp }
+// Result: { accessToken: "..." }
+// Note: Store accessToken and use it for Bearer headers.
 const verify = asyncHandler(async (req, res) => {
     const { accessToken, refreshToken } = await verifyOtp(req.body);
     setRefreshCookie(res, refreshToken);
@@ -32,6 +45,9 @@ const verify = asyncHandler(async (req, res) => {
 });
 
 // LOGIN
+// --- FRONTEND INTEGRATION GUIDE: Manual Login ---
+// POST /auth/login | Body: { email, password }
+// Result: { accessToken: "..." }
 const login = asyncHandler(async (req, res) => {
     const { accessToken, refreshToken } = await loginUser(req.body);
     setRefreshCookie(res, refreshToken);
@@ -39,6 +55,10 @@ const login = asyncHandler(async (req, res) => {
 });
 
 // GOOGLE AUTH
+// --- FRONTEND INTEGRATION GUIDE: Google OAuth ---
+// POST /auth/google | Body: { idToken }
+// Note: The idToken comes from the @react-oauth/google or similar library.
+// Result: { accessToken: "..." }
 const googleAuth = asyncHandler(async (req, res) => {
     const { idToken } = req.body;
     const { accessToken, refreshToken } = await googleAuthService(idToken);
@@ -48,6 +68,10 @@ const googleAuth = asyncHandler(async (req, res) => {
 
 
 // REFRESH
+// --- FRONTEND INTEGRATION GUIDE: Silent Refresh ---
+// POST /auth/refresh | Body: None
+// Note: Call this automatically every 14 mins to get a fresh accessToken.
+// Result: { accessToken: "..." }
 const refresh = asyncHandler(async (req, res) => {
     const oldRefreshToken = req.cookies.refreshToken;
     if (!oldRefreshToken) {

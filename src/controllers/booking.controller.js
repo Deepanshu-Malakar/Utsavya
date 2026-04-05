@@ -1,3 +1,10 @@
+/**
+ * --- FRONTEND INTEGRATION GUIDE: Booking Controllers ---
+ * Base Path: /bookings
+ * 
+ * Note: A 'Booking' is the parent event. 
+ * A 'Booking Item' is a specific vendor service request within that event.
+ */
 const { 
     createBooking, 
     getUserBookings, 
@@ -14,6 +21,9 @@ const { cancelBookingItem } = require("../services/cancellation.services");
 const asyncHandler = require("../utils/asyncHandler");
 
 const createBookingController = asyncHandler(async (req, res) => {
+// --- FRONTEND INTEGRATION GUIDE: Create Event ---
+// POST /bookings | Body: { title, event_start, event_end }
+// Required: Authorization: Bearer <accessToken>
     const customerId = req.user.userId;
     const booking = await createBooking(customerId, req.body);
     res.status(201).json(booking);
@@ -53,6 +63,8 @@ const updateBookingItemPriceController = asyncHandler(async (req, res) => {
 });
 
 const requestServiceBookingController = asyncHandler(async (req, res) => {
+// --- FRONTEND INTEGRATION GUIDE: Request Vendor Service ---
+// POST /bookings/items | Body: { service_id, booking_id, vendor_id }
     const result = await requestServiceBooking(
         req.user,
         req.body
@@ -83,6 +95,9 @@ const selectVendorController = asyncHandler(async (req, res) => {
 });
 
 const getBookingDetailsController = asyncHandler(async (req, res) => {
+// --- FRONTEND INTEGRATION GUIDE: Get Full Event Details ---
+// GET /bookings/:id
+// Returns: Full event object + list of requested service items
     const result = await getBookingDetails(
         req.user,
         req.params.id
@@ -91,6 +106,9 @@ const getBookingDetailsController = asyncHandler(async (req, res) => {
 });
 
 const completeBookingController = asyncHandler(async (req, res) => {
+// --- FRONTEND INTEGRATION GUIDE: Mark Service as Done ---
+// PATCH /bookings/items/:id/complete
+// Note: This moves the status to 'completed' and triggers payment logic.
     const result = await completeBookingItem(
         req.user,
         req.params.id

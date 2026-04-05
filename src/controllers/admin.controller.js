@@ -1,8 +1,14 @@
+/**
+ * --- FRONTEND INTEGRATION GUIDE: Admin Controllers ---
+ * Base Path: /admin
+ */
 const adminService = require("../services/admin.services");
 const vendorService = require("../services/vendor.services");
 const asyncHandler = require("../utils/asyncHandler");
 
 const getStatsController = asyncHandler(async (req, res) => {
+// --- FRONTEND INTEGRATION GUIDE: Dashboard Stats ---
+// GET /admin/stats
     const stats = await adminService.getDashboardStats();
     res.status(200).json({
         success: true,
@@ -19,6 +25,8 @@ const getModerationQueueController = asyncHandler(async (req, res) => {
 });
 
 const getPendingRequestsController = asyncHandler(async (req, res) => {
+// --- FRONTEND INTEGRATION GUIDE: Pending Vendor Requests ---
+// GET /admin/vendor-requests
     const list = await adminService.getPendingVendorRequests();
     res.status(200).json({
         success: true,
@@ -47,6 +55,8 @@ const blockUserController = asyncHandler(async (req, res) => {
 });
 
 const reviewVendorRequestController = asyncHandler(async (req, res) => {
+// --- FRONTEND INTEGRATION GUIDE: Review Vendor Request ---
+// PATCH /admin/vendor-requests/:id | Body: { status: 'approved' | 'rejected' }
     const requestId = req.params.id;
     const result = await vendorService.reviewVendorRequest(req.user, requestId, req.body);
     res.status(200).json({

@@ -1,3 +1,10 @@
+/**
+ * --- FRONTEND INTEGRATION GUIDE ---
+ * Authentication & Profile Management
+ * Base Path: /auth
+ * 
+ * Headers: { 'Authorization': 'Bearer <accessToken>' } (For protected routes)
+ */
 const express = require("express");
 const router = express.Router();
 const rateLimit = require("express-rate-limit");
@@ -57,16 +64,46 @@ const googleValidation = [
 ];
 
 // Auth Routes
+// --- FRONTEND INTEGRATION GUIDE: Registration ---
+// POST /auth/register | Body: { full_name, email, password }
 router.post("/register", registerLimiter, registerValidation, register);
+
+// --- FRONTEND INTEGRATION GUIDE: Email Verification ---
+// POST /auth/verify-otp | Body: { email, otp }
+// Note: Sets secure cookie and returns { accessToken }
 router.post("/verify-otp", authLimiter, verifyValidation, verify);
+
+// --- FRONTEND INTEGRATION GUIDE: Manual Login ---
+// POST /auth/login | Body: { email, password }
+// Note: Sets secure cookie and returns { accessToken }
 router.post("/login", authLimiter, loginValidation, login);
+
+// --- FRONTEND INTEGRATION GUIDE: Google OAuth Login ---
+// POST /auth/google | Body: { idToken }
+// Note: Get idToken after user selects account in your frontend. 
+// Sets secure cookie and returns { accessToken }
 router.post("/google", googleValidation, googleAuth);
+
+// --- FRONTEND INTEGRATION GUIDE: Token Refresh ---
+// POST /auth/refresh | No Body | Returns { accessToken }
+// Note: Call this automatically every 14 mins or on 401 error.
 router.post("/refresh", refresh);
+
+// --- FRONTEND INTEGRATION GUIDE: Logout ---
+// POST /auth/logout | Clears cookies/session
 router.post("/logout", logout);
 
 // Profile & Password Reset
+// --- FRONTEND INTEGRATION GUIDE: Profile Management ---
+// PATCH /auth/profile | Body: { full_name, phone, profile_image (file) }
+// Headers: { 'Authorization': 'Bearer <accessToken>' }
 router.patch("/profile", authenticateUser, upload.single("profile_image"), updateProfileController);
+
+// --- FRONTEND INTEGRATION GUIDE: Delete Account ---
+// DELETE /auth/profile | Body: { reason: "Optional" }
 router.delete("/profile", authenticateUser, deleteAccountController);
+
+// --- FRONTEND INTEGRATION GUIDE: Password Recovery ---
 router.post("/forgot-password", forgotPasswordController);
 router.post("/reset-password", resetPasswordController);
 

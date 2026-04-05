@@ -3,6 +3,7 @@ const cloudinary = require("../config/cloudinary");
 const fs = require("fs-extra");
 const { sendAccountDeleteEmail, sendNoticeEmail } = require("../utils/email");
 const { logAuditEvent } = require("./audit.services");
+const { extractPublicId } = require("../utils/cloudinaryHelper");
 
 const updateProfile = async (userId, userRole, updates, file) => {
     // 1. SECURITY LOCK: Vendors cannot change business_name or business_city via profile update
@@ -79,7 +80,29 @@ const deleteAccount = async (userId, reason = "No reason provided") => {
         if (userRes.rows.length === 0) throw new Error("User not found");
         const email = userRes.rows[0].email;
 
-        // 2. Log deletion to audit table before purging
+        // 2. FETCH ALL ASSOCIATED MEDIA (Profile, Service Media, Review Media)
+        const mediaRes = await client.query(`
+            SELECT profile_image as url FROM users WHERE id = $1
+            UNION ALL
+            SELECT media_url as url FROM service_media WHERE uploaded_by = $1
+            UNION ALL
+            SELECT media_url as url FROM review_media WHERE uploaded_by = $1
+        `, [userId]);
+
+        const mediaUrls = mediaRes.rows.map(r => r.url).filter(Boolean);
+
+        // 3. PURGE FROM CLOUDINARY
+        for (const url of mediaUrls) {
+            const publicId = extractPublicId(url);
+            if (publicId) {
+                // Determine resource type (could be video or image)
+                const resourceType = url.includes('/video/') ? 'video' : 'image';
+                await cloudinary.uploader.destroy(publicId, { resource_type: resourceType })
+                    .catch(err => console.error(`[Non-critical] Cloudinary purge failed for ${publicId}:`, err.message));
+            }
+        }
+
+        // 4. Log deletion to audit table before purging
         await logAuditEvent('account_deletion', userId, { reason });
 
         // 3. Delete user (cascades to internal tables)

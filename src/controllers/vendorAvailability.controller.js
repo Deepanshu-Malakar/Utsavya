@@ -1,3 +1,7 @@
+/**
+ * --- FRONTEND INTEGRATION GUIDE: Vendor Availability ---
+ * Base Path: /vendors/:id/availability
+ */
 const {
     addUnavailabilityBlock,
     getVendorBlocks,
@@ -6,6 +10,9 @@ const {
 const asyncHandler = require("../utils/asyncHandler");
 
 const addBlockController = asyncHandler(async (req, res) => {
+// --- FRONTEND INTEGRATION GUIDE: Block Unavailable Dates ---
+// POST /vendors/:id/availability | Body: { start_time, end_time, reason }
+// Required: Authorization: Bearer <accessToken> (Vendor or Admin)
     // Both vendor and admins can add blocks for a vendor, assuming route checks authentication and ID
     const { start_time, end_time, reason } = req.body;
     
@@ -25,6 +32,8 @@ const addBlockController = asyncHandler(async (req, res) => {
 });
 
 const getBlocksController = asyncHandler(async (req, res) => {
+// --- FRONTEND INTEGRATION GUIDE: Get Vendor Availability ---
+// GET /vendors/:id/availability | Returns: List of unavailable blocks
     const vendorId = req.params.id;
     const blocks = await getVendorBlocks(vendorId);
     

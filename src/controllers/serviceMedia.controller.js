@@ -1,3 +1,7 @@
+/**
+ * --- FRONTEND INTEGRATION GUIDE: Service Media Controllers ---
+ * Base Path: /services/:id/media
+ */
 const {
     uploadMedia,
     listMedia,
@@ -6,6 +10,9 @@ const {
 const asyncHandler = require("../utils/asyncHandler");
 
 const uploadServiceMediaController = asyncHandler(async (req, res) => {
+// --- FRONTEND INTEGRATION GUIDE: Upload Service Media ---
+// POST /services/:id/media | Body: FormData { file: <image/video> }
+// Required: Authorization: Bearer <accessToken> (Vendor only)
     const media = await uploadMedia(
         req.user,
         req.params.id,
@@ -20,6 +27,8 @@ const getServiceMediaController = asyncHandler(async (req, res) => {
 });
 
 const deleteServiceMediaController = asyncHandler(async (req, res) => {
+// --- FRONTEND INTEGRATION GUIDE: Remove Service Media ---
+// DELETE /services/media/:mediaId
     const deleted = await removeMedia(
         req.user,
         req.params.mediaId
