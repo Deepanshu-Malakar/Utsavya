@@ -39,10 +39,23 @@ const createBooking = async (customerId, data) => {
 const getUserBookings = async (customerId) => {
 
     const query = `
-        SELECT *
-        FROM bookings
-        WHERE customer_id = $1
-        ORDER BY created_at DESC
+        SELECT b.*, 
+        (
+            SELECT json_agg(json_build_object(
+                'id', bi.id,
+                'vendor_name', u.full_name,
+                'service_title', vs.title,
+                'status', bi.status,
+                'price', bi.price_quote
+            ))
+            FROM booking_items bi
+            JOIN vendor_services vs ON bi.service_id = vs.id
+            JOIN users u ON bi.vendor_id = u.id
+            WHERE bi.booking_id = b.id AND bi.is_selected = TRUE
+        ) as vendors
+        FROM bookings b
+        WHERE b.customer_id = $1
+        ORDER BY b.created_at DESC
     `;
 
     const { rows } = await pool.query(query, [customerId]);
@@ -80,21 +93,26 @@ const requestServiceBooking = async (user, data) => {
         throw new Error(`Vendor is unavailable: ${availability.reason}`);
     }
 
+    const serviceRes = await pool.query("SELECT title, price FROM vendor_services WHERE id = $1", [service_id]);
+    if (serviceRes.rows.length === 0) {
+        throw new Error("Service not found");
+    }
+    const initialPrice = serviceRes.rows[0].price || 0;
+
     const query = `
         INSERT INTO booking_items
-        (booking_id, service_id, vendor_id)
-        VALUES ($1,$2,$3)
+        (booking_id, service_id, vendor_id, price_quote)
+        VALUES ($1,$2,$3,$4)
         RETURNING *;
     `;
 
-    const values = [booking_id, service_id, vendor_id];
+    const values = [booking_id, service_id, vendor_id, initialPrice];
 
     const { rows } = await pool.query(query, values);
     const item = rows[0];
 
     // 📧 Notification: Notify Vendor
     const vendorRes = await pool.query("SELECT email FROM users WHERE id = $1", [vendor_id]);
-    const serviceRes = await pool.query("SELECT title FROM vendor_services WHERE id = $1", [service_id]);
     
     if (vendorRes.rows.length > 0) {
         await sendNoticeEmail(
@@ -286,6 +304,7 @@ const getBookingDetails = async (user, bookingId) => {
         SELECT 
             bi.*,
             vs.title AS service_title,
+            vs.price AS service_price,
             u.full_name AS vendor_name
         FROM booking_items bi
         JOIN vendor_services vs ON bi.service_id = vs.id

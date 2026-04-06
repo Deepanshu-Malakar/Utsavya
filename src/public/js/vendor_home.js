@@ -1,30 +1,47 @@
 // Tab switching functionality
-function showRequestsTab() {
-    ['requestsSection', 'servicesSection', 'profileCardSection'].forEach(id => {
-        document.getElementById(id)?.classList.remove('active');
+const ALL_TABS = ['homeSection', 'servicesSection', 'scheduleSection', 'memoriesSection', 'profileCardSection'];
+const ALL_TAB_BTNS = ['navHome', 'navServices', 'navSchedule', 'navMemories', 'navProfileCard'];
+
+function switchTab(activeSectionId, activeBtnId) {
+    ALL_TABS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
     });
-    document.getElementById('requestsSection').classList.add('active');
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('tabRequests').classList.add('active');
+    ALL_TAB_BTNS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+    });
+
+    const activeSection = document.getElementById(activeSectionId);
+    if (activeSection) activeSection.classList.add('active');
+    
+    const activeBtn = document.getElementById(activeBtnId);
+    if (activeBtn) activeBtn.classList.add('active');
+}
+
+function showHomeTab() {
+    switchTab('homeSection', 'navHome');
+    loadBookingRequests();
 }
 
 function showServicesTab() {
-    ['requestsSection', 'servicesSection', 'profileCardSection'].forEach(id => {
-        document.getElementById(id)?.classList.remove('active');
-    });
-    document.getElementById('servicesSection').classList.add('active');
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('tabServices').classList.add('active');
+    switchTab('servicesSection', 'navServices');
     loadServices();
 }
 
+function showScheduleTab() {
+    switchTab('scheduleSection', 'navSchedule');
+    loadSchedule();
+    loadBlockedDates();
+}
+
+function showMemoriesTab() {
+    switchTab('memoriesSection', 'navMemories');
+    renderMemories(); 
+}
+
 function showProfileCardTab() {
-    ['requestsSection', 'servicesSection', 'profileCardSection'].forEach(id => {
-        document.getElementById(id)?.classList.remove('active');
-    });
-    document.getElementById('profileCardSection').classList.add('active');
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('tabProfileCard').classList.add('active');
+    switchTab('profileCardSection', 'navProfileCard');
     loadProfileCardData();
 }
 
@@ -32,6 +49,11 @@ function showProfileCardTab() {
 async function loadServices() {
     try {
         const response = await window.fetchWithAuth('/services/vendor');
+
+        if (response.status === 403) {
+            document.getElementById('servicesGrid').innerHTML = '<div class="error" style="color:#e53935;padding:20px;background:#ffebee;border-radius:8px;">🔒 Access Denied: You do not have permission to view these services. Please contact support if you are a verified vendor.</div>';
+            return;
+        }
 
         if (!response.ok) {
             throw new Error('Failed to load services');
@@ -96,7 +118,7 @@ function closeAddServiceModal() {
 }
 
 // Handle form submission
-document.getElementById('addServiceForm').addEventListener('submit', async function(e) {
+document.getElementById('addServiceForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const token = localStorage.getItem('accessToken');
@@ -130,7 +152,8 @@ document.getElementById('addServiceForm').addEventListener('submit', async funct
         const result = await response.json();
         alert('Service added successfully!');
         closeAddServiceModal();
-        loadServices(); // Refresh the services list
+        if (typeof loadServices === 'function') loadServices(); // Refresh the services list
+        if (typeof loadProfileCardData === 'function') loadProfileCardData(); // Refresh the profile card dropdown too
     } catch (error) {
         console.error('Error adding service:', error);
         alert('Failed to add service. Please try again.');
@@ -138,7 +161,7 @@ document.getElementById('addServiceForm').addEventListener('submit', async funct
 });
 
 // Close modal when clicking outside
-window.addEventListener('click', function(event) {
+window.addEventListener('click', function (event) {
     const modal = document.getElementById('addServiceModal');
     if (event.target === modal) {
         closeAddServiceModal();
@@ -149,14 +172,14 @@ window.addEventListener('click', function(event) {
 async function uploadServiceMedia(serviceId) {
     const fileInput = document.getElementById(`media-upload-${serviceId}`);
     if (!fileInput.files.length) return alert("Please select a file first.");
-    
+
     const file = fileInput.files[0];
     const formData = new FormData();
     formData.append('file', file);
 
     try {
         const token = localStorage.getItem('accessToken') || localStorage.getItem('authToken');
-        
+
         const response = await fetch(`/services/${serviceId}/media`, {
             method: 'POST',
             headers: {
@@ -181,34 +204,34 @@ async function uploadServiceMedia(serviceId) {
 
 async function fetchServiceMedia(serviceId) {
     const container = document.getElementById(`media-display-${serviceId}`);
-    if(!container) return;
+    if (!container) return;
 
     try {
         const response = await fetch(`/services/${serviceId}/media`);
-        if(!response.ok) return;
+        if (!response.ok) return;
 
         const data = await response.json();
         const mediaItems = Array.isArray(data) ? data : (data.media || []);
 
         container.innerHTML = mediaItems.map(item => `
             <div style="position: relative; width: 60px; height: 60px; border-radius: 4px; overflow: hidden; background: #eee;">
-                ${item.media_type === 'video' 
-                    ? `<video src="${item.media_url}" style="width:100%; height:100%; object-fit:cover;"></video>`
-                    : `<img src="${item.media_url}" style="width:100%; height:100%; object-fit:cover;">`
-                }
+                ${item.media_type === 'video'
+                ? `<video src="${item.media_url}" style="width:100%; height:100%; object-fit:cover;"></video>`
+                : `<img src="${item.media_url}" style="width:100%; height:100%; object-fit:cover;">`
+            }
                 <button onclick="deleteServiceMedia('${item.id}', '${serviceId}')" 
                     style="position: absolute; top: 0; right: 0; background: rgba(231, 76, 60, 0.8); color: white; border: none; width: 20px; height: 20px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                     &times;
                 </button>
             </div>
         `).join('');
-    } catch(e) {
+    } catch (e) {
         console.error(e);
     }
 }
 
 async function deleteServiceMedia(mediaId, serviceId) {
-    if(!confirm("Are you sure you want to delete this media?")) return;
+    if (!confirm("Are you sure you want to delete this media?")) return;
 
     try {
         const token = localStorage.getItem('accessToken') || localStorage.getItem('authToken');
@@ -217,22 +240,33 @@ async function deleteServiceMedia(mediaId, serviceId) {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
-        if(response.ok) {
+        if (response.ok) {
             fetchServiceMedia(serviceId); // reload
         } else {
             alert("Failed to delete media.");
         }
-    } catch(e) {
+    } catch (e) {
         console.error(e);
         alert("Error deleting media.");
     }
 }
 
 // Initialize
-document.addEventListener('DOMContentLoaded', function() {
-    // Show requests tab by default
-    showRequestsTab();
-    loadBookingRequests();
+document.addEventListener('DOMContentLoaded', function () {
+    // Show home tab by default
+    showHomeTab();
+    
+    // Initialize Schedule Form
+    const availForm = document.getElementById('availabilityForm');
+    if (availForm) {
+        availForm.addEventListener('submit', handleAvailabilitySubmit);
+    }
+
+    // Initialize Memories
+    const addMemoryBtn = document.getElementById('addMemoryBtn');
+    if (addMemoryBtn) {
+        addMemoryBtn.addEventListener('click', handleAddMemory);
+    }
 });
 
 async function loadBookingRequests() {
@@ -260,7 +294,7 @@ async function loadBookingRequests() {
 
 function renderRequests(requests) {
     const container = document.getElementById('requestCardsContainer');
-    
+
     if (!requests || requests.length === 0) {
         container.innerHTML = '<div class="no-services" style="grid-column: 1/-1;">No pending booking requests right now.</div>';
         return;
@@ -284,7 +318,7 @@ function renderRequests(requests) {
                     <span class="price">Service: ${req.service_title || 'General'}</span>
                     ${isPending ? `
                     <div class="action-buttons">
-                        <button class="accept-btn" onclick="updateRequestStatus('${req.id}', 'accepted')">Accept</button>
+                        <button class="accept-btn" onclick="updateRequestStatus('${req.id}', 'accepted', '${req.price_quote || 0}')">Accept</button>
                         <button class="reject-btn" onclick="updateRequestStatus('${req.id}', 'rejected')" style="background: #e74c3c; color: white;">Reject</button>
                     </div>
                     ` : ''}
@@ -295,11 +329,20 @@ function renderRequests(requests) {
     }).join('');
 }
 
-async function updateRequestStatus(itemId, status) {
+async function updateRequestStatus(itemId, status, currentPrice = 0) {
+    let price_quote = currentPrice;
+
+    if (status === 'accepted') {
+        const input = window.prompt(`Confirm or update your price quote for this event (₹):`, currentPrice);
+        if (input === null) return; // User cancelled
+        price_quote = parseFloat(input) || currentPrice;
+        if (isNaN(price_quote)) price_quote = currentPrice;
+    }
+
     try {
         const response = await window.fetchWithAuth(`/vendors/booking-requests/${itemId}`, {
             method: 'PATCH',
-            body: JSON.stringify({ status })
+            body: JSON.stringify({ status, price_quote })
         });
 
         if (!response.ok) throw new Error('Failed to update status');
@@ -313,6 +356,8 @@ async function updateRequestStatus(itemId, status) {
 }
 
 // ===== PROFILE CARD TAB =====
+let vendorServices = [];
+
 async function loadProfileCardData() {
     try {
         const res = await window.fetchWithAuth('/auth/profile');
@@ -321,37 +366,85 @@ async function loadProfileCardData() {
         const user = data.data || data;
 
         document.getElementById('previewName').textContent = user.full_name || 'Your Name';
-
         if (user.profile_image) {
             document.getElementById('previewImage').src = user.profile_image;
-            document.getElementById('editProfileImage').value = user.profile_image;
-        }
-        if (user.tagline) {
-            document.getElementById('editTagline').value = user.tagline;
-            document.getElementById('previewTagline').textContent = user.tagline;
         }
 
-        // Load services to show category + price
+        // Load services for dropdown
         const svcRes = await window.fetchWithAuth('/services/vendor');
+        const dropdown = document.getElementById('selectServiceForCard');
+        
         if (svcRes.ok) {
             const services = await svcRes.json();
-            const svcArr = Array.isArray(services) ? services : (services.data || []);
-            if (svcArr.length > 0) {
-                const categories = svcArr.slice(0, 2).map(s => s.title).join(', ');
-                document.getElementById('previewCategory').textContent = '🏷️ ' + categories;
-
-                const city = svcArr[0]?.city || '';
-                if (city) document.getElementById('previewCity').textContent = '📍 ' + city;
-
-                const minPrice = Math.min(...svcArr.map(s => parseFloat(s.price) || 0));
-                if (minPrice > 0) {
-                    document.getElementById('previewPrice').textContent = '₹' + minPrice.toLocaleString('en-IN') + '+';
+            vendorServices = Array.isArray(services) ? services : (services.data || []);
+            
+            if (vendorServices.length === 0) {
+                dropdown.innerHTML = '<option value="">No services available. Create one first!</option>';
+            } else {
+                dropdown.innerHTML = '<option value="">Select a service to customize...</option>' + 
+                    vendorServices.map(s => `<option value="${s.id}">${s.title}</option>`).join('');
+                
+                // Load first service if none selected
+                if (!dropdown.value && vendorServices.length > 0) {
+                    loadServiceCardDetails(vendorServices[0].id);
+                    dropdown.value = vendorServices[0].id;
                 }
+            }
+        } else {
+            console.error('Failed to load services for dropdown:', svcRes.status);
+            if (svcRes.status === 403) {
+                dropdown.innerHTML = '<option value="">🔒 Access Denied (403)</option>';
+                showVendorNotification('Permission denied while loading services.', 'error');
+            } else {
+                dropdown.innerHTML = '<option value="">Error loading services.</option>';
             }
         }
     } catch (e) {
         console.error('Error loading profile card data:', e);
+        const dropdown = document.getElementById('selectServiceForCard');
+        if (dropdown) dropdown.innerHTML = '<option value="">Error loading data.</option>';
     }
+}
+
+function updateLivePreview() {
+    const title = document.getElementById('editServiceTitle').value;
+    const tagline = document.getElementById('editTagline').value;
+    const price = document.getElementById('editServicePrice').value;
+    const city = document.getElementById('editServiceCity').value;
+    const image = document.getElementById('editServiceImage').value;
+
+    document.getElementById('previewName').textContent = title || 'Your Service';
+    document.getElementById('previewTagline').textContent = tagline || 'Your tagline...';
+    document.getElementById('previewPrice').textContent = price ? '₹' + (parseInt(price) || 0).toLocaleString() : '₹–';
+    document.getElementById('previewCity').textContent = city ? '📍 ' + city : '📍 Your City';
+    
+    if (image) {
+        document.getElementById('previewImage').src = image;
+    }
+}
+
+function loadServiceCardDetails(serviceId) {
+    if (!serviceId) {
+        document.getElementById('editServiceTitle').value = '';
+        document.getElementById('editTagline').value = '';
+        document.getElementById('editServicePrice').value = '';
+        document.getElementById('editServiceCity').value = '';
+        document.getElementById('editServiceImage').value = '';
+        updateLivePreview();
+        return;
+    }
+
+    const service = vendorServices.find(s => s.id === serviceId);
+    if (!service) return;
+
+    // Update inputs
+    document.getElementById('editServiceTitle').value = service.title || '';
+    document.getElementById('editTagline').value = service.tagline || '';
+    document.getElementById('editServicePrice').value = service.price || '';
+    document.getElementById('editServiceCity').value = service.city || '';
+    document.getElementById('editServiceImage').value = service.service_image_url || '';
+
+    updateLivePreview();
 }
 
 function previewUploadedImage(input) {
@@ -365,70 +458,192 @@ function previewUploadedImage(input) {
 }
 
 async function saveProfileCard() {
-    const tagline = document.getElementById('editTagline').value.trim();
-    const imageUrl = document.getElementById('editProfileImage').value.trim();
-    const fileInput = document.getElementById('editProfileImageFile');
-    const statusEl = document.getElementById('saveCardStatus');
-    const btn = document.querySelector('.save-card-btn');
+    const serviceId = document.getElementById('selectServiceForCard').value;
+    if (!serviceId) return alert('Please select a service.');
 
+    const payload = {
+        title: document.getElementById('editServiceTitle').value.trim(),
+        tagline: document.getElementById('editTagline').value.trim(),
+        price: parseInt(document.getElementById('editServicePrice').value),
+        city: document.getElementById('editServiceCity').value.trim()
+    };
+
+    const btn = document.querySelector('.save-card-btn');
     btn.disabled = true;
     btn.textContent = 'Saving...';
-    statusEl.textContent = '';
 
     try {
-        // If a file was chosen, upload it first
-        let finalImageUrl = imageUrl;
-        if (fileInput.files && fileInput.files[0]) {
-            const formData = new FormData();
-            formData.append('file', fileInput.files[0]);
-            const uploadRes = await window.fetchWithAuth('/auth/profile/image', {
-                method: 'POST',
-                body: formData,
-                headers: {} // Don't set Content-Type; browser handles multipart boundary
-            });
-            if (uploadRes.ok) {
-                const uploadData = await uploadRes.json();
-                finalImageUrl = uploadData.url || uploadData.profile_image || finalImageUrl;
-            }
-        }
-
-        // Save tagline and image URL via profile PATCH
-        const payload = {};
-        if (tagline) payload.tagline = tagline;
-        if (finalImageUrl) payload.profile_image = finalImageUrl;
-
-        const res = await window.fetchWithAuth('/auth/profile', {
+        const res = await window.fetchWithAuth(`/services/${serviceId}`, {
             method: 'PATCH',
             body: JSON.stringify(payload)
         });
 
-        if (!res.ok) throw new Error('Save failed');
-
-        statusEl.style.color = '#27ae60';
-        statusEl.textContent = '✅ Profile card updated! Customers will see these changes immediately.';
-        showVendorNotification('Profile card saved!', 'success');
-
-        // Update preview
-        if (finalImageUrl) document.getElementById('previewImage').src = finalImageUrl;
-        if (tagline) document.getElementById('previewTagline').textContent = tagline;
-
+        if (res.ok) {
+            showVendorNotification('Profile card updated!', 'success');
+            // Update local state
+            const sIdx = vendorServices.findIndex(s => s.id === serviceId);
+            if (sIdx > -1) vendorServices[sIdx] = { ...vendorServices[sIdx], ...payload };
+        } else {
+            throw new Error('Save failed');
+        }
     } catch (err) {
-        statusEl.style.color = '#e53935';
-        statusEl.textContent = '❌ Could not save changes. Please try again.';
-        showVendorNotification('Save failed.', 'error');
+        showVendorNotification('Failed to save profile card.', 'error');
     } finally {
         btn.disabled = false;
-        btn.textContent = '💾 Save Changes';
+        btn.textContent = '💾 Save Card Changes';
     }
 }
 
+// ===== SCHEDULE TAB LOGIC =====
+async function loadSchedule() {
+    const grid = document.getElementById('scheduleGrid');
+    try {
+        const res = await window.fetchWithAuth('/vendors/booking-requests');
+        if (!res.ok) throw new Error('Load failed');
+        const bookings = await res.json();
+        const upcoming = (Array.isArray(bookings) ? bookings : []).filter(b => b.status === 'accepted');
+        
+        if (upcoming.length === 0) {
+            grid.innerHTML = '<div class="no-services" style="grid-column: 1/-1;">No upcoming bookings.</div>';
+            return;
+        }
+
+        grid.innerHTML = upcoming.map(item => `
+            <div class="service-card">
+                <h3>${item.booking_title || item.title || 'Event'}</h3>
+                <div style="font-size:14px; color:#666; margin-bottom:10px;">📅 ${new Date(item.event_start).toLocaleString()}</div>
+                <div style="font-size:13px; color:#888;">👤 Customer: ${item.customer_name || 'Customer'}</div>
+                <button class="accept-btn" style="margin-top:15px;" onclick="completeBooking('${item.id}')">Mark Completed</button>
+            </div>
+        `).join('');
+    } catch (e) {
+        console.error(e);
+        grid.innerHTML = '<div class="error">Failed to load schedule.</div>';
+    }
+}
+
+async function loadBlockedDates() {
+    const list = document.getElementById('blockedDatesList');
+    try {
+        const profRes = await window.fetchWithAuth('/auth/profile');
+        const profData = await profRes.json();
+        const userId = profData.data?.id || profData.id;
+
+        const res = await fetch(`/vendors/${userId}/availability`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const blocks = Array.isArray(data) ? data : (data.blocks || []);
+
+        if (blocks.length === 0) {
+            list.innerHTML = '<p style="font-size:12px; color:#888;">No dates blocked.</p>';
+            return;
+        }
+
+        list.innerHTML = blocks.map(block => `
+            <div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <strong style="font-size:13px;">${block.reason || 'Blocked'}</strong><br>
+                    <small style="color:#666; font-size:11px;">${new Date(block.start_time).toLocaleDateString()} - ${new Date(block.end_time).toLocaleDateString()}</small>
+                </div>
+                <button style="border:none; background:none; color:#e74c3c; cursor:pointer;" onclick="removeBlock('${block.id}', '${userId}')">&times;</button>
+            </div>
+        `).join('');
+    } catch (e) { console.error(e); }
+}
+
+async function handleAvailabilitySubmit(e) {
+    e.preventDefault();
+    const start_time = document.getElementById('blockStart').value;
+    const end_time = document.getElementById('blockEnd').value;
+    const reason = document.getElementById('blockReason').value;
+
+    try {
+        const profRes = await window.fetchWithAuth('/auth/profile');
+        const profData = await profRes.json();
+        const userId = profData.data?.id || profData.id;
+
+        const res = await fetch(`/vendors/${userId}/availability`, {
+            method: 'POST',
+            headers: { 
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ start_time, end_time, reason })
+        });
+        if (res.ok) {
+            showVendorNotification('Dates blocked!');
+            document.getElementById('availabilityForm').reset();
+            loadBlockedDates();
+        }
+    } catch (err) { console.error(err); }
+}
+
+window.removeBlock = async (blockId, userId) => {
+    if (!confirm('Remove block?')) return;
+    try {
+        const res = await fetch(`/vendors/${userId}/availability/${blockId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('accessToken')}` }
+        });
+        if (res.ok) loadBlockedDates();
+    } catch (err) { console.error(err); }
+};
+
+window.completeBooking = async (itemId) => {
+    if (!confirm('Confirm completion?')) return;
+    try {
+        const res = await window.fetchWithAuth(`/bookings/items/${itemId}/complete`, { method: 'PATCH' });
+        if (res.ok) {
+            showVendorNotification('Booking completed!');
+            loadSchedule();
+        }
+    } catch (e) { console.error(e); }
+};
+
+// ===== MEMORIES TAB LOGIC =====
+let localMemories = []; 
+
+function renderMemories() {
+    const grid = document.getElementById('memoriesGrid');
+    if (localMemories.length === 0) {
+        grid.innerHTML = '<div class="no-services" style="grid-column: 1/-1;">No memories added yet.</div>';
+        return;
+    }
+
+    grid.innerHTML = localMemories.map((m, idx) => `
+        <div class="service-card" style="position:relative;">
+            <div style="font-weight:600; color:#e53935; font-size:12px; margin-bottom:5px;">${m.event.toUpperCase()}</div>
+            <a href="${m.url}" target="_blank" style="font-size:13px; color:#3498db; text-decoration:none;">${m.url}</a>
+            <button onclick="removeMemory(${idx})" style="position:absolute; top:10px; right:10px; border:none; background:none; color:#e74c3c; cursor:pointer;">&times;</button>
+        </div>
+    `).join('');
+}
+
+function handleAddMemory() {
+    const event = document.getElementById('memoryEventSelect').value;
+    const url = document.getElementById('memoryVideoURL').value.trim();
+    if (!event || !url) return alert('Fill all fields.');
+
+    localMemories.push({ event, url });
+    document.getElementById('memoryVideoURL').value = '';
+    renderMemories();
+}
+
+window.removeMemory = (idx) => {
+    localMemories.splice(idx, 1);
+    renderMemories();
+};
+
 function showVendorNotification(msg, type = 'success') {
     const n = document.createElement('div');
-    n.style.cssText = `position:fixed;bottom:25px;right:25px;padding:14px 22px;border-radius:12px;font-size:14px;font-weight:500;color:white;z-index:9999;box-shadow:0 8px 25px rgba(0,0,0,0.2);animation:slideNotifIn 0.4s ease;background:${type==='error'?'#e53935':'#27ae60'};`;
+    n.style.cssText = `position:fixed;bottom:25px;right:25px;padding:14px 22px;border-radius:12px;font-size:14px;font-weight:500;color:white;z-index:9999;box-shadow:0 8px 25px rgba(0,0,0,0.2);animation:slideNotifIn 0.4s ease;background:${type === 'error' ? '#e53935' : '#27ae60'};`;
     n.textContent = msg;
-    const style = document.createElement('style');
-    style.textContent = '@keyframes slideNotifIn{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}';
-    document.head.appendChild(style);
+    if (!document.getElementById('notif-style')) {
+        const style = document.createElement('style');
+        style.id = 'notif-style';
+        style.textContent = '@keyframes slideNotifIn{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}';
+        document.head.appendChild(style);
+    }
     document.body.appendChild(n);
     setTimeout(() => n.remove(), 3500);
-}
+}

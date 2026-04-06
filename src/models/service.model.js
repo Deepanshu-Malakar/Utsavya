@@ -6,13 +6,14 @@ const createVendorService = async ({
     description,
     city,
     price,
-    price_type
+    price_type,
+    tagline
 }) => {
 
     const query = `
         INSERT INTO vendor_services
-        (vendor_id, title, description, city, price, price_type)
-        VALUES ($1,$2,$3,$4,$5,$6)
+        (vendor_id, title, description, city, price, price_type, tagline)
+        VALUES ($1,$2,$3,$4,$5,$6,$7)
         RETURNING *
     `;
 
@@ -22,7 +23,8 @@ const createVendorService = async ({
         description,
         city,
         price,
-        price_type
+        price_type,
+        tagline
     ];
 
     const { rows } = await pool.query(query, values);
@@ -60,17 +62,48 @@ const getAllServices = async (limit = 10, offset = 0) => {
 };
 
 
-const getServiceById = async (service_id) => {
+const updateVendorService = async (service_id, vendor_id, updates) => {
+    const fields = [];
+    const values = [];
+    let idx = 1;
 
+    // Allowed fields for update
+    const allowedFields = ['title', 'description', 'city', 'price', 'price_type', 'is_active', 'category', 'tagline'];
+    
+    for (const [key, value] of Object.entries(updates)) {
+        if (allowedFields.includes(key) && value !== undefined) {
+            fields.push(`${key} = $${idx++}`);
+            values.push(value);
+        }
+    }
+
+    if (fields.length === 0) {
+        throw new Error("No valid fields provided for update");
+    }
+
+    values.push(service_id);
+    const serviceIdx = idx++;
+    values.push(vendor_id);
+    const vendorIdx = idx++;
+
+    const query = `
+        UPDATE vendor_services
+        SET ${fields.join(', ')}, updated_at = NOW()
+        WHERE id = $${serviceIdx} AND vendor_id = $${vendorIdx}
+        RETURNING *
+    `;
+
+    const { rows } = await pool.query(query, values);
+    return rows[0];
+};
+
+const getServiceById = async (service_id) => {
     const query = `
         SELECT *
         FROM vendor_services
         WHERE id = $1
-        AND is_active = TRUE
     `;
-
     const { rows } = await pool.query(query, [service_id]);
-
     return rows[0];
 };
 
@@ -78,5 +111,6 @@ module.exports = {
     createVendorService,
     getVendorServices,
     getAllServices,
-    getServiceById
+    getServiceById,
+    updateVendorService
 };

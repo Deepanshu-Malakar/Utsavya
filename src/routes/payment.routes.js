@@ -8,7 +8,8 @@ const { body } = require("express-validator");
 const validate = require("../middlewares/validate.middleware");
 
 const {
-    createPaymentController
+    createPaymentController,
+    verifyPaymentController
 } = require("../controllers/payment.controller");
 
 const authenticateUser = require("../middlewares/auth.middleware");
@@ -27,6 +28,11 @@ const createPaymentValidation = [
 // Note: This returns a Stripe Checkout URL. The frontend should 
 // redirect the user to that URL.
 router.post("/", authenticateUser, createPaymentValidation, createPaymentController);
+
+// --- FRONTEND INTEGRATION GUIDE: Verify Payment Status (Success Redirect) ---
+// GET /payments/verify/:bookingId
+// Required: Authorization: Bearer <accessToken>
+router.get("/verify/:bookingId", authenticateUser, verifyPaymentController);
 
 // Webhook endpoint is mapped in src/index.js directly to avoid body-parser conflicts!
 

@@ -1,88 +1,161 @@
-// Cart management for booking items
-let cart = [];
+// ============================================================
+// vendors.js – Customer Vendor Browsing & Booking Flow
+// ============================================================
+let cart = [];           // In-memory cart (synced from backend on load)
+let existingItems = [];  // Already-submitted booking_items from backend
 let selectedBookingId = null;
+let selectedBookingTitle = null;
+let statusPollInterval = null;
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Check if coming from events page with selected booking
-    selectedBookingId = sessionStorage.getItem('selectedBookingId');
-    if (selectedBookingId) {
-        // Clear the stored booking ID after use
-        sessionStorage.removeItem('selectedBookingId');
-        loadBookingDetails();
+document.addEventListener('DOMContentLoaded', async function () {
+    // Check for payment outcomes
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'success') {
+        const bId = urlParams.get('booking_id');
+        if (bId) {
+            // VERIFY WITH BACKEND (Manual fallback for localhost)
+            try {
+                await window.fetchWithAuth(`/payments/verify/${bId}`);
+            } catch (e) {
+                console.error('Verification failed:', e);
+            }
+        }
+        const banner = document.getElementById('paymentBanner');
+        if (banner) banner.style.display = 'block';
+        setTimeout(() => { if (banner) banner.style.display = 'none'; }, 10000);
+    } else if (urlParams.get('payment') === 'cancelled') {
+        showNotification('Payment was cancelled. Your vendor selections are still saved.', 'error');
     }
 
-    // Load vendors
+    // Check if coming from events page with a pre-selected booking
+    selectedBookingId = sessionStorage.getItem('selectedBookingId') || urlParams.get('booking_id');
+    selectedBookingTitle = sessionStorage.getItem('selectedBookingTitle');
+    if (selectedBookingId) {
+        sessionStorage.removeItem('selectedBookingId');
+        sessionStorage.removeItem('selectedBookingTitle');
+        // Hydrate state from backend
+        await hydrateBookingState();
+    }
+
+    updateSelectedEventBanner();
     loadVendors();
 });
 
-async function loadBookingDetails() {
+// ------------------- BACKEND HYDRATION -------------------
+
+// Called on startup to load existing booking_items into cart UI
+async function hydrateBookingState() {
     if (!selectedBookingId) return;
-
     try {
-        const response = await window.fetchWithAuth(`/bookings/${selectedBookingId}`);
-        if (response.ok) {
-            const booking = await response.json();
-            updateHeroWithBooking(booking);
+        const res = await window.fetchWithAuth(`/bookings/${selectedBookingId}`);
+        if (!res.ok) return;
+        const booking = await res.json();
+
+        selectedBookingTitle = selectedBookingTitle || booking.title;
+        existingItems = booking.items || [];
+
+        // Build the in-memory cart from accepted/pending items
+        cart = existingItems
+            .filter(item => !['rejected', 'cancelled'].includes(item.status))
+            .map(item => ({
+                vendorId: item.vendor_id,
+                itemId: item.id,
+                name: item.vendor_name || 'Vendor',
+                category: item.service_title || '',
+                location: '',
+                serviceId: item.service_id,
+                price: parseFloat(item.price_quote) || parseFloat(item.service_price) || 0,
+                status: item.status   // 'pending' | 'accepted' | 'rejected'
+            }));
+
+        if (cart.length > 0) {
+            updateCart();
+            renderRequestStatus(existingItems);
+
+            // If booking is already confirmed (paid), show that
+            if (booking.status === 'confirmed') {
+                showPaidState();
+            } else {
+                // Resume polling if there are pending items
+                const hasPending = cart.some(i => i.status === 'pending');
+                const allAccepted = cart.length > 0 && cart.every(i => i.status === 'accepted');
+                if (hasPending) startStatusPolling();
+                if (allAccepted) showPayNowButton(booking);
+            }
         }
-    } catch (error) {
-        console.error('Error loading booking details:', error);
+    } catch (e) {
+        console.error('Failed to hydrate booking state:', e);
     }
 }
 
-function updateHeroWithBooking(booking) {
-    const heroContent = document.querySelector('.hero-content h1');
-    if (heroContent) {
-        heroContent.innerHTML = `Find Vendors for <span>${booking.title}</span>`;
+// ------------------- BOOKING CONTEXT -------------------
+
+function updateSelectedEventBanner() {
+    let banner = document.getElementById('selectedEventBanner');
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'selectedEventBanner';
+        banner.style.cssText = `
+            color: white; padding: 12px 20px; text-align: center;
+            font-size: 14px; font-weight: 500; position: sticky; top: 0; z-index: 100;
+            transition: background 0.3s;
+        `;
+        const main = document.querySelector('.main-container');
+        if (main) main.parentNode.insertBefore(banner, main);
     }
 
-    const eventSelect = document.getElementById('eventSelect');
-    if (eventSelect) {
-        // Add the current booking as the selected option
-        const eventDate = new Date(booking.event_start).toLocaleDateString('en-IN');
-        eventSelect.innerHTML = `<option value="${booking.id}" selected>${booking.title} - ${eventDate}</option>` + eventSelect.innerHTML;
+    if (selectedBookingId && selectedBookingTitle) {
+        banner.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        banner.innerHTML = `📅 Adding vendors to: <strong>${selectedBookingTitle}</strong>
+            <button onclick="changeEvent()" style="margin-left:12px; background:rgba(255,255,255,0.25); border:1px solid white;
+            color:white; padding:4px 10px; border-radius:4px; cursor:pointer; font-size:12px;">Change</button>`;
+    } else {
+        banner.style.background = 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)';
+        banner.innerHTML = `⚠️ No event selected. Click <strong>"+ Add"</strong> on any vendor to choose your event.`;
     }
+    banner.style.display = 'block';
 }
+
+function changeEvent() {
+    selectedBookingId = null;
+    selectedBookingTitle = null;
+    cart = [];
+    existingItems = [];
+    updateCart();
+    updateSelectedEventBanner();
+    showEventSelectorModal(null, null);
+}
+
+// ------------------- LOAD & RENDER VENDORS -------------------
 
 async function loadVendors() {
     try {
-        // Fetch DOM filters if evaluating
         const categoryVal = document.querySelector('input[name="category"]:checked')?.value || 'all';
         const budgetVal = document.getElementById('budgetSlider')?.value || 100000;
         const searchTerm = document.querySelector('.search-box input')?.value.toLowerCase().trim() || '';
-        
+
         let url = new URL(window.location.origin + '/vendors');
         if (categoryVal !== 'all') url.searchParams.append('service', categoryVal);
-        if (budgetVal < 100000) url.searchParams.append('max_price', budgetVal);
-        if (searchTerm) url.searchParams.append('city', searchTerm); // matching text to city or service name based on API support
+        if (parseInt(budgetVal) < 100000) url.searchParams.append('max_price', budgetVal);
+        if (searchTerm) url.searchParams.append('city', searchTerm);
 
         const response = await window.fetchWithAuth(url.pathname + url.search);
-
-        if (!response.ok) {
-            throw new Error('Failed to load vendors');
-        }
+        if (!response.ok) throw new Error('Failed to load vendors');
 
         const result = await response.json();
-        const vendors = Array.isArray(result) ? result : (result.vendors || []);
+        const vendors = Array.isArray(result) ? result : (result.vendors || result.data || []);
 
         renderVendors(vendors);
 
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        if (loadingIndicator) {
-            loadingIndicator.remove();
-        }
-
+        document.getElementById('loadingIndicator')?.remove();
         const vendorCount = document.getElementById('vendorCount');
-        if (vendorCount) {
-            vendorCount.textContent = `${vendors.length} Vendor${vendors.length === 1 ? '' : 's'}`;
-        }
+        if (vendorCount) vendorCount.textContent = `${vendors.length} Vendor${vendors.length === 1 ? '' : 's'}`;
 
     } catch (error) {
         console.error('Error loading vendors:', error);
-        const vendorsGrid = document.getElementById('vendorsGrid');
-        if (vendorsGrid) {
-            vendorsGrid.innerHTML = '<p class="error-message">Could not load vendors. Please refresh.</p>';
-        }
-        showNotification('Failed to load vendors. Please try again.', 'error');
+        const grid = document.getElementById('vendorsGrid');
+        if (grid) grid.innerHTML = '<p class="error-message">Could not load vendors. Please refresh.</p>';
+        showNotification('Failed to load vendors.', 'error');
     }
 }
 
@@ -97,49 +170,64 @@ function renderVendors(vendors) {
 
     container.innerHTML = vendors.map(vendor => {
         const rating = parseFloat(vendor.average_rating) || 0;
-        const fullStars = Math.round(rating);
-        const starsHtml = '★'.repeat(fullStars) + '☆'.repeat(5 - fullStars);
+        const starsHtml = '★'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
         const reviewCount = parseInt(vendor.total_reviews) || 0;
 
-        // Get starting price from first service
-        const services = vendor.services || [];
-        const minPrice = services.length > 0
-            ? Math.min(...services.map(s => parseFloat(s.price) || 0))
-            : 0;
-        const priceDisplay = minPrice > 0
-            ? `₹${minPrice.toLocaleString('en-IN')}+`
-            : 'Contact for price';
+        // Price: use starting_price from search API; fall back to nested services
+        const minPrice = parseFloat(vendor.starting_price) ||
+            (() => {
+                const svcs = vendor.services || [];
+                const prices = svcs.map(s => parseFloat(s.price) || 0).filter(p => p > 0);
+                return prices.length > 0 ? Math.min(...prices) : 0;
+            })();
 
-        const city = vendor.city || (services[0]?.city) || '';
-        const categories = services.length > 0
-            ? services.slice(0, 2).map(s => s.category || s.title).filter(Boolean).join(', ')
-            : 'Event Services';
+        const priceDisplay = minPrice > 0 ? `₹${minPrice.toLocaleString('en-IN')}+` : 'Contact for price';
+        const city = vendor.city || vendor.business_city || '';
+
+        const servicesList = vendor.services || [];
+        const categories = servicesList.length > 0
+            ? servicesList.slice(0, 2).map(s => typeof s === 'string' ? s : (s.category || s.title)).filter(Boolean).join(', ')
+            : (vendor.category || 'Event Services');
 
         const profileImg = vendor.profile_image || 'images/default-vendor.jpg';
 
+        // Check if already in cart (persistent from backend)
+        const existingItem = existingItems.find(i => i.vendor_id === vendor.id && !['rejected', 'cancelled'].includes(i.status));
+        const inCart = existingItem || cart.some(i => i.vendorId === vendor.id);
+        const itemStatus = existingItem?.status || (inCart ? 'pending' : null);
+
+        const statusBadge = itemStatus === 'accepted'
+            ? `<span style="background:#27ae60;color:white;padding:2px 8px;border-radius:4px;font-size:11px;">✅ Accepted</span>`
+            : itemStatus === 'pending'
+            ? `<span style="background:#f39c12;color:white;padding:2px 8px;border-radius:4px;font-size:11px;">⏳ Pending</span>`
+            : '';
+
         return `
             <div class="vendor-card" data-vendor-id="${vendor.id}">
-                <div class="vendor-image" onclick="openVendorProfile('${vendor.id}')" style="cursor:pointer;" title="View ${vendor.full_name}'s profile">
+                <div class="vendor-image" onclick="openVendorProfile('${vendor.id}')" style="cursor:pointer;">
                     <img src="${profileImg}" alt="${vendor.full_name}" onerror="this.src='images/default-vendor.jpg'">
-                    <div class="vendor-image-overlay">
-                        <span>View Profile →</span>
-                    </div>
+                    <div class="vendor-image-overlay"><span>View Profile →</span></div>
                 </div>
                 <div class="vendor-details">
-                    <h3 onclick="openVendorProfile('${vendor.id}')" style="cursor:pointer;">${vendor.full_name}</h3>
+                    <h3 onclick="openVendorProfile('${vendor.id}')" style="cursor:pointer;">${vendor.full_name || 'Vendor'}</h3>
                     <p class="category">🏷️ ${categories}</p>
                     ${city ? `<p class="location">📍 ${city}</p>` : ''}
-                    <div class="vendor-rating" style="color:#f39c12; font-size:14px; margin: 6px 0;">
+                    <div style="color:#f39c12; font-size:14px; margin: 6px 0;">
                         ${starsHtml}
                         <span style="color:#999; font-size:12px; margin-left:5px;">${rating > 0 ? rating.toFixed(1) : 'No rating'} (${reviewCount})</span>
                     </div>
-                    <div class="vendor-price" style="font-size:16px; font-weight:700; color:#27ae60; margin: 5px 0;">
-                        ${priceDisplay}
-                    </div>
+                    <div style="font-size:16px; font-weight:700; color:#27ae60; margin: 5px 0;">${priceDisplay}</div>
+                    ${statusBadge}
                 </div>
-                <div class="vendor-card-actions" style="padding: 12px 20px 16px; display:flex; gap:8px; border-top:1px solid #f5f5f5;">
-                    <button class="view-profile-btn" onclick="openVendorProfile('${vendor.id}')" style="flex:1; padding:9px; border:2px solid #e53935; background:transparent; color:#e53935; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600; transition:0.3s;" onmouseover="this.style.background='#e53935';this.style.color='white'" onmouseout="this.style.background='transparent';this.style.color='#e53935'">👁 Profile</button>
-                    <button class="add-btn" onclick="addToCart(this)" style="flex:1;">+ Add</button>
+                <div style="padding: 12px 20px 16px; display:flex; gap:8px; border-top:1px solid #f5f5f5;">
+                    <button onclick="openVendorProfile('${vendor.id}')"
+                        style="flex:1; padding:9px; border:2px solid #e53935; background:transparent; color:#e53935; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600; transition:0.3s;"
+                        onmouseover="this.style.background='#e53935';this.style.color='white'"
+                        onmouseout="this.style.background='transparent';this.style.color='#e53935'">👁 Profile</button>
+                    <button class="add-btn ${inCart ? 'added' : ''}" onclick="addToCart(this)"
+                        style="flex:1;" ${inCart ? 'disabled' : ''}>
+                        ${itemStatus === 'accepted' ? '✅ Accepted' : inCart ? '✓ Added' : '+ Add'}
+                    </button>
                 </div>
             </div>
         `;
@@ -150,75 +238,124 @@ function openVendorProfile(id) {
     window.location.href = `vendor_profile.html?id=${id}`;
 }
 
+// ------------------- EVENT SELECTOR MODAL -------------------
+
+async function showEventSelectorModal(buttonEl, vendorCard) {
+    try {
+        const res = await window.fetchWithAuth('/bookings');
+        if (!res.ok) throw new Error('Failed to load events');
+        const bookings = await res.json();
+        const activeBookings = bookings.filter(b => ['planning', 'pending'].includes(b.status));
+
+        if (activeBookings.length === 0) {
+            showNotification('No active events found. Please create one on the Events page first.', 'error');
+            setTimeout(() => { window.location.href = 'events_page.html'; }, 2500);
+            return;
+        }
+
+        const modal = document.createElement('div');
+        modal.id = 'eventSelectorModal';
+        modal.style.cssText = `
+            position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:3000;
+            display:flex; align-items:center; justify-content:center; font-family:'Poppins',sans-serif;
+        `;
+        modal.innerHTML = `
+            <div style="background:white; border-radius:16px; padding:30px; width:420px; max-width:90vw; max-height:80vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.25);">
+                <h3 style="margin:0 0 6px; font-size:18px;">📅 Select an Event</h3>
+                <p style="color:#888; font-size:13px; margin:0 0 20px;">Choose which event you want to add this vendor to.</p>
+                ${activeBookings.map(b => `
+                    <div onclick="selectEventFromModal('${b.id}','${(b.title||'').replace(/'/g,"\\'")}',this)"
+                        style="border:2px solid #eee; border-radius:10px; padding:14px 16px; cursor:pointer; margin-bottom:10px; transition:0.2s;"
+                        onmouseover="this.style.borderColor='#e53935';this.style.background='#fff5f5'"
+                        onmouseout="this.style.borderColor='#eee';this.style.background='white'">
+                        <div style="font-weight:600; color:#222;">🎉 ${b.title}</div>
+                        <div style="font-size:12px; color:#888;">📍 ${b.location || 'No location'} &nbsp;|&nbsp; 📅 ${new Date(b.event_start).toLocaleDateString('en-IN')}</div>
+                    </div>
+                `).join('')}
+                <button onclick="document.getElementById('eventSelectorModal').remove()"
+                    style="margin-top:10px; width:100%; padding:10px; border:2px solid #ddd; background:transparent; border-radius:8px; cursor:pointer; color:#666;">Cancel</button>
+            </div>
+        `;
+        modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+        document.body.appendChild(modal);
+        window._pendingAddButton = buttonEl;
+
+    } catch (err) {
+        showNotification('Could not load your events. Please try again.', 'error');
+    }
+}
+
+async function selectEventFromModal(bookingId, bookingTitle, el) {
+    selectedBookingId = bookingId;
+    selectedBookingTitle = bookingTitle;
+    cart = [];
+    existingItems = [];
+    document.getElementById('eventSelectorModal')?.remove();
+
+    // Hydrate with any existing items for this booking
+    await hydrateBookingState();
+    updateSelectedEventBanner();
+
+    if (window._pendingAddButton) {
+        addToCart(window._pendingAddButton);
+        window._pendingAddButton = null;
+    }
+}
+
+// ------------------- CART MANAGEMENT -------------------
 
 async function addToCart(button) {
     if (!selectedBookingId) {
-        showNotification('Please select an event first from the Events page.', 'error');
+        showEventSelectorModal(button, button.closest('.vendor-card'));
         return;
     }
 
-    // Get vendor information from the card
     const card = button.closest('.vendor-card');
     const vendorId = card.getAttribute('data-vendor-id');
     const vendorName = card.querySelector('.vendor-details h3').textContent;
-    const vendorCategory = card.querySelector('.category').textContent;
-    const vendorLocation = card.querySelector('.location').textContent;
 
-    // Check if vendor already in cart
-    const existingItem = cart.find(item => item.vendorId === vendorId);
-
-    if (!existingItem) {
-        button.textContent = 'Loading...';
-        button.disabled = true;
-
-        try {
-            // Fetch vendor profile to get a valid service_id
-            const response = await window.fetchWithAuth(`/vendors/${vendorId}`);
-            const profile = await response.json();
-            
-            let serviceId = null;
-            let price = 0;
-            if (profile.services && profile.services.length > 0) {
-                serviceId = profile.services[0].id;
-                price = parseFloat(profile.services[0].price) || 0;
-            } else {
-                throw new Error("No services found for this vendor");
-            }
-
-            cart.push({
-                vendorId: vendorId,
-                name: vendorName,
-                category: vendorCategory,
-                location: vendorLocation,
-                serviceId: serviceId,
-                price: price
-            });
-
-            // Update button
-            button.textContent = '✓ Added';
-            button.classList.add('added');
-            button.disabled = true;
-
-            // Show confirmation
-            showNotification(`${vendorName} added to your event!`);
-            updateCart();
-        } catch (err) {
-            console.error(err);
-            button.textContent = '+ Add to Event';
-            button.disabled = false;
-            showNotification(`Failed to add vendor: Please ensure vendor has active services.`, "error");
-        }
-    } else {
-        // Remove from cart
-        cart = cart.filter(item => item.vendorId !== vendorId);
-        button.textContent = '+ Add to Event';
-        button.classList.remove('added');
-        button.disabled = false;
-
-        showNotification(`${vendorName} removed from your event!`);
+    // Already in existingItems?
+    if (existingItems.find(i => i.vendor_id === vendorId && !['rejected', 'cancelled'].includes(i.status))) {
+        showNotification(`${vendorName} is already in your booking.`, 'error');
+        return;
+    }
+    if (cart.find(i => i.vendorId === vendorId)) {
+        showNotification(`${vendorName} is already added.`, 'error');
+        return;
     }
 
-    updateCart();
+    button.textContent = '⏳ Loading...';
+    button.disabled = true;
+
+    try {
+        const response = await window.fetchWithAuth(`/vendors/${vendorId}`);
+        const profile = await response.json();
+        const services = profile.services || [];
+        if (services.length === 0) throw new Error('No services found for this vendor');
+
+        const serviceId = services[0].id;
+        const price = parseFloat(services[0].price) || 0;
+
+        cart.push({
+            vendorId,
+            name: vendorName,
+            category: card.querySelector('.category')?.textContent || '',
+            location: card.querySelector('.location')?.textContent || '',
+            serviceId,
+            price,
+            status: 'cart'  // local only, not yet sent
+        });
+
+        button.textContent = '✓ Added';
+        button.classList.add('added');
+        button.disabled = true;
+        showNotification(`${vendorName} added!`);
+        updateCart();
+    } catch (err) {
+        button.textContent = '+ Add';
+        button.disabled = false;
+        showNotification(`Failed to add: ${err.message}`, 'error');
+    }
 }
 
 function updateCart() {
@@ -227,240 +364,291 @@ function updateCart() {
     const paymentSection = document.getElementById('paymentSection');
     const statusSection = document.querySelector('.status-section');
 
-    if (cart.length === 0) {
+    // Merge existing backend items + new local-only cart items for display
+    const allDisplayItems = [
+        ...existingItems.filter(i => !['rejected', 'cancelled'].includes(i.status)).map(i => ({
+            ...i,
+            displayName: i.vendor_name || 'Vendor',
+            displayCategory: i.service_title || '',
+            displayPrice: parseFloat(i.price_quote) || parseFloat(i.service_price) || 0,
+            isBackend: true
+        })),
+        ...cart.filter(i => i.status === 'cart').map(i => ({
+            ...i,
+            displayName: i.name,
+            displayCategory: i.category,
+            displayPrice: i.price,
+            isBackend: false
+        }))
+    ];
+
+    if (allDisplayItems.length === 0) {
         cartItemsDiv.innerHTML = '<p class="empty-message">No vendors added yet</p>';
-        cartTotal.style.display = 'none';
-        paymentSection.style.display = 'none';
-        statusSection.style.display = 'none';
-        document.querySelector('.status-summary').style.display = 'none';
+        if (cartTotal) cartTotal.style.display = 'none';
+        if (paymentSection) paymentSection.style.display = 'none';
+        if (statusSection) statusSection.style.display = 'none';
+        document.querySelector('.send-request-btn')?.remove();
         return;
     }
 
-    // Build cart items HTML
-    let cartHTML = '';
+    const statusColor = { accepted: '#27ae60', pending: '#f39c12', rejected: '#e74c3c', cart: '#3498db' };
+    const statusIcon = { accepted: '✅', pending: '⏳', rejected: '❌', cart: '🛒' };
 
-    cart.forEach((item, index) => {
-        cartHTML += `
-            <div class="cart-item">
-                <div class="cart-item-info">
-                    <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-category">${item.category}</div>
-                    <div class="cart-item-location">${item.location}</div>
+    cartItemsDiv.innerHTML = allDisplayItems.map((item, idx) => `
+        <div class="cart-item" style="border-left: 3px solid ${statusColor[item.status] || '#aaa'};">
+            <div class="cart-item-info">
+                <div class="cart-item-name">${item.displayName}</div>
+                <div class="cart-item-category">${item.displayCategory}</div>
+                <div style="font-weight:700;color:#27ae60;font-size:13px;">₹${(item.displayPrice || 0).toLocaleString()}</div>
+                <div style="font-size:11px; color:${statusColor[item.status] || '#aaa'}; margin-top:3px;">
+                    ${statusIcon[item.status] || ''} ${item.status === 'cart' ? 'Ready to send' : item.status.charAt(0).toUpperCase() + item.status.slice(1)}
                 </div>
-                <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button>
             </div>
-        `;
-    });
+            ${!item.isBackend ? `<button class="remove-btn" onclick="removeLocalCartItem('${item.vendorId}')">✕</button>` : ''}
+        </div>
+    `).join('');
 
-    cartItemsDiv.innerHTML = cartHTML;
-
-    // Update total
-    if (cart.length > 0) {
+    // Total = accepted price_quote + local cart prices
+    const total = allDisplayItems.reduce((sum, i) => sum + (i.displayPrice || 0), 0);
+    if (cartTotal) {
         cartTotal.style.display = 'flex';
-        paymentSection.style.display = 'block';
+        document.getElementById('totalPrice').textContent = `₹${total.toLocaleString()}`;
+    }
 
-        const totalAmt = cart.reduce((acc, item) => acc + item.price, 0);
-        document.getElementById('totalPrice').textContent = `₹${totalAmt.toLocaleString()}`;
+    if (statusSection) statusSection.style.display = 'block';
 
-        // Show send request button
-        if (!document.querySelector('.send-request-btn')) {
-            const requestBtn = document.createElement('button');
-            requestBtn.className = 'send-request-btn';
-            requestBtn.innerHTML = '📤 Send Vendor Requests';
-            requestBtn.onclick = sendVendorRequests;
-            requestBtn.style.cssText = `
-                width: 100%;
-                padding: 12px;
-                margin-top: 15px;
-                background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
-                color: white;
-                border: none;
-                border-radius: 6px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: 0.3s;
-                font-size: 13px;`;
-            requestBtn.onmouseover = function() {
-                this.style.transform = 'translateY(-2px)';
-                this.style.boxShadow = '0 5px 15px rgba(39, 174, 96, 0.3)';
-            };
-            requestBtn.onmouseout = function() {
-                this.style.transform = 'translateY(0)';
-                this.style.boxShadow = 'none';
-            };
-            cartTotal.parentElement.appendChild(requestBtn);
-        }
+    // Show "Send Request" btn only if there are unsent local items
+    const hasLocalItems = cart.some(i => i.status === 'cart');
+    if (hasLocalItems && !document.querySelector('.send-request-btn')) {
+        const btn = document.createElement('button');
+        btn.className = 'send-request-btn';
+        btn.innerHTML = '📤 Send Vendor Requests';
+        btn.onclick = sendVendorRequests;
+        btn.style.cssText = `width:100%; padding:12px; margin-top:15px; background:linear-gradient(135deg,#27ae60,#229954); color:white; border:none; border-radius:6px; font-weight:600; cursor:pointer; font-size:13px; transition:0.3s;`;
+        cartTotal.parentElement.appendChild(btn);
+    } else if (!hasLocalItems) {
+        document.querySelector('.send-request-btn')?.remove();
     }
 }
 
-function removeFromCart(index) {
-    const vendorName = cart[index].name;
-    const vendorId = cart[index].vendorId;
-    cart.splice(index, 1);
-
-    // Reset button state
-    const buttons = document.querySelectorAll('.add-btn');
-    buttons.forEach(btn => {
-        const card = btn.closest('.vendor-card');
+function removeLocalCartItem(vendorId) {
+    cart = cart.filter(i => i.vendorId !== vendorId);
+    // Reset vendor card button
+    document.querySelectorAll('.vendor-card').forEach(card => {
         if (card.getAttribute('data-vendor-id') === vendorId) {
-            btn.textContent = '+ Add to Event';
-            btn.classList.remove('added');
-            btn.disabled = false;
+            const btn = card.querySelector('.add-btn');
+            if (btn) { btn.textContent = '+ Add'; btn.classList.remove('added'); btn.disabled = false; }
         }
     });
-
-    showNotification(`${vendorName} removed from event!`);
     updateCart();
 }
 
-async function sendVendorRequests() {
-    if (cart.length === 0) {
-        showNotification('Please add vendors before sending requests', 'error');
-        return;
-    }
+// ------------------- SEND REQUESTS -------------------
 
-    if (!selectedBookingId) {
-        showNotification('No event selected. Please go back to Events page and select an event.', 'error');
-        return;
-    }
+async function sendVendorRequests() {
+    const localItems = cart.filter(i => i.status === 'cart');
+    if (localItems.length === 0) return showNotification('No new vendors to send requests to.', 'error');
+    if (!selectedBookingId) return showNotification('No event selected.', 'error');
+
+    const btn = document.querySelector('.send-request-btn');
+    if (btn) { btn.textContent = '⏳ Sending...'; btn.disabled = true; }
 
     try {
-        // Send requests for each vendor in cart
-        const promises = cart.map(async (item) => {
-            const response = await window.fetchWithAuth('/bookings/items', {
+        for (const item of localItems) {
+            const res = await window.fetchWithAuth('/bookings/items', {
                 method: 'POST',
-                body: JSON.stringify({
-                    booking_id: selectedBookingId,
-                    vendor_id: item.vendorId,
-                    service_id: item.serviceId
-                })
+                body: JSON.stringify({ booking_id: selectedBookingId, vendor_id: item.vendorId, service_id: item.serviceId })
             });
-
-            if (!response.ok) {
-                throw new Error(`Failed to send request to ${item.name}`);
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.message || `Failed for ${item.name}`);
             }
+            // Mark as sent (pending)
+            item.status = 'pending';
+        }
 
-            return await response.json();
-        });
-
-        await Promise.all(promises);
-
-        // Show success and redirect to events page
-        showNotification('Vendor requests sent successfully!', 'success');
-        setTimeout(() => {
-            window.location.href = 'events_page.html';
-        }, 2000);
+        showNotification('✅ Vendor requests sent! Waiting for approval...', 'success');
+        // Reload from backend
+        await hydrateBookingState();
+        startStatusPolling();
 
     } catch (error) {
-        console.error('Error sending vendor requests:', error);
-        showNotification('Failed to send some vendor requests. Please try again.', 'error');
+        showNotification(`Failed: ${error.message}`, 'error');
+        if (btn) { btn.textContent = '📤 Send Vendor Requests'; btn.disabled = false; }
     }
 }
 
-async function proceedToPayment() {
-    if (!selectedBookingId) return showNotification("Please select an event first.", "error");
-    if (cart.length === 0) return showNotification("Cart is empty.", "error");
+// ------------------- STATUS POLLING -------------------
 
-    const totalAmt = cart.reduce((acc, item) => acc + item.price, 0);
+function startStatusPolling() {
+    if (statusPollInterval) clearInterval(statusPollInterval);
+    statusPollInterval = setInterval(async () => {
+        if (!selectedBookingId) return;
+        try {
+            const res = await window.fetchWithAuth(`/bookings/${selectedBookingId}`);
+            if (!res.ok) return;
+            const booking = await res.json();
+            existingItems = booking.items || [];
+
+            // Rebuild cart from backend
+            cart = cart.filter(i => i.status === 'cart'); // keep local unsent
+            updateCart();
+            renderRequestStatus(existingItems);
+
+            if (booking.status === 'confirmed') {
+                clearInterval(statusPollInterval);
+                showPaidState();
+                return;
+            }
+
+            const accepted = existingItems.filter(i => i.status === 'accepted');
+            const pending = existingItems.filter(i => i.status === 'pending');
+
+            if (accepted.length > 0 && pending.length === 0) {
+                clearInterval(statusPollInterval);
+                showPayNowButton(booking);
+            }
+        } catch (e) { console.error(e); }
+    }, 10000);
+}
+
+function renderRequestStatus(items) {
+    const statusItemsDiv = document.getElementById('statusItems');
+    const statusSummary = document.getElementById('statusSummary');
+    const statusSection = document.querySelector('.status-section');
+
+    if (!statusItemsDiv || !items.length) return;
+    if (statusSection) statusSection.style.display = 'block';
+
+    const accepted = items.filter(i => i.status === 'accepted').length;
+    const pending = items.filter(i => i.status === 'pending').length;
+    const rejected = items.filter(i => i.status === 'rejected').length;
+
+    if (statusSummary) {
+        statusSummary.style.display = 'flex';
+        document.getElementById('acceptedCount').textContent = accepted;
+        document.getElementById('pendingCount').textContent = pending;
+        document.getElementById('deniedCount').textContent = rejected;
+    }
+
+    statusItemsDiv.innerHTML = items.map(item => {
+        const colorMap = { accepted: '#27ae60', pending: '#f39c12', rejected: '#e74c3c' };
+        const iconMap = { accepted: '✅', pending: '⏳', rejected: '❌' };
+        const s = item.status || 'pending';
+        return `
+            <div style="padding:10px 0; border-bottom:1px solid #f5f5f5;">
+                <div style="font-weight:600; font-size:13px;">${item.vendor_name || 'Vendor'}</div>
+                <div style="font-size:12px; margin-top:2px;">${item.service_title || ''}</div>
+                <div style="font-size:12px; color:${colorMap[s] || '#999'}; margin-top:3px;">
+                    ${iconMap[s] || '⏳'} ${s.charAt(0).toUpperCase() + s.slice(1)}
+                    ${item.price_quote ? ` · ₹${parseFloat(item.price_quote).toLocaleString()}` : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function showPayNowButton(booking) {
+    const paymentSection = document.getElementById('paymentSection');
+    if (!paymentSection) return;
+    const acceptedItems = existingItems.filter(i => i.status === 'accepted');
+    const total = acceptedItems.reduce((sum, i) => sum + (parseFloat(i.price_quote) || 0), 0);
+    paymentSection.style.display = 'block';
+    paymentSection.innerHTML = `
+        <h3>💳 Payment</h3>
+        <p style="font-size:13px; color:#27ae60; font-weight:600;">🎉 All vendors approved!</p>
+        <p style="font-size:12px; color:#888; margin:0 0 12px;">Total: <strong>₹${total.toLocaleString()}</strong></p>
+        <button onclick="proceedToPayment(${total})" class="proceed-payment-btn" style="width:100%; padding:12px; background:linear-gradient(135deg,#e53935,#c62828); color:white; border:none; border-radius:8px; font-weight:700; font-size:14px; cursor:pointer;">
+            💳 Pay ₹${total.toLocaleString()} Now →
+        </button>
+    `;
+}
+
+function showPaidState() {
+    const paymentSection = document.getElementById('paymentSection');
+    if (paymentSection) {
+        paymentSection.style.display = 'block';
+        paymentSection.innerHTML = `
+            <h3>💳 Payment</h3>
+            <p style="color:#27ae60; font-weight:600; font-size:14px;">✅ Payment Confirmed!</p>
+            <a href="events_page.html" style="display:block; margin-top:10px; padding:10px; background:#27ae60; color:white; text-align:center; border-radius:8px; text-decoration:none; font-weight:600;">
+                View in Upcoming Events →
+            </a>
+        `;
+    }
+}
+
+// ------------------- PAYMENT -------------------
+
+async function proceedToPayment(totalOverride) {
+    if (!selectedBookingId) return showNotification('Please select an event first.', 'error');
+
+    const totalAmt = totalOverride ||
+        existingItems.filter(i => i.status === 'accepted').reduce((sum, i) => sum + (parseFloat(i.price_quote) || 0), 0);
+
+    if (totalAmt === 0) return showNotification('Total amount is 0. Please ensure vendors have set a price.', 'error');
 
     try {
+        showNotification('Redirecting to payment gateway...', 'success');
         const res = await window.fetchWithAuth('/payments', {
             method: 'POST',
-            body: JSON.stringify({
-                booking_id: selectedBookingId,
-                amount: totalAmt
-            })
+            body: JSON.stringify({ booking_id: selectedBookingId, amount: totalAmt })
         });
 
         if (res.ok) {
             const data = await res.json();
-            showNotification(`Payment intent initialized.`, "success");
-            setTimeout(() => {
-                window.location.href = data.url || 'events_page.html';
-            }, 2000);
+            const checkoutUrl = data.checkout_url || data.url;
+            if (checkoutUrl) {
+                window.location.href = checkoutUrl;
+            } else {
+                showNotification('Payment initiated. Check your email for confirmation.', 'success');
+            }
         } else {
             const err = await res.json();
-            showNotification("Payment Failed: " + err.message, "error");
+            showNotification('Payment Failed: ' + (err.message || 'Please try again.'), 'error');
         }
-    } catch(err) {
-        showNotification("Payment gateway error", "error");
+    } catch (err) {
+        showNotification('Payment gateway error. Please try again.', 'error');
     }
 }
 
+// ------------------- NOTIFICATIONS -------------------
+
 function showNotification(message, type = 'success') {
-    // Remove existing notifications
-    const existingNotifications = document.querySelectorAll('.notification');
-    existingNotifications.forEach(notification => notification.remove());
-
-    // Create new notification
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-
-    // Auto remove after 3 seconds
-    setTimeout(() => {
-        if (notification.parentElement) {
-            notification.remove();
-        }
-    }, 3000);
+    document.querySelectorAll('.notification').forEach(n => n.remove());
+    const n = document.createElement('div');
+    n.className = `notification ${type}`;
+    n.textContent = message;
+    document.body.appendChild(n);
+    setTimeout(() => { if (n.parentElement) n.remove(); }, 4000);
 }
+
+// ------------------- VENDOR REVIEWS -------------------
 
 async function showVendorReviews(vendorId, vendorName) {
     try {
         const res = await fetch(`/reviews/vendors/${vendorId}/reviews`);
         const data = await res.json();
         const reviews = data.reviews || [];
-
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
-        modal.style.cssText = `
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); display: flex; align-items: center;
-            justify-content: center; z-index: 2000; font-family: 'Poppins', sans-serif;
-        `;
-
+        modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2000;font-family:Poppins,sans-serif;';
         let reviewsHtml = reviews.length === 0 ? '<p>No reviews yet.</p>' : reviews.map(r => `
-            <div style="border-bottom: 1px solid #eee; padding: 15px 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <strong>${r.customer_name}</strong>
-                    <span style="color: #f39c12;">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span>
-                </div>
-                <p style="font-size: 14px; color: #555; margin: 10px 0;">${r.comment || 'No comment provided.'}</p>
-                <div style="display: flex; gap: 5px;">
-                    ${(r.media || []).map(m => `
-                        <img src="${m.url}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
-                    `).join('')}
-                </div>
-                <small style="color: #999;">${new Date(r.created_at).toLocaleDateString()}</small>
-            </div>
-        `).join('');
-
-        modal.innerHTML = `
-            <div style="background: white; padding: 30px; border-radius: 15px; width: 500px; max-height: 80vh; overflow-y: auto; position: relative;">
-                <button onclick="this.closest('.modal-overlay').remove()" style="position: absolute; top: 15px; right: 15px; border: none; background: none; font-size: 20px; cursor: pointer;">&times;</button>
-                <h3 style="margin-top: 0;">Reviews for ${vendorName}</h3>
-                <div style="margin-top: 20px;">${reviewsHtml}</div>
-            </div>
-        `;
-
+            <div style="border-bottom:1px solid #eee;padding:15px 0;">
+                <div style="display:flex;justify-content:space-between;"><strong>${r.customer_name}</strong><span style="color:#f39c12;">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span></div>
+                <p style="font-size:14px;color:#555;margin:10px 0;">${r.comment||'No comment.'}</p>
+                <small style="color:#999;">${new Date(r.created_at).toLocaleDateString()}</small>
+            </div>`).join('');
+        modal.innerHTML = `<div style="background:white;padding:30px;border-radius:15px;width:500px;max-height:80vh;overflow-y:auto;position:relative;">
+            <button onclick="this.closest('.modal-overlay').remove()" style="position:absolute;top:15px;right:15px;border:none;background:none;font-size:20px;cursor:pointer;">&times;</button>
+            <h3 style="margin-top:0;">Reviews for ${vendorName}</h3>
+            <div style="margin-top:20px;">${reviewsHtml}</div></div>`;
         document.body.appendChild(modal);
-        modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+        modal.onclick = e => { if (e.target === modal) modal.remove(); };
     } catch (err) {
-        console.error(err);
-        showNotification("Failed to load reviews.", "error");
+        showNotification('Failed to load reviews.', 'error');
     }
 }
 
-// Keep the existing functions for backward compatibility
-function closeRequestModal() {
-    const modal = document.getElementById('requestModal');
-    if (modal) {
-        modal.style.display = 'none';
-    }
-}
-
-function simulateResponses() {
-    // This function can be removed or kept for testing purposes
-    console.log('Simulate responses function called');
-}
+function closeRequestModal() { document.getElementById('requestModal')?.style && (document.getElementById('requestModal').style.display = 'none'); }
+function simulateResponses() {}

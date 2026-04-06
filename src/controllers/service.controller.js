@@ -6,14 +6,15 @@ const {
     createService,
     getVendorServicesService,
     getAllServicesService,
-    getServiceDetailsService
+    getServiceDetailsService,
+    updateVendorServiceService
 } = require("../services/service.services");
 const asyncHandler = require("../utils/asyncHandler");
 
 const createVendorServiceController = asyncHandler(async (req, res) => {
-// --- FRONTEND INTEGRATION GUIDE: Create Service ---
-// POST /services | Body: { title, city, price, price_type, category, description }
-// Required: Authorization: Bearer <accessToken> (Vendor only)
+    // --- FRONTEND INTEGRATION GUIDE: Create Service ---
+    // POST /services | Body: { title, city, price, price_type, category, description }
+    // Required: Authorization: Bearer <accessToken> (Vendor only)
     const service = await createService(
         req.user,
         req.body
@@ -22,30 +23,47 @@ const createVendorServiceController = asyncHandler(async (req, res) => {
 });
 
 const getVendorServicesController = asyncHandler(async (req, res) => {
-// --- FRONTEND INTEGRATION GUIDE: My Services (Vendor Own) ---
-// GET /services/vendor
-// Required: Authorization: Bearer <accessToken>
+    // --- FRONTEND INTEGRATION GUIDE: My Services (Vendor Own) ---
+    // GET /services/vendor
+    // Required: Authorization: Bearer <accessToken>
     const services = await getVendorServicesService(req.user);
     res.status(200).json(services);
 });
 
 const getAllServicesController = asyncHandler(async (req, res) => {
-// --- FRONTEND INTEGRATION GUIDE: Browse Services ---
-// GET /services?city=...&category=...
+    // --- FRONTEND INTEGRATION GUIDE: Browse Services ---
+    // GET /services?city=...&category=...
     const services = await getAllServicesService(req.query);
     res.status(200).json(services);
 });
 
 const getServiceDetailsController = asyncHandler(async (req, res) => {
-// --- FRONTEND INTEGRATION GUIDE: Service Details ---
-// GET /services/:id
+    // --- FRONTEND INTEGRATION GUIDE: Service Details ---
+    // GET /services/:id
     const service = await getServiceDetailsService(req.params.id);
     res.status(200).json(service);
+});
+
+const updateVendorServiceController = asyncHandler(async (req, res) => {
+    // --- FRONTEND INTEGRATION GUIDE: Update Service (Vendor) ---
+    // PATCH /services/:id | Body: { title, city, price, tagline, etc }
+    // Required: Authorization: Bearer <accessToken>
+    const service = await updateVendorServiceService(
+        req.user,
+        req.params.id,
+        req.body
+    );
+    res.status(200).json({
+        success: true,
+        message: "Service updated successfully",
+        data: service
+    });
 });
 
 module.exports = {
     createVendorServiceController,
     getVendorServicesController,
     getAllServicesController,
-    getServiceDetailsController
+    getServiceDetailsController,
+    updateVendorServiceController
 };

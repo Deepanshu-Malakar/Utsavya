@@ -15,7 +15,8 @@ const {
     createVendorServiceController,
     getVendorServicesController,
     getAllServicesController,
-    getServiceDetailsController
+    getServiceDetailsController,
+    updateVendorServiceController
 } = require("../controllers/service.controller");
 
 // Vendor dashboard
@@ -69,10 +70,10 @@ router.get("/:id", getServiceDetailsController);
 
 // additional specific routes from duplicate block above:
 router.get(
-  "/vendor/me",
-  authenticateUser,
-  authorizeRoles("vendor"),
-  getVendorServicesController
+    "/vendor/me",
+    authenticateUser,
+    authorizeRoles("vendor"),
+    getVendorServicesController
 );
 
 const {
@@ -103,6 +104,16 @@ router.delete(
     authenticateUser,
     authorizeRoles("vendor"),
     deleteServiceMediaController
+);
+
+// --- FRONTEND INTEGRATION GUIDE: Update Service (Vendor) ---
+// PATCH /services/:id | Body: { title, city, price, tagline, etc }
+// Required: Authorization: Bearer <accessToken>
+router.patch(
+    "/:id",
+    authenticateUser,
+    authorizeRoles("vendor"),
+    updateVendorServiceController
 );
 
 module.exports = router;

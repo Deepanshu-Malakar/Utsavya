@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vendor Home – Utsavya</title>
     <link rel="stylesheet" href="css/vendor_home.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
 
     <!-- NAVBAR -->
@@ -18,9 +21,11 @@
         <input type="checkbox" id="nav-toggle" class="nav-toggle">
         <label for="nav-toggle" class="nav-toggle-label">☰</label>
         <nav class="nav-menu">
-            <a href="dashboard.html">Home</a>
-            <a href="vendor_schedule.html">Schedules</a>
-            <a href="vendor_memories.html">Memories</a>
+            <a href="javascript:void(0)" id="navHome" onclick="showHomeTab()" class="active">Dashboard</a>
+            <a href="javascript:void(0)" id="navServices" onclick="showServicesTab()">My Services</a>
+            <a href="javascript:void(0)" id="navSchedule" onclick="showScheduleTab()">Schedule</a>
+            <a href="javascript:void(0)" id="navMemories" onclick="showMemoriesTab()">Memories</a>
+            <a href="javascript:void(0)" id="navProfileCard" onclick="showProfileCardTab()">Profile Card</a>
         </nav>
         <div class="profile">
             Hello <span id="navUserName">Vendor</span>
@@ -30,7 +35,7 @@
     </header>
 
     <!-- HERO SECTION -->
-    <section class="hero">
+    <section class="hero" style="height: 250px;">
         <div class="hero-overlay"></div>
         <div class="bokeh">
             <span></span><span></span><span></span>
@@ -41,15 +46,11 @@
         </div>
     </section>
 
-    <!-- TABS -->
-    <div class="tabs">
-        <button class="tab-btn active" id="tabRequests" onclick="showRequestsTab()">📋 Booking Requests</button>
-        <button class="tab-btn" id="tabServices" onclick="showServicesTab()">🛠 My Services</button>
-        <button class="tab-btn" id="tabProfileCard" onclick="showProfileCardTab()">🎨 My Profile Card</button>
-    </div>
+    <!-- TAB CONTENTS -->
+    <div class="dashboard-body" style="padding-top: 20px;">
 
-    <!-- REQUESTS SECTION -->
-    <div id="requestsSection" class="tab-content active">
+    <!-- HOME SECTION (Overview & Requests) -->
+    <div id="homeSection" class="tab-content active">
         <main class="vendors-section">
             <div class="vendors-grid" id="vendorsGrid">
                 <div class="calendar-container">
@@ -59,8 +60,13 @@
                         <button onclick="nextMonth()">▶</button>
                     </div>
                     <div class="calendar-days">
-                        <div>Sun</div><div>Mon</div><div>Tue</div>
-                        <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                        <div>Sun</div>
+                        <div>Mon</div>
+                        <div>Tue</div>
+                        <div>Wed</div>
+                        <div>Thu</div>
+                        <div>Fri</div>
+                        <div>Sat</div>
                     </div>
                     <div class="calendar-dates" id="calendarDates"></div>
                 </div>
@@ -79,7 +85,71 @@
                 <button class="add-service-btn" onclick="showAddServiceModal()">+ Add New Service</button>
             </div>
             <div class="services-grid" id="servicesGrid">
-                <div class="loading">Loading services...</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SCHEDULE SECTION -->
+    <div id="scheduleSection" class="tab-content">
+        <main class="main-container" style="display:flex; gap:20px; max-width:1200px; margin:20px auto;">
+            <div class="vendors-section" style="flex:1;">
+                <div class="section-header">
+                    <h2>📅 My Schedule</h2>
+                    <p>Track your upcoming bookings and availability.</p>
+                </div>
+                <div class="vendors-grid" id="scheduleGrid">
+                    <p class="loading">Loading schedule...</p>
+                </div>
+            </div>
+            <aside class="right-sidebar" style="flex:0 0 300px;">
+                <div class="sidebar-card">
+                    <h3>Manage Availability</h3>
+                    <p style="font-size:12px; color:#666; margin-bottom:15px;">Block dates when you are unavailable.</p>
+                    <form id="availabilityForm">
+                        <div class="form-group">
+                            <label>Start</label>
+                            <input type="datetime-local" id="blockStart" required>
+                        </div>
+                        <div class="form-group">
+                            <label>End</label>
+                            <input type="datetime-local" id="blockEnd" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Reason</label>
+                            <input type="text" id="blockReason" placeholder="Vacation, etc.">
+                        </div>
+                        <button type="submit" class="submit-btn" style="width:100%;">Block Dates</button>
+                    </form>
+                </div>
+                <div class="sidebar-card" style="margin-top:20px;">
+                    <h3>Blocked Dates</h3>
+                    <div id="blockedDatesList">
+                        <p style="font-size:12px; color:#888;">No dates blocked.</p>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- MEMORIES SECTION -->
+    <div id="memoriesSection" class="tab-content">
+        <main class="services-section">
+            <div class="services-header">
+                <h2>📸 Event Memories</h2>
+                <div class="add-memory-form" style="display:flex; gap:10px;">
+                    <select id="memoryEventSelect">
+                        <option value="">Select Category</option>
+                        <option value="wedding">Wedding</option>
+                        <option value="birthday">Birthday</option>
+                        <option value="festival">Festival</option>
+                        <option value="corporate">Corporate</option>
+                    </select>
+                    <input type="text" id="memoryVideoURL" placeholder="Paste Video/Image URL...">
+                    <button class="add-service-btn" id="addMemoryBtn">Add Memory</button>
+                </div>
+            </div>
+            <div class="services-grid" id="memoriesGrid">
+                <div class="loading">No memories added yet.</div>
             </div>
         </main>
     </div>
@@ -91,19 +161,17 @@
             <div class="services-header">
                 <h2>🎨 My Profile Card</h2>
             </div>
-            <p style="font-size:14px;color:#888;margin-bottom:30px;">This is exactly how customers see your card in the vendor listing. Customise it to attract more bookings.</p>
+            <p style="font-size:14px;color:#888;margin-bottom:30px;">This is exactly how customers see your card in the
+                vendor listing. Customise it to attract more bookings.</p>
 
             <div class="profile-card-editor">
 
                 <!-- LIVE PREVIEW -->
-                <div class="card-preview-wrapper">
+                <div class="card-preview-wrapper" style="flex: 0 0 320px;">
                     <h3 class="editor-label">Live Preview</h3>
-                    <div class="vendor-card vendor-card-preview" id="cardPreview">
+                    <div class="vendor-card vendor-card-preview" id="cardPreview" style="margin: 0 auto;">
                         <div class="vendor-image">
                             <img id="previewImage" src="images/default-vendor.jpg" alt="Preview">
-                            <div class="vendor-image-overlay" style="position:absolute;inset:0;background:rgba(229,57,53,0.7);display:flex;align-items:center;justify-content:center;opacity:0;transition:0.3s;pointer-events:none;">
-                                <span style="color:white;font-weight:700;">View Profile →</span>
-                            </div>
                         </div>
                         <div class="vendor-details">
                             <h3 id="previewName">Your Name</h3>
@@ -113,40 +181,53 @@
                             <div style="color:#f39c12;font-size:14px;margin:6px 0;">★★★★☆</div>
                             <div id="previewPrice" style="font-size:16px;font-weight:700;color:#27ae60;">₹–</div>
                         </div>
-                        <div style="padding:12px 20px 16px;display:flex;gap:8px;border-top:1px solid #f5f5f5;">
-                            <button style="flex:1;padding:9px;border:2px solid #e53935;background:transparent;color:#e53935;border-radius:6px;font-size:13px;font-weight:600;">👁 Profile</button>
-                            <button style="flex:1;padding:9px;background:#e53935;color:white;border:none;border-radius:6px;font-size:13px;font-weight:600;">+ Add</button>
+                    </div>
+                </div>
+
+                <div class="card-editor-controls" style="flex: 1;">
+                    <h3 class="editor-label">Edit Card Content</h3>
+                    <div class="edit-group">
+                        <label>Select Service to Customize</label>
+                        <select id="selectServiceForCard" onchange="loadServiceCardDetails(this.value)">
+                            <option value="">Select a service...</option>
+                        </select>
+                    </div>
+
+                    <div class="edit-form-card" style="background:#f8f4ef; padding:20px; border-radius:12px; margin-top:15px;">
+                        <div class="edit-group">
+                            <label>Service Title</label>
+                            <input type="text" id="editServiceTitle" placeholder="e.g. Wedding Photography" oninput="updateLivePreview()">
                         </div>
+
+                        <div class="edit-group">
+                            <label>Card Tagline <small style="color:#aaa;font-weight:400;">(80 chars max)</small></label>
+                            <input type="text" id="editTagline" placeholder="e.g. Making every moment magical ✨" maxlength="80" oninput="updateLivePreview()">
+                        </div>
+
+                        <div class="edit-group" style="display:flex; gap:15px;">
+                            <div style="flex:1;">
+                                <label>Price (₹)</label>
+                                <input type="number" id="editServicePrice" placeholder="50000" oninput="updateLivePreview()">
+                            </div>
+                            <div style="flex:1;">
+                                <label>City</label>
+                                <input type="text" id="editServiceCity" placeholder="Delhi" oninput="updateLivePreview()">
+                            </div>
+                        </div>
+
+                        <div class="edit-group">
+                            <label>Service Image URL</label>
+                            <input type="url" id="editServiceImage" placeholder="https://..." oninput="updateLivePreview()">
+                        </div>
+
+                        <button class="save-card-btn" onclick="saveProfileCard()" style="margin-top:10px;">💾 Save Profile Card Changes</button>
+                        <p id="saveCardStatus" style="font-size:12px;color:#aaa;margin-top:8px;"></p>
                     </div>
                 </div>
-
-                <!-- CONTROLS -->
-                <div class="card-editor-controls">
-                    <h3 class="editor-label">Edit Your Card</h3>
-
-                    <div class="edit-group">
-                        <label>Profile Tagline <small style="color:#aaa;font-weight:400;">(80 chars max)</small></label>
-                        <input type="text" id="editTagline" placeholder="e.g. Making every moment magical ✨" maxlength="80" oninput="document.getElementById('previewTagline').textContent=this.value||'Your tagline...'">
-                    </div>
-
-                    <div class="edit-group">
-                        <label>Upload Profile Photo</label>
-                        <input type="file" id="editProfileImageFile" accept="image/*" onchange="previewUploadedImage(this)">
-                        <small>Recommended: square image, at least 300×300 px</small>
-                    </div>
-
-                    <div class="edit-group">
-                        <label>Profile Photo URL <small style="color:#aaa;font-weight:400;">(alternative)</small></label>
-                        <input type="url" id="editProfileImage" placeholder="https://..." oninput="if(this.value)document.getElementById('previewImage').src=this.value">
-                    </div>
-
-                    <button class="save-card-btn" onclick="saveProfileCard()">💾 Save Changes</button>
-                    <p id="saveCardStatus" style="font-size:12px;color:#aaa;margin-top:8px;"></p>
-                </div>
-
             </div>
         </main>
     </div>
+</div> <!-- End of dashboard-body -->
 
     <!-- ADD SERVICE MODAL -->
     <div id="addServiceModal" class="modal">
@@ -186,7 +267,8 @@
         <p>© 2026 Utsavya</p>
     </footer>
 
-    <script src="js/vendor_home.js"></script>
     <script src="js/navbar.js"></script>
+    <script src="js/vendor_home.js"></script>
 </body>
+
 </html>

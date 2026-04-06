@@ -132,9 +132,25 @@ function renderIncompleteBookings(bookings) {
 function createBookingCard(b) {
     const card = document.createElement('div');
     card.className = 'booking-card';
+    card.setAttribute('data-aos', 'fade-up');
+
+    const eventImages = {
+        wedding: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80',
+        birthday: 'https://images.unsplash.com/photo-1530103862676-fa8c91811617?auto=format&fit=crop&w=800&q=80',
+        corporate: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80',
+        festival: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=80',
+        default: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80'
+    };
+
+    const lowerTitle = b.title.toLowerCase();
+    let imgSrc = eventImages.default;
+    if (lowerTitle.includes('wed')) imgSrc = eventImages.wedding;
+    else if (lowerTitle.includes('birth')) imgSrc = eventImages.birthday;
+    else if (lowerTitle.includes('corp')) imgSrc = eventImages.corporate;
+    else if (lowerTitle.includes('fest')) imgSrc = eventImages.festival;
 
     const img = document.createElement('img');
-    img.src = "../images/caterging.jpg";
+    img.src = imgSrc;
     img.loading = "lazy";
 
     const body = document.createElement('div');
@@ -190,25 +206,50 @@ function renderUpcomingEvents(bookings) {
     const container = document.getElementById('upcomingEventsList');
     if (!container) return;
 
-    const fragment = document.createDocumentFragment();
+    if (bookings.length === 0) {
+        container.innerHTML = '<p style="color:#888; text-align:center; padding:20px; font-size:14px;">No upcoming events yet. Complete your bookings to see them here!</p>';
+        return;
+    }
 
+    const fragment = document.createDocumentFragment();
     bookings.forEach(b => {
         const div = document.createElement('div');
         div.className = 'list-item';
 
-        div.innerHTML = `
-            <span>${formatShortDate(b.event_start)}</span>
-            <span>${b.title}</span>
-            <span>📍 ${b.location || 'TBD'}</span>
-            <button class="btn-outline btn-edit-dates" data-booking-id="${b.id}" style="border-color: #3498db; color: #3498db; padding: 5px 10px; font-size: 13px;">📅 Edit Dates</button>
-        `;
+        const statusBadge = b.status === 'confirmed'
+            ? `<span style="background:#27ae60; color:white; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:600;">✅ Confirmed</span>`
+            : `<span style="background:#f39c12; color:white; padding:2px 8px; border-radius:4px; font-size:11px;">⏳ ${b.status}</span>`;
 
+        let vendorsHtml = '';
+        if (b.vendors && b.vendors.length > 0) {
+            vendorsHtml = `
+                <div class="assigned-vendors">
+                    ${b.vendors.map(v => `<span class="vendor-badge">👤 ${v.vendor_name} (${v.service_title})</span>`).join('')}
+                </div>
+            `;
+        } else {
+            vendorsHtml = `<div class="assigned-vendors"><span style="font-size:11px; color:#999;">No vendors assigned yet</span></div>`;
+        }
+
+        div.innerHTML = `
+            <div style="flex: 1;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
+                    <span style="font-size:13px; color:#666; background:#eee; padding:2px 8px; border-radius:4px;">${formatShortDate(b.event_start)}</span>
+                    <h4 style="margin:0; font-size:1.1rem; color:#333;">${b.title}</h4>
+                    ${statusBadge}
+                </div>
+                <div style="font-size:13px; color:#555; margin-bottom:10px;">📍 ${b.location || 'TBD'}</div>
+                ${vendorsHtml}
+            </div>
+            <button class="btn-outline btn-edit-dates" data-booking-id="${b.id}" style="border-color: #3498db; color: #3498db; padding: 8px 16px; font-size: 13px; font-weight:600;">📅 Reschedule</button>
+        `;
         fragment.appendChild(div);
     });
 
     container.innerHTML = '';
     container.appendChild(fragment);
 }
+
 
 function renderPastEvents(bookings) {
     const container = document.getElementById('pastEventsList');
@@ -478,45 +519,65 @@ function showRecommendationsUI(suggestions) {
 function showCreateEventModal() {
     const modal = document.createElement('div');
     modal.className = 'modal-overlay';
+    modal.style.animation = 'fadeIn 0.3s ease';
 
     modal.innerHTML = `
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Create New Event</h3>
+        <div class="modal-content" style="max-width:600px; transform: scale(0.9); animation: modalIn 0.3s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+            <div class="modal-header" style="background:#fdf5e6;">
+                <h3 style="display:flex; align-items:center; gap:10px;">✨ Create New Event</h3>
                 <button class="modal-close">&times;</button>
             </div>
-            <form id="createEventForm">
+            <form id="createEventForm" style="padding:2rem;">
                 <div class="form-group">
-                    <label>Event Title *</label>
-                    <input type="text" name="title" required>
+                    <label>📝 Event Title *</label>
+                    <input type="text" name="title" placeholder="e.g. Rahul's Grand Wedding" required>
                 </div>
-                <div class="form-group">
-                    <label>Start *</label>
-                    <input type="datetime-local" name="event_start" required>
+                
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
+                    <div class="form-group">
+                        <label>📅 Start Date & Time *</label>
+                        <input type="datetime-local" name="event_start" required>
+                    </div>
+                    <div class="form-group">
+                        <label>⌛ End Date & Time *</label>
+                        <input type="datetime-local" name="event_end" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>End *</label>
-                    <input type="datetime-local" name="event_end" required>
+
+                <div style="display:grid; grid-template-columns: 1.5fr 0.5fr; gap:1.5rem;">
+                    <div class="form-group">
+                        <label>📍 Venue / Location</label>
+                        <input type="text" name="location" placeholder="City, Hall, or TBD">
+                    </div>
+                    <div class="form-group">
+                        <label>👥 Guests</label>
+                        <input type="number" name="guest_count" min="1" value="50">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Location</label>
-                    <input type="text" name="location">
-                </div>
-                <div class="form-group">
-                    <label>Guest Count</label>
-                    <input type="number" name="guest_count" min="1" value="0">
-                </div>
-                <div class="form-actions">
-                    <button type="button" id="cancelBtn">Cancel</button>
-                    <button type="submit">Create Event</button>
+
+                <div class="form-actions" style="border-top: 1px solid #eee; padding-top:1.5rem; margin-top:1rem;">
+                    <button type="button" id="cancelBtn" class="btn-secondary">Dismiss</button>
+                    <button type="submit" class="btn-complete" style="width:auto; padding:10px 40px; border-radius:30px;">Launch Event 🚀</button>
                 </div>
             </form>
         </div>
     `;
 
+    // Add extra animations
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.85) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    `;
+    document.head.appendChild(style);
+
     document.body.appendChild(modal);
 
-    const close = () => modal.remove();
+    const close = () => {
+        modal.style.opacity = '0';
+        modal.style.transition = 'opacity 0.2s';
+        setTimeout(() => modal.remove(), 200);
+    };
 
     modal.querySelector('.modal-close').onclick = close;
     modal.querySelector('#cancelBtn').onclick = close;
@@ -527,18 +588,29 @@ function showCreateEventModal() {
 
     modal.querySelector('form').addEventListener('submit', async (e) => {
         e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.textContent;
+        btn.textContent = "Creating...";
+        btn.disabled = true;
+
         const fd = new FormData(e.target);
         
-        // Manual validation before sending
         const start = new Date(fd.get('event_start'));
         const end = new Date(fd.get('event_end'));
         
         if (end <= start) {
-            return showError("Event end time must be after the start time.");
+            btn.textContent = originalText;
+            btn.disabled = false;
+            return showError("Oops! Event end time must be after the start time.");
         }
 
-        await createEvent(fd);
-        close();
+        try {
+            await createEvent(fd);
+            close();
+        } finally {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
     });
 }
 

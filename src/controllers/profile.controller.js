@@ -42,7 +42,18 @@ const deleteAccountController = asyncHandler(async (req, res) => {
     });
 });
 
+const getProfileController = asyncHandler(async (req, res) => {
+    const userId = req.user.userId;
+    const profile = await profileService.getProfile(userId);
+
+    res.status(200).json({
+        success: true,
+        data: profile
+    });
+});
+
 module.exports = {
     updateProfileController,
-    deleteAccountController
+    deleteAccountController,
+    getProfileController
 };

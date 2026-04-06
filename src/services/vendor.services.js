@@ -199,11 +199,14 @@ const searchVendors = async (queryParams) => {
         SELECT 
             u.id,
             u.full_name,
+            u.profile_image,
 
             COALESCE(ROUND(AVG(r.rating)::numeric, 1), 0) AS average_rating,
             COUNT(DISTINCT r.id) AS total_reviews,
 
-            ARRAY_AGG(DISTINCT vs.title) AS services,
+            ARRAY_AGG(DISTINCT vs.title) AS service_titles,
+            MIN(vs.price) AS starting_price,
+            MIN(vs.city) AS city,
             ${availabilitySubquery}
 
         FROM users u
@@ -222,11 +225,12 @@ const searchVendors = async (queryParams) => {
 
     const { rows } = await pool.query(query, values);
 
-    // Fix types (IMPORTANT)
     return rows.map(v => ({
         ...v,
-        average_rating: parseFloat(v.average_rating),
-        total_reviews: parseInt(v.total_reviews)
+        average_rating: parseFloat(v.average_rating) || 0,
+        total_reviews: parseInt(v.total_reviews) || 0,
+        starting_price: parseFloat(v.starting_price) || 0,
+        services: v.service_titles || []   // keep 'services' field for frontend compatibility
     }));
 };
 

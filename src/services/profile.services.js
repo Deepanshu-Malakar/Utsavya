@@ -122,7 +122,23 @@ const deleteAccount = async (userId, reason = "No reason provided") => {
     }
 };
 
+const getProfile = async (userId) => {
+    const query = `
+        SELECT id, full_name, email, phone, role, profile_image, business_name, business_city, created_at
+        FROM users
+        WHERE id = $1
+    `;
+    const { rows } = await pool.query(query, [userId]);
+    
+    if (rows.length === 0) {
+        throw new Error("User not found");
+    }
+    
+    return rows[0];
+};
+
 module.exports = {
     updateProfile,
-    deleteAccount
+    deleteAccount,
+    getProfile
 };

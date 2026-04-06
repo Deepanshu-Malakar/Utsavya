@@ -2,7 +2,8 @@ const {
     createVendorService,
     getVendorServices,
     getAllServices,
-    getServiceById
+    getServiceById,
+    updateVendorService
 } = require("../models/service.model");
 
 const createService = async (user, data) => {
@@ -47,9 +48,24 @@ const getServiceDetailsService = async (serviceId) => {
     return service;
 };
 
+const updateVendorServiceService = async (user, serviceId, data) => {
+    if (user.role !== "vendor") {
+        throw new Error("Only vendors can update services");
+    }
+
+    const updated = await updateVendorService(serviceId, user.userId, data);
+    
+    if (!updated) {
+        throw new Error("Service not found or unauthorized");
+    }
+
+    return updated;
+};
+
 module.exports = {
     createService,
     getVendorServicesService,
     getAllServicesService,
-    getServiceDetailsService
+    getServiceDetailsService,
+    updateVendorServiceService
 };

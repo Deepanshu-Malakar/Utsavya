@@ -20,7 +20,7 @@ const {
     logout
 } = require("../controllers/auth.controller");
 
-const { updateProfileController, deleteAccountController } = require("../controllers/profile.controller");
+const { updateProfileController, deleteAccountController, getProfileController } = require("../controllers/profile.controller");
 const { forgotPasswordController, resetPasswordController } = require("../controllers/passwordReset.controller");
 const authenticateUser = require("../middlewares/auth.middleware");
 const upload = require("../middlewares/upload.middleware");
@@ -95,6 +95,10 @@ router.post("/logout", logout);
 
 // Profile & Password Reset
 // --- FRONTEND INTEGRATION GUIDE: Profile Management ---
+// GET /auth/profile | No Body
+// Headers: { 'Authorization': 'Bearer <accessToken>' }
+router.get("/profile", authenticateUser, getProfileController);
+
 // PATCH /auth/profile | Body: { full_name, phone, profile_image (file) }
 // Headers: { 'Authorization': 'Bearer <accessToken>' }
 router.patch("/profile", authenticateUser, upload.single("profile_image"), updateProfileController);

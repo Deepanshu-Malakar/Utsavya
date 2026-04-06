@@ -4,7 +4,8 @@
  */
 const {
     createPayment,
-    verifyStripeWebhook
+    verifyStripeWebhook,
+    handleSuccessRedirect
 } = require("../services/payment.services");
 const asyncHandler = require("../utils/asyncHandler");
 
@@ -19,6 +20,12 @@ const createPaymentController = asyncHandler(async (req, res) => {
     res.status(201).json(payment);
 });
 
+const verifyPaymentController = asyncHandler(async (req, res) => {
+    const { bookingId } = req.params;
+    const result = await handleSuccessRedirect(bookingId);
+    res.status(200).json(result);
+});
+
 const stripeWebhookController = asyncHandler(async (req, res) => {
     // Crucial: req.body MUST be raw buffer here for crypto signature to work!
     const signature = req.headers['stripe-signature'];
@@ -28,5 +35,6 @@ const stripeWebhookController = asyncHandler(async (req, res) => {
 
 module.exports = {
     createPaymentController,
+    verifyPaymentController,
     stripeWebhookController
 };
