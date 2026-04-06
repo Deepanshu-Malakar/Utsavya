@@ -29,7 +29,19 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Use Helmet to secure Express headers
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            "default-src": ["'self'"],
+            "script-src": ["'self'", "'unsafe-inline'", "https://js.stripe.com"],
+            "script-src-attr": ["'unsafe-inline'"],
+            "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            "font-src": ["'self'", "https://fonts.gstatic.com"],
+            "img-src": ["'self'", "data:", "blob:", "https:", "http:"],
+            "connect-src": ["'self'", "http:", "https:"]
+        }
+    }
+}));
 // Use Morgan to log HTTP requests in the console
 app.use(morgan("dev"));
 
@@ -81,6 +93,11 @@ app.get("/test/auth", authenticateUser, (req, res) => {
     res.status(200).json({
         user: req.user
     });
+});
+
+// Admin dashboard page route
+app.get("/admin/dashboard", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
 
 // Global Error Handler

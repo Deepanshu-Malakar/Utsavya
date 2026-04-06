@@ -68,17 +68,15 @@ const updateVendorRequestStatus = async ({
     return rows[0];
 };
 
-const promoteUserToVendor = async (userId, businessName, businessCity) => {
+const promoteUserToVendor = async (userId) => {
 
     const query = `
         UPDATE users
-        SET role = 'vendor',
-            business_name = $2,
-            business_city = $3
+        SET role = 'vendor'
         WHERE id = $1
     `;
 
-    await pool.query(query, [userId, businessName, businessCity]);
+    await pool.query(query, [userId]);
 };
 
 module.exports = {

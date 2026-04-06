@@ -4,206 +4,675 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Admin Dashboard - Utsavya</title>
-
+    <title>Admin Dashboard – Utsavya</title>
+    <meta name="description" content="Utsavya admin control panel – manage users, vendor requests, and platform moderation.">
     <link rel="stylesheet" href="/css/admin.css">
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-    <!-- NAVBAR -->
-
+    <!-- ===== NAVBAR ===== -->
     <header class="navbar">
-
-        <div class="logo">
-            <img src="/images/logo.png" alt="" width="60">
+        <a class="logo" href="/admin/dashboard">
+            <img src="/images/logo.png" alt="Utsavya">
             <span>UTSAVYA</span>
+        </a>
+        <div class="nav-right">
+            <span class="admin-badge">⚙️ Admin Panel</span>
+            <span id="adminName" style="font-size:13px;font-weight:600;color:#555;"></span>
+            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
         </div>
-
-        <input type="checkbox" id="nav-toggle" class="nav-toggle">
-        <label for="nav-toggle" class="nav-toggle-label">☰</label>
-
-        <nav class="nav-menu">
-            <a href="dashboard.html">Home</a>
-            <a href="events_page.html">Events</a>
-            <a href="vendors_page.html">Vendors</a>
-            <a href="memories_page.html">Memories</a>
-            <a>Admin Panel</a>
-        </nav>
-
-        <div class="profile">
-            Admin
-            <img src="images/profile.png">
-            <button class="vendor-signup-btn" onclick="logout()">Logout</button>
-        </div>
-
     </header>
 
-    <!-- HERO SECTION -->
+    <!-- ===== LAYOUT ===== -->
+    <div class="admin-layout">
 
-    <section class="hero">
-
-        <div class="hero-overlay"></div>
-        <div class="bokeh">
-            <span></span><span></span><span></span>
-            <span></span><span></span><span></span>
-        </div>
-
-        <div class="hero-content">
-
-            <h1>
-                Admin <span>Dashboard</span>
-            </h1>
-
-            <div class="stats" id="adminStats">
-                <!-- Stats will be loaded here -->
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-label">Overview</div>
+                <div class="sidebar-link active" onclick="navigate('overview')" id="nav-overview">
+                    <span class="icon">📊</span> Dashboard
+                </div>
             </div>
 
+            <div class="sidebar-section">
+                <div class="sidebar-label">Management</div>
+                <div class="sidebar-link" onclick="navigate('vendor-requests')" id="nav-vendor-requests">
+                    <span class="icon">🏪</span> Vendor Requests
+                    <span class="sidebar-badge" id="requestsBadge">0</span>
+                </div>
+                <div class="sidebar-link" onclick="navigate('users')" id="nav-users">
+                    <span class="icon">👥</span> All Users
+                </div>
+                <div class="sidebar-link" onclick="navigate('moderation')" id="nav-moderation">
+                    <span class="icon">🚨</span> Moderation
+                    <span class="sidebar-badge" id="modBadge">0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- ========== PAGE: OVERVIEW ========== -->
+            <section class="page active" id="page-overview">
+                <div class="page-header">
+                    <h1>Dashboard Overview</h1>
+                    <p>Platform health at a glance — live data from the backend.</p>
+                </div>
+
+                <!-- Revenue Cards -->
+                <div class="rev-grid" id="revGrid">
+                    <div class="loading-state" style="grid-column:1/-1;">
+                        <div class="spinner"></div>Loading stats…
+                    </div>
+                </div>
+
+                <!-- Stat Cards -->
+                <div class="stats-grid" id="statsGrid"></div>
+
+                <!-- Quick summary table for recent audit -->
+                <div class="section-card">
+                    <div class="section-card-header">
+                        <h2>📋 Platform Snapshot</h2>
+                    </div>
+                    <div id="snapshotContent" style="color:#888;text-align:center;padding:30px;">Loading…</div>
+                </div>
+            </section>
+
+            <!-- ========== PAGE: VENDOR REQUESTS ========== -->
+            <section class="page" id="page-vendor-requests">
+                <div class="page-header">
+                    <h1>🏪 Vendor Requests</h1>
+                    <p>Review applications from users who want to become vendors.</p>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-card-header">
+                        <h2>⏳ Pending Applications <span class="count-pill" id="reqCount">0</span></h2>
+                        <button onclick="loadVendorRequests()" style="background:none;border:1px solid #ddd;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-family:'Poppins',sans-serif;">🔄 Refresh</button>
+                    </div>
+                    <div class="requests-grid" id="requestsGrid">
+                        <div class="loading-state" style="grid-column:1/-1;">
+                            <div class="spinner"></div>Loading requests…
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== PAGE: USERS ========== -->
+            <section class="page" id="page-users">
+                <div class="page-header">
+                    <h1>👥 All Users</h1>
+                    <p>Browse, search, and manage every registered user on the platform.</p>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-card-header">
+                        <h2>User Registry</h2>
+                        <button onclick="loadUsers()" style="background:none;border:1px solid #ddd;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-family:'Poppins',sans-serif;">🔄 Refresh</button>
+                    </div>
+
+                    <div class="table-controls">
+                        <input class="search-input" type="text" placeholder="🔍  Search by name or email…" id="userSearch" oninput="filterUsers()">
+                        <select class="role-filter" id="roleFilter" onchange="filterUsers()">
+                            <option value="">All Roles</option>
+                            <option value="customer">Customer</option>
+                            <option value="vendor">Vendor</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+
+                    <div class="users-table-wrap">
+                        <table class="users-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Joined</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr><td colspan="6" class="loading-state"><div class="spinner" style="margin:20px auto 10px;"></div>Loading users…</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="usersPagination"></div>
+                </div>
+            </section>
+
+            <!-- ========== PAGE: MODERATION ========== -->
+            <section class="page" id="page-moderation">
+                <div class="page-header">
+                    <h1>🚨 Moderation Queue</h1>
+                    <p>Vendors with multiple customer reports — review and take action.</p>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-card-header">
+                        <h2>Reported Vendors <span class="count-pill" id="modCount">0</span></h2>
+                        <button onclick="loadModeration()" style="background:none;border:1px solid #ddd;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-family:'Poppins',sans-serif;">🔄 Refresh</button>
+                    </div>
+                    <div class="mod-grid" id="modGrid">
+                        <div class="loading-state" style="grid-column:1/-1;">
+                            <div class="spinner"></div>Loading moderation queue…
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div><!-- end layout -->
+
+    <!-- ===== CONFIRM MODAL ===== -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <h3 id="modalTitle">Confirm Action</h3>
+            <p id="modalBody">Are you sure you want to proceed?</p>
+            <div class="modal-actions">
+                <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+                <button class="modal-confirm" id="modalConfirmBtn">Confirm</button>
+            </div>
         </div>
+    </div>
 
-    </section>
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast">
+        <span class="toast-icon" id="toastIcon"></span>
+        <span id="toastMsg"></span>
+    </div>
 
-    <!-- PENDING VENDOR REQUESTS -->
-
-    <section class="section reveal">
-
-        <h2>Pending Vendor Requests</h2>
-
-        <div class="card-grid" id="pendingRequests">
-            <!-- Requests will be loaded here -->
-        </div>
-
-    </section>
 
     <script>
-        const token = localStorage.getItem("accessToken");
+        // ─────────────────────────────────────────
+        //  AUTH HELPERS
+        // ─────────────────────────────────────────
+        const token = localStorage.getItem('accessToken');
 
         async function verifyAdmin() {
-            if (!token) {
-                window.location.href = "/login2.html";
+            if (!token) { window.location.href = '/login2.html'; return; }
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            if (payload.role !== 'admin') {
+                alert('Access denied. Admins only.');
+                window.location.href = '/login2.html';
                 return;
             }
-
-            // Test if token is admin by calling the stats route
-            const res = await fetch("/api/admin/stats", {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            if (!res.ok) {
-                alert("Session expired or not admin. Redirecting to login.");
-                localStorage.removeItem("accessToken");
-                window.location.href = "/login2.html";
-                return;
-            }
-        }
-
-        async function loadStats() {
-            const res = await fetch("/api/admin/stats", {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            if (res.ok) {
-                const stats = await res.json();
-                document.getElementById("adminStats").innerHTML = `
-                    <div>
-                        <h3>${stats.totalUsers}+</h3>
-                        <p>Users</p>
-                    </div>
-                    <div>
-                        <h3>${stats.totalVendors}+</h3>
-                        <p>Vendors</p>
-                    </div>
-                    <div>
-                        <h3>${stats.pendingRequests}</h3>
-                        <p>Pending Requests</p>
-                    </div>
-                    <div>
-                        <h3>${stats.totalBookings}+</h3>
-                        <p>Bookings</p>
-                    </div>
-                `;
-            }
-        }
-
-        async function loadPendingRequests() {
-            const res = await fetch("/api/admin/vendor-requests", {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            if (res.ok) {
-                const requests = await res.json();
-                const container = document.getElementById("pendingRequests");
-                container.innerHTML = requests.map(req => `
-                    <div class="card">
-                        <h3>${req.business_name}</h3>
-                        <p>${req.business_description}</p>
-                        <p>City: ${req.city}</p>
-                        <p>User: ${req.user_name} (${req.email})</p>
-                        <button onclick="reviewRequest('${req.id}', 'approved')">Approve</button>
-                        <button onclick="reviewRequest('${req.id}', 'rejected')">Reject</button>
-                    </div>
-                `).join("");
-            }
-        }
-
-        async function reviewRequest(id, status) {
-            console.log('Reviewing request', id, status);
-            const admin_note = prompt("Enter a note (optional):") || "";
-            console.log('Admin note:', admin_note);
-            const res = await fetch(`/api/admin/vendor-requests/${id}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({ status, admin_note })
-            });
-            console.log('Response status:', res.status);
-            if (res.ok) {
-                alert(`Request ${status}`);
-                loadPendingRequests(); // Reload
-            } else {
-                const error = await res.text();
-                console.log('Error:', error);
-                alert("Error updating request: " + error);
-            }
+            document.getElementById('adminName').textContent = payload.full_name || payload.email || 'Admin';
         }
 
         function logout() {
-            localStorage.removeItem("accessToken");
-            window.location.href = "/login2.html";
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('authToken');
+            window.location.href = '/login2.html';
         }
 
-        // Reveal animation
-        function reveal() {
-            const reveals = document.querySelectorAll(".reveal");
-            reveals.forEach(el => {
-                const windowHeight = window.innerHeight;
-                const elementTop = el.getBoundingClientRect().top;
-                const elementVisible = 150;
-                if (elementTop < windowHeight - elementVisible) {
-                    el.classList.add("active");
-                }
+        function authHeaders() {
+            const token = localStorage.getItem('accessToken');
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            };
+        }
+
+        // ─────────────────────────────────────────
+        //  NAVIGATION
+        // ─────────────────────────────────────────
+        const pages = ['overview', 'vendor-requests', 'users', 'moderation'];
+
+        function navigate(page) {
+            pages.forEach(p => {
+                document.getElementById(`page-${p}`).classList.remove('active');
+                const navEl = document.getElementById(`nav-${p}`);
+                if (navEl) navEl.classList.remove('active');
             });
-        }
-        window.addEventListener("scroll", reveal);
+            document.getElementById(`page-${page}`).classList.add('active');
+            const navTarget = document.getElementById(`nav-${page}`);
+            if (navTarget) navTarget.classList.add('active');
 
-        // Init
-        verifyAdmin();
-        loadStats();
-        loadPendingRequests();
+            // Lazy load content
+            if (page === 'overview')         loadStats();
+            if (page === 'vendor-requests')  loadVendorRequests();
+            if (page === 'users')            loadUsers();
+            if (page === 'moderation')       loadModeration();
+        }
+
+        // ─────────────────────────────────────────
+        //  TOAST
+        // ─────────────────────────────────────────
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            document.getElementById('toastIcon').textContent = type === 'success' ? '✅' : '❌';
+            t.className = `toast ${type} show`;
+            setTimeout(() => t.classList.remove('show'), 3500);
+        }
+
+        // ─────────────────────────────────────────
+        //  MODAL
+        // ─────────────────────────────────────────
+        let _modalCallback = null;
+
+        function openModal(title, body, onConfirm) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').textContent = body;
+            _modalCallback = onConfirm;
+            document.getElementById('confirmModal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').classList.remove('open');
+            _modalCallback = null;
+        }
+
+        document.getElementById('modalConfirmBtn').addEventListener('click', () => {
+            const cb = _modalCallback;
+            closeModal();
+            if (cb) cb();
+        });
+
+        // Close modal on backdrop click
+        document.getElementById('confirmModal').addEventListener('click', e => {
+            if (e.target === document.getElementById('confirmModal')) closeModal();
+        });
+
+        // ─────────────────────────────────────────
+        //  OVERVIEW – loadStats
+        // ─────────────────────────────────────────
+        async function loadStats() {
+            try {
+                const res = await fetch('/api/admin/stats', { headers: authHeaders() });
+                if (!res.ok) throw new Error('Unauthorized');
+                const json = await res.json();
+                const d = json.data;
+
+                // Revenue cards
+                document.getElementById('revGrid').innerHTML = `
+                    <div class="rev-card">
+                        <div class="label">💰 Lifetime Revenue</div>
+                        <div class="amount">₹${Number(d.revenue.lifetime).toLocaleString('en-IN', {minimumFractionDigits:2})}</div>
+                        <div class="sub">All-time successful payments</div>
+                    </div>
+                    <div class="rev-card">
+                        <div class="label">📅 This Month's Revenue</div>
+                        <div class="amount">₹${Number(d.revenue.monthly).toLocaleString('en-IN', {minimumFractionDigits:2})}</div>
+                        <div class="sub">Revenue earned this calendar month</div>
+                    </div>
+                    <div class="rev-card green-gradient">
+                        <div class="label">🔄 Total Refunds Issued</div>
+                        <div class="amount">₹${Number(d.refunds.total_value).toLocaleString('en-IN', {minimumFractionDigits:2})}</div>
+                        <div class="sub">${d.refunds.total_count} successful refund(s)</div>
+                    </div>
+                `;
+
+                // Stat cards
+                const s = d.stats;
+                document.getElementById('statsGrid').innerHTML = `
+                    ${statCard('👤', 'red',    s.total_users,            'Total Users')}
+                    ${statCard('🚫', 'orange',  s.blocked_users,          'Blocked Users')}
+                    ${statCard('🏪', 'blue',    s.total_vendors,          'Active Vendors')}
+                    ${statCard('✅', 'green',   s.approved_vendors,       'Approved Vendors')}
+                    ${statCard('📅', 'purple',  s.upcoming_events,        'Upcoming Events')}
+                    ${statCard('⏳', 'red',     s.pending_verifications,  'Pending Verifications')}
+                    ${statCard('🗑️', 'orange',  s.monthly_deletions,     'Deletions This Month')}
+                `;
+
+                // Update badges
+                document.getElementById('requestsBadge').textContent = s.pending_verifications;
+
+                // Platform snapshot
+                document.getElementById('snapshotContent').innerHTML = `
+                    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                        <tbody>
+                            ${snapRow('Total Registered Users',   s.total_users)}
+                            ${snapRow('Currently Blocked',        s.blocked_users, '#e53935')}
+                            ${snapRow('Vendors on Platform',      s.total_vendors)}
+                            ${snapRow('Pending Vendor Requests',  s.pending_verifications, '#f39c12')}
+                            ${snapRow('Upcoming Events',          s.upcoming_events)}
+                            ${snapRow('Accounts Deleted (month)', s.monthly_deletions, '#e53935')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (err) {
+                showToast('Failed to load stats: ' + err.message, 'error');
+                console.error(err);
+            }
+        }
+
+        function statCard(icon, color, value, label) {
+            return `
+            <div class="stat-card">
+                <div class="stat-icon ${color}">${icon}</div>
+                <div class="stat-info">
+                    <h3>${value ?? '—'}</h3>
+                    <p>${label}</p>
+                </div>
+            </div>`;
+        }
+
+        function snapRow(label, value, color = '') {
+            return `<tr>
+                <td style="padding:10px 0;color:#666;border-bottom:1px solid #f0f0f0;">${label}</td>
+                <td style="padding:10px 0;font-weight:700;text-align:right;border-bottom:1px solid #f0f0f0;color:${color || '#333'};">${value ?? '—'}</td>
+            </tr>`;
+        }
+
+        // ─────────────────────────────────────────
+        //  VENDOR REQUESTS
+        // ─────────────────────────────────────────
+        async function loadVendorRequests() {
+            const grid = document.getElementById('requestsGrid');
+            grid.innerHTML = `<div class="loading-state" style="grid-column:1/-1;"><div class="spinner"></div>Loading requests…</div>`;
+            try {
+                const res = await fetch('/api/admin/vendor-requests', { headers: authHeaders() });
+                const json = await res.json();
+                const requests = json.data || [];
+                document.getElementById('reqCount').textContent = requests.length;
+                document.getElementById('requestsBadge').textContent = requests.length;
+
+                if (!requests.length) {
+                    grid.innerHTML = `
+                        <div class="empty-state" style="grid-column:1/-1;">
+                            <div class="icon">🎉</div>
+                            <p>No pending vendor applications right now!</p>
+                        </div>`;
+                    return;
+                }
+
+                grid.innerHTML = requests.map(r => requestCard(r)).join('');
+            } catch (err) {
+                grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="icon">⚠️</div><p>${err.message}</p></div>`;
+            }
+        }
+
+        function requestCard(r) {
+            const initials = (r.requester_name || '?').charAt(0).toUpperCase();
+            const date = r.created_at ? new Date(r.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '—';
+            const docHtml = r.documents_url
+                ? `<a class="doc-link" href="${r.documents_url}" target="_blank" rel="noopener">📄 View Documents</a>`
+                : `<span class="no-doc">📁 No documents uploaded</span>`;
+
+            return `
+            <div class="request-card" id="req-${r.id}">
+                <div class="request-card-header">
+                    <div>
+                        <div class="request-biz-name">${escHtml(r.business_name)}</div>
+                        <div class="request-city">📍 ${escHtml(r.city)}</div>
+                    </div>
+                    <div class="request-date-badge">${date}</div>
+                </div>
+                <div class="request-card-body">
+                    <div class="request-requester">
+                        <div class="requester-avatar">${initials}</div>
+                        <div class="requester-info">
+                            <div class="name">${escHtml(r.requester_name || 'Unknown')}</div>
+                            <div class="email">${escHtml(r.requester_email || '')}</div>
+                        </div>
+                    </div>
+                    <p class="request-desc">${escHtml(r.business_description || 'No description provided.')}</p>
+                    ${docHtml}
+                    <textarea class="note-input" id="note-${r.id}" rows="2" placeholder="Optional admin note (visible to applicant)…"></textarea>
+                    <div class="request-actions">
+                        <button class="btn-approve" onclick="reviewRequest('${r.id}', 'approved')">✅ Approve</button>
+                        <button class="btn-reject"  onclick="reviewRequest('${r.id}', 'rejected')">❌ Reject</button>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        async function reviewRequest(id, status) {
+            const label = status === 'approved' ? 'approve' : 'reject';
+            openModal(
+                `${status === 'approved' ? '✅ Approve' : '❌ Reject'} Vendor Request`,
+                `Are you sure you want to ${label} this vendor application? An email will be sent to the applicant.`,
+                async () => {
+                    const note = document.getElementById(`note-${id}`)?.value || '';
+                    try {
+                        const res = await fetch(`/api/admin/vendor-requests/${id}`, {
+                            method: 'PATCH',
+                            headers: authHeaders(),
+                            body: JSON.stringify({ status, admin_note: note })
+                        });
+                        const json = await res.json();
+                        if (!res.ok) throw new Error(json.message || 'Failed');
+                        showToast(`Vendor request ${status} successfully!`);
+                        // Remove card from DOM
+                        const card = document.getElementById(`req-${id}`);
+                        if (card) {
+                            card.style.transition = 'all 0.4s';
+                            card.style.opacity = '0';
+                            card.style.transform = 'scale(0.9)';
+                            setTimeout(() => { card.remove(); updateReqCount(); }, 400);
+                        }
+                    } catch (err) { showToast(err.message, 'error'); }
+                }
+            );
+        }
+
+        function updateReqCount() {
+            const remaining = document.getElementById('requestsGrid').querySelectorAll('.request-card').length;
+            document.getElementById('reqCount').textContent = remaining;
+            document.getElementById('requestsBadge').textContent = remaining;
+            if (!remaining) loadVendorRequests();
+        }
+
+        // ─────────────────────────────────────────
+        //  USERS
+        // ─────────────────────────────────────────
+        let allUsers = [];
+        let usersOffset = 0;
+        const USERS_LIMIT = 10;
+
+        async function loadUsers(reset = true) {
+            if (reset) { allUsers = []; usersOffset = 0; }
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:#888;"><div class="spinner" style="margin:0 auto 10px;"></div>Loading users…</td></tr>`;
+            try {
+                const res = await fetch(`/api/admin/users?limit=${USERS_LIMIT}&offset=${usersOffset}`, { headers: authHeaders() });
+                const json = await res.json();
+                allUsers = json.data || [];
+                renderUsersTable(allUsers);
+                renderPagination();
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:30px;color:#e53935;">${err.message}</td></tr>`;
+            }
+        }
+
+        function renderUsersTable(users) {
+            const search = document.getElementById('userSearch').value.toLowerCase();
+            const role   = document.getElementById('roleFilter').value;
+
+            const filtered = users.filter(u => {
+                const matchSearch = !search ||
+                    (u.full_name || '').toLowerCase().includes(search) ||
+                    (u.email || '').toLowerCase().includes(search);
+                const matchRole = !role || u.role === role;
+                return matchSearch && matchRole;
+            });
+
+            const tbody = document.getElementById('usersTableBody');
+            if (!filtered.length) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:30px;color:#888;">No users found.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(u => {
+                const initials = (u.full_name || '?').charAt(0).toUpperCase();
+                const date = u.created_at ? new Date(u.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '—';
+                const isBlocked = !u.is_active;
+                return `
+                <tr>
+                    <td>
+                        <span class="user-avatar-sm">${initials}</span>
+                        ${escHtml(u.full_name || '—')}
+                    </td>
+                    <td style="color:#666;">${escHtml(u.email)}</td>
+                    <td><span class="role-badge ${u.role}">${u.role}</span></td>
+                    <td>
+                        <span class="status-badge ${isBlocked ? 'blocked' : 'active'}">
+                            ${isBlocked ? 'Blocked' : 'Active'}
+                        </span>
+                    </td>
+                    <td style="color:#888;font-size:12px;">${date}</td>
+                    <td>
+                        <button class="btn-block"
+                            ${isBlocked ? 'disabled title="Already blocked"' : `onclick="confirmBlock('${u.id}', '${escHtml(u.full_name || u.email)}')"`}>
+                            ${isBlocked ? '🚫 Blocked' : '🔒 Block'}
+                        </button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        function filterUsers() { renderUsersTable(allUsers); }
+
+        function renderPagination() {
+            // Simple prev/next since backend uses limit/offset
+            const pg = document.getElementById('usersPagination');
+            pg.innerHTML = `
+                <button class="page-btn" onclick="paginate(-1)" ${usersOffset === 0 ? 'disabled style="opacity:.4"' : ''}>‹ Prev</button>
+                <button class="page-btn" onclick="paginate(1)" ${allUsers.length < USERS_LIMIT ? 'disabled style="opacity:.4"' : ''}>Next ›</button>
+            `;
+        }
+
+        function paginate(dir) {
+            usersOffset = Math.max(0, usersOffset + dir * USERS_LIMIT);
+            loadUsers(false);
+            fetch(`/api/admin/users?limit=${USERS_LIMIT}&offset=${usersOffset}`, { headers: authHeaders() })
+                .then(r => r.json()).then(json => {
+                    allUsers = json.data || [];
+                    renderUsersTable(allUsers);
+                    renderPagination();
+                });
+        }
+
+        function confirmBlock(userId, name) {
+            openModal(
+                '🔒 Block User',
+                `Are you sure you want to block "${name}"? They will be deactivated and notified by email.`,
+                () => blockUser(userId)
+            );
+        }
+
+        async function blockUser(userId) {
+            try {
+                const res = await fetch(`/api/admin/users/${userId}/block`, {
+                    method: 'PATCH',
+                    headers: authHeaders()
+                });
+                const json = await res.json();
+                if (!res.ok) throw new Error(json.message || 'Failed to block user');
+                showToast('User blocked and notified by email.');
+                loadUsers();
+            } catch (err) { showToast(err.message, 'error'); }
+        }
+
+        // ─────────────────────────────────────────
+        //  MODERATION
+        // ─────────────────────────────────────────
+        async function loadModeration() {
+            const grid = document.getElementById('modGrid');
+            grid.innerHTML = `<div class="loading-state" style="grid-column:1/-1;"><div class="spinner"></div>Loading…</div>`;
+            try {
+                const res = await fetch('/api/admin/moderation', { headers: authHeaders() });
+                const json = await res.json();
+                const vendors = json.data || [];
+                document.getElementById('modCount').textContent = vendors.length;
+                document.getElementById('modBadge').textContent = vendors.length;
+
+                if (!vendors.length) {
+                    grid.innerHTML = `
+                        <div class="empty-state" style="grid-column:1/-1;">
+                            <div class="icon">✅</div>
+                            <p>Moderation queue is clear — no reported vendors.</p>
+                        </div>`;
+                    return;
+                }
+
+                grid.innerHTML = vendors.map(v => modCard(v)).join('');
+            } catch (err) {
+                grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="icon">⚠️</div><p>${err.message}</p></div>`;
+            }
+        }
+
+        function modCard(v) {
+            const initials = (v.full_name || '?').charAt(0).toUpperCase();
+            const reasons  = (v.reasons || []).filter(Boolean);
+            const reasonTags = reasons.slice(0, 5).map(r => `<span class="reason-tag">${escHtml(r)}</span>`).join('');
+            const extra = reasons.length > 5 ? `<span class="reason-tag">+${reasons.length - 5} more</span>` : '';
+
+            return `
+            <div class="mod-card" id="mod-${v.vendor_id}">
+                <div class="mod-card-top">
+                    <div class="mod-avatar">${initials}</div>
+                    <div>
+                        <div class="mod-name">${escHtml(v.full_name)}</div>
+                        <div class="mod-email">${escHtml(v.email)}</div>
+                    </div>
+                    <div class="reports-count">🚨 ${v.report_count} report${v.report_count !== 1 ? 's' : ''}</div>
+                </div>
+                ${reasons.length ? `<div class="reasons-list">${reasonTags}${extra}</div>` : '<p style="font-size:12px;color:#aaa;margin-bottom:14px;">No reason details.</p>'}
+                <button class="btn-block-vendor" onclick="confirmBlockVendor('${v.vendor_id}', '${escHtml(v.full_name)}')">
+                    🔒 Block This Vendor
+                </button>
+            </div>`;
+        }
+
+        function confirmBlockVendor(id, name) {
+            openModal(
+                '⚠️ Block Vendor',
+                `Block "${name}"? Their account will be deactivated and they will receive a notification email.`,
+                async () => {
+                    try {
+                        const res = await fetch(`/api/admin/users/${id}/block`, {
+                            method: 'PATCH',
+                            headers: authHeaders()
+                        });
+                        const json = await res.json();
+                        if (!res.ok) throw new Error(json.message || 'Failed');
+                        showToast(`${name} has been blocked.`);
+                        const card = document.getElementById(`mod-${id}`);
+                        if (card) {
+                            card.style.transition = 'all 0.4s';
+                            card.style.opacity = '0';
+                            card.style.transform = 'scale(0.9)';
+                            setTimeout(() => { card.remove(); updateModCount(); }, 400);
+                        }
+                    } catch (err) { showToast(err.message, 'error'); }
+                }
+            );
+        }
+
+        function updateModCount() {
+            const remaining = document.getElementById('modGrid').querySelectorAll('.mod-card').length;
+            document.getElementById('modCount').textContent = remaining;
+            document.getElementById('modBadge').textContent = remaining;
+        }
+
+        // ─────────────────────────────────────────
+        //  UTILS
+        // ─────────────────────────────────────────
+        function escHtml(str) {
+            if (str == null) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        // ─────────────────────────────────────────
+        //  INIT
+        // ─────────────────────────────────────────
+        (async () => {
+            await verifyAdmin();
+            loadStats();
+        })();
     </script>
 
-<script src="js/navbar.js"></script>
 </body>
-
 </html>

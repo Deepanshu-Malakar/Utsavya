@@ -53,12 +53,14 @@ const reviewVendorRequest = async (adminUser, requestId, data) => {
     }
 
     if (data.status === "approved") {
-        await promoteUserToVendor(request.user_id, request.business_name, request.city);
+        await promoteUserToVendor(request.user_id);
     }
 
     // Notify user of their vendor application status
-    const statusMsg = data.status === "approved" ? "APPROVED" : "REJECTED";
-    const reasonMsg = data.admin_note || (data.status === "approved" ? "Your business details meet our platform standards." : "Your application did not meet our current requirements.");
+    const statusMsg = data.status === "approved" ? "APPROVED - PROMOTED TO VENDOR" : "REJECTED";
+    const reasonMsg = data.admin_note || (data.status === "approved" 
+        ? "Congratulations! Your account has been officially promoted. You can now log out, log back in, and access your Vendor Dashboard." 
+        : "Your application did not meet our current requirements.");
     
     // We need the user's email, but we already have it in the request object (joined with users table in model)
     // Actually, getVendorRequestById might not have the email. Let's check the model or just fetch it.
