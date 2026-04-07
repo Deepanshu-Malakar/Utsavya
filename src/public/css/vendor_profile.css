@@ -11,6 +11,7 @@
 body {
     background: #f8f4ef;
     color: #333;
+    line-height: 1.5;
 }
 
 /* ===== NAVBAR ===== */
@@ -18,6 +19,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
     padding: 15px 30px;
     background: white;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -65,6 +68,7 @@ body {
     height: 35px;
     border-radius: 50%;
     cursor: pointer;
+    object-fit: cover;
 }
 
 /* ===== HERO BANNER ===== */
@@ -206,6 +210,7 @@ body {
     padding: 30px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
     margin-bottom: 25px;
+    border: 1px solid rgba(229,57,53,0.08);
 }
 .section-card h2 {
     font-size: 20px;
@@ -379,6 +384,28 @@ body {
     border-color: #e53935;
     background: white;
 }
+#reviewServiceSelect {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-bottom: 12px;
+    font-family: 'Poppins', sans-serif;
+    background: #fafafa;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+#reviewServiceSelect:focus {
+    outline: none;
+    border-color: #e53935;
+    box-shadow: 0 0 0 3px rgba(229,57,53,0.08);
+    background: white;
+}
+#reviewNote {
+    font-size: 11px;
+    color: #aaa;
+    margin-top: 8px;
+}
 .submit-review-btn {
     width: 100%;
     padding: 12px;
@@ -410,6 +437,7 @@ body {
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     margin-bottom: 20px;
     text-align: center;
+    border: 1px solid rgba(229,57,53,0.08);
 }
 .book-card h3 { font-size: 16px; color: #333; margin-bottom: 5px; }
 .book-card .price-tag {
@@ -444,6 +472,7 @@ body {
     border-radius: 16px;
     padding: 22px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid rgba(229,57,53,0.08);
 }
 .quick-info-card h4 { font-size: 14px; color: #333; margin-bottom: 15px; font-weight: 600; }
 .info-row {
@@ -532,6 +561,19 @@ body {
     to { transform: translateX(0); opacity: 1; }
 }
 
+#vendorAbout {
+    color: #555;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.profile-footer {
+    text-align: center;
+    padding: 30px;
+    color: #aaa;
+    font-size: 13px;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
     .profile-main { grid-template-columns: 1fr; }
@@ -542,7 +584,19 @@ body {
     .portfolio-grid { columns: 2 150px; }
 }
 @media (max-width: 600px) {
+    .navbar {
+        padding: 12px 16px;
+        justify-content: center;
+    }
+    .back-btn {
+        width: 100%;
+        justify-content: center;
+    }
     .vendor-hero { height: 300px; }
     .portfolio-grid { columns: 1; }
     .services-grid { grid-template-columns: 1fr; }
+    .section-card,
+    .rating-form-card {
+        padding: 20px;
+    }
 }

@@ -160,6 +160,15 @@ async function loadVendors() {
 }
 
 function renderVendors(vendors) {
+    const categoryImages = {
+        venue: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=800&q=80',
+        catering: 'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=800&q=80',
+        photography: 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&w=800&q=80',
+        music: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80',
+        decor: 'https://images.unsplash.com/photo-1522673607200-164883efcdf1?auto=format&fit=crop&w=800&q=80',
+        other: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80'
+    };
+
     const container = document.querySelector('.vendors-grid');
     if (!container) return;
 
@@ -185,11 +194,14 @@ function renderVendors(vendors) {
         const city = vendor.city || vendor.business_city || '';
 
         const servicesList = vendor.services || [];
+        const mainCategory = (servicesList[0]?.category || vendor.category || 'other').toLowerCase();
+        const fallbackImg = categoryImages[mainCategory] || categoryImages.other;
+        
         const categories = servicesList.length > 0
             ? servicesList.slice(0, 2).map(s => typeof s === 'string' ? s : (s.category || s.title)).filter(Boolean).join(', ')
             : (vendor.category || 'Event Services');
 
-        const profileImg = vendor.profile_image || 'images/default-vendor.jpg';
+        const profileImg = vendor.profile_image || fallbackImg;
 
         // Check if already in cart (persistent from backend)
         const existingItem = existingItems.find(i => i.vendor_id === vendor.id && !['rejected', 'cancelled'].includes(i.status));
@@ -205,7 +217,7 @@ function renderVendors(vendors) {
         return `
             <div class="vendor-card" data-vendor-id="${vendor.id}">
                 <div class="vendor-image" onclick="openVendorProfile('${vendor.id}')" style="cursor:pointer;">
-                    <img src="${profileImg}" alt="${vendor.full_name}" onerror="this.src='images/default-vendor.jpg'">
+                    <img src="${profileImg}" alt="${vendor.full_name}" onerror="this.src='${categoryImages.other}'">
                     <div class="vendor-image-overlay"><span>View Profile →</span></div>
                 </div>
                 <div class="vendor-details">

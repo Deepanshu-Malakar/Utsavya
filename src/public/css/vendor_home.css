@@ -1,3 +1,12 @@
+ :root {
+    --brand-red: #e53935;
+    --brand-red-dark: #c62828;
+    --brand-bg: #f8f4ef;
+    --card-radius: 16px;
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --muted-text: #6b7280;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,8 +15,9 @@
 }
 
 body {
-    background: #f8f4ef;
+    background: var(--brand-bg);
     color: #333;
+    line-height: 1.5;
 }
 
 /* NAVBAR */
@@ -16,7 +26,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 10px;
+    padding: 14px 24px;
     background: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     position: sticky;
@@ -29,8 +39,13 @@ body {
     align-items: center;
     gap: 10px;
     font-weight: 600;
-    color: #e53935;
+    color: var(--brand-red);
     animation: logoPulse 2s infinite;
+}
+
+.logo img {
+    width: 52px;
+    height: auto;
 }
 
 @keyframes logoPulse {
@@ -110,6 +125,9 @@ nav a.active::after {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
 }
 
 .vendor-signup-btn {
@@ -146,16 +164,17 @@ nav a.active::after {
     width: 35px;
     height: 35px;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .calendar-container {
     width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
+    max-width: 1000px;
+    margin: 0 auto 40px; /* Centered with bottom margin */
     background: #fff;
     padding: 25px;
-    border-radius: 16px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
 }
 
 /* Header */
@@ -172,13 +191,19 @@ nav a.active::after {
 }
 
 .calendar-header button {
-    background: #ff5a5f;
+    background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
     color: white;
     border: none;
     padding: 10px 16px;
     cursor: pointer;
     border-radius: 8px;
     font-size: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.calendar-header button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(229, 57, 53, 0.25);
 }
 
 /* Days row */
@@ -198,16 +223,46 @@ nav a.active::after {
 
 /* Dates */
 .calendar-dates div {
-    height: 80px;
-    /* 🔥 BIG SIZE */
+    height: 60px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #f5f5f5;
+    background: #fff;
+    border: 1px solid #eee;
     border-radius: 12px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 16px;
     transition: 0.2s;
+    position: relative;
+}
+
+.calendar-dates div.empty {
+    background: transparent;
+    border: none;
+    cursor: default;
+}
+
+.calendar-dates div.has-event {
+    background: #fff5f5;
+    border-color: #ffcdd2;
+}
+
+.calendar-dates div.accepted {
+    background: #f1f8e9;
+    border-color: #c5e1a5;
+}
+
+.event-dot {
+    width: 6px;
+    height: 6px;
+    background: #e53935;
+    border-radius: 50%;
+    margin-top: 4px;
+}
+
+.accepted .event-dot {
+    background: #4caf50;
 }
 
 /* Hover */
@@ -228,13 +283,14 @@ nav a.active::after {
 .hero {
     height: 70vh;
     background-image: url("../images/download.jpg");
-    background-size: contain;
+    background-size: cover;
     background-position: center;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     background-attachment: fixed;
+    overflow: hidden;
 }
 
 .hero-overlay {
@@ -321,6 +377,8 @@ nav a.active::after {
 .hero h1 {
     font-size: 60px;
     font-weight: 700;
+    letter-spacing: -0.03em;
+    max-width: 720px;
 }
 
 .hero h1 span {
@@ -394,6 +452,7 @@ nav a.active::after {
     margin: 40px auto;
     gap: 30px;
     padding: 0 20px;
+    align-items: flex-start;
 }
 
 /* SIDEBAR */
@@ -508,6 +567,12 @@ nav a.active::after {
     flex: 1;
 }
 
+.dashboard-body {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 20px 24px 40px;
+}
+
 .vendors-header {
     display: flex;
     justify-content: space-between;
@@ -535,17 +600,116 @@ nav a.active::after {
 
 .vendors-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 300px));
-    justify-content: center;
-    /* centers cards */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 25px;
+}
+
+#vendorsGrid {
+    display: block;
+    width: 100%;
+}
+
+@media (min-width: 1024px) {
+    #vendorsGrid .calendar-container {
+        max-width: 1000px;
+        margin: 0 auto 30px;
+    }
+}
+
+#requestCardsContainer {
+    display: grid !important; 
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)) !important;
+    gap: 25px;
+    width: 100% !important;
+    padding: 10px 0;
+}
+
+#requestTitleSection {
+    margin-top: 28px !important;
+    padding: 24px 0 0 !important;
+    border-top: 1px solid rgba(229, 57, 53, 0.12) !important;
+}
+
+#requestTitleSection h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px !important;
+    font-size: 28px !important;
+}
+
+@media (max-width: 1023px) {
+    #requestCardsContainer {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* Clean Horizontal Request Card */
+.vendor-card.horizontal-request {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    height: auto !important;
+    min-height: 120px !important;
+    width: auto !important; /* Changed from 100% to allow grid to manage width */
+    margin-bottom: 0px !important;
+    padding: 0;
+    border: 1px solid rgba(229, 57, 53, 0.08);
+}
+
+#requestCardsContainer .vendor-card .request-icon {
+    flex: 0 0 100px;
+    background: #fdf2f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    border-right: 1px solid #eee;
+}
+
+.vendor-card.horizontal-request .vendor-details {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    padding: 15px 20px;
+    gap: 20px;
+    align-items: center;
+    overflow: hidden; /* Prevent text breakout */
+}
+
+.vendor-card.horizontal-request .info-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.vendor-card.horizontal-request .info-side {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    border-left: 1px solid #eee;
+    padding-left: 20px;
+    text-align: right;
+}
+
+#requestCardsContainer .info-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    border-left: 1px solid #eee;
+    padding-left: 20px;
 }
 
 .vendor-card {
     background: white;
-    border-radius: 12px;
+    border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--card-shadow);
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
@@ -636,8 +800,22 @@ nav a.active::after {
     align-items: center;
     gap: 10px;
     border-top: 1px solid #eee;
+    margin-top: auto;
     padding-top: 15px;
 }
+
+.status-tag {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.status-tag.pending { background: #fff3e0; color: #ef6c00; }
+.status-tag.accepted { background: #e8f5e9; color: #2e7d32; }
+.status-tag.rejected { background: #ffebee; color: #c62828; }
+.status-tag.completed { background: #e3f2fd; color: #1565c0; }
 
 .price {
     font-size: 16px;
@@ -1175,6 +1353,20 @@ footer {
     grid-column: 1 / -1;
 }
 
+/* Keep the customer requests section full-width inside the dashboard grid */
+#requestTitleSection,
+#requestCardsContainer {
+    grid-column: 1 / -1;
+    width: 100% !important;
+}
+
+/* Let request cards fill their grid columns instead of inheriting the generic card cap */
+#requestCardsContainer .vendor-card {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+
 /* ✅ MAKE CELLS BIGGER */
 .calendar-dates div {
     height: 120px !important;
@@ -1252,9 +1444,11 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
     margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 2px solid #e53935;
+    border-bottom: 2px solid rgba(229, 57, 53, 0.18);
 }
 
 .services-header h2 {
@@ -1267,10 +1461,11 @@ footer {
     color: white;
     border: none;
     padding: 12px 20px;
-    border-radius: 8px;
+    border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
+    min-height: 46px;
 }
 
 .add-service-btn:hover {
@@ -1286,10 +1481,11 @@ footer {
 
 .service-card {
     background: white;
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--card-shadow);
     transition: 0.3s;
+    border: 1px solid rgba(229, 57, 53, 0.08);
 }
 
 .service-card:hover {
@@ -1368,9 +1564,20 @@ footer {
     width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
-    border-radius: 6px;
+    border-radius: 10px;
     font-size: 14px;
     font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    background: #fcfcfc;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--brand-red);
+    box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.08);
+    background: white;
 }
 
 .form-group textarea {
@@ -1436,9 +1643,10 @@ footer {
 .card-preview-wrapper,
 .card-editor-controls {
     background: white;
-    border-radius: 16px;
+    border-radius: var(--card-radius);
     padding: 25px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(229, 57, 53, 0.08);
 }
 
 .editor-label {
@@ -1570,6 +1778,10 @@ footer {
 /* SCHEDULE & MEMORIES SPECIFIC */
 .section-header {
     margin-bottom: 25px;
+    padding: 20px 22px;
+    background: linear-gradient(180deg, rgba(229, 57, 53, 0.06), rgba(229, 57, 53, 0.02));
+    border-radius: 14px;
+    border: 1px solid rgba(229, 57, 53, 0.08);
 }
 
 .section-header h2 {
@@ -1586,8 +1798,9 @@ footer {
 .right-sidebar .sidebar-card {
     background: white;
     padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(229, 57, 53, 0.08);
 }
 
 .right-sidebar h3 {
@@ -1596,21 +1809,44 @@ footer {
     color: #2d3436;
 }
 
+.add-memory-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
 .add-memory-form select, 
 .add-memory-form input {
     padding: 10px 15px;
     border: 1.5px solid #eee;
-    border-radius: 8px;
+    border-radius: 10px;
     font-family: inherit;
     font-size: 14px;
+    min-height: 46px;
+    background: #fff;
 }
 
 .add-memory-form select {
     background: white;
+    min-width: 260px;
 }
 
 .add-memory-form input {
     flex: 1;
+    min-width: 240px;
+}
+
+#memoryFiles {
+    padding: 10px 12px;
+    background: #fffaf9;
+}
+
+#memoriesSection > .services-section > p {
+    padding: 14px 16px;
+    background: rgba(229, 57, 53, 0.05);
+    border: 1px solid rgba(229, 57, 53, 0.08);
+    border-radius: 12px;
 }
 
 /* Tab content */
@@ -1648,5 +1884,81 @@ footer {
 
     .vendor-card-preview {
         max-width: 100%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .dashboard-body {
+        padding: 18px 18px 32px;
+    }
+
+    #requestCardsContainer {
+        grid-template-columns: 1fr !important;
+    }
+
+    .vendor-card.horizontal-request .vendor-details {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .vendor-card.horizontal-request .info-side,
+    #requestCardsContainer .info-side {
+        align-items: flex-start;
+        text-align: left;
+        border-left: none;
+        border-top: 1px solid #eee;
+        padding-left: 0;
+        padding-top: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 12px 16px;
+    }
+
+    .profile {
+        gap: 8px;
+        font-size: 13px;
+    }
+
+    .profile span:not(#navUserName) {
+        display: none;
+    }
+
+    .hero {
+        height: 220px !important;
+        background-attachment: scroll;
+    }
+
+    .hero h1 {
+        font-size: 34px;
+        padding: 0 16px;
+    }
+
+    .services-section {
+        padding: 16px;
+    }
+
+    .main-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .right-sidebar {
+        width: 100%;
+    }
+
+    .calendar-container {
+        padding: 18px;
+    }
+
+    .calendar-header h2 {
+        font-size: 20px;
+    }
+
+    .calendar-dates div {
+        height: 54px;
+        font-size: 14px;
     }
 }

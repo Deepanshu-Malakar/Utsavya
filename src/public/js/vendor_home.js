@@ -2,6 +2,9 @@
 const ALL_TABS = ['homeSection', 'servicesSection', 'scheduleSection', 'memoriesSection', 'profileCardSection'];
 const ALL_TAB_BTNS = ['navHome', 'navServices', 'navSchedule', 'navMemories', 'navProfileCard'];
 
+let currentDate = new Date();
+let allRequests = [];
+
 function switchTab(activeSectionId, activeBtnId) {
     ALL_TABS.forEach(id => {
         const el = document.getElementById(id);
@@ -24,6 +27,72 @@ function showHomeTab() {
     loadBookingRequests();
 }
 
+// ================= CALENDAR LOGIC =================
+function renderCalendar() {
+    const monthYear = document.getElementById("monthYear");
+    const calendarDates = document.getElementById("calendarDates");
+    if (!monthYear || !calendarDates) return;
+
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const lastDate = new Date(year, month + 1, 0).getDate();
+
+    monthYear.textContent = currentDate.toLocaleString("default", { month: "long", year: "numeric" });
+    calendarDates.innerHTML = "";
+
+    // Empty slots for previous month
+    for (let i = 0; i < firstDay; i++) {
+        calendarDates.innerHTML += '<div class="empty"></div>';
+    }
+
+    // Dates for current month
+    for (let i = 1; i <= lastDate; i++) {
+        const dateDiv = document.createElement("div");
+        dateDiv.textContent = i;
+        
+        const fullDate = new Date(year, month, i);
+        const dateStr = fullDate.toDateString();
+
+        // Check if this date has any bookings
+        const bookingsOnDate = allRequests.filter(req => {
+            const reqDate = new Date(req.event_start).toDateString();
+            return reqDate === dateStr;
+        });
+
+        if (bookingsOnDate.length > 0) {
+            const hasAccepted = bookingsOnDate.some(r => r.status === 'accepted');
+            dateDiv.classList.add('has-event');
+            if (hasAccepted) dateDiv.classList.add('accepted');
+            
+            // Add a small indicator dot
+            const dot = document.createElement('span');
+            dot.className = 'event-dot';
+            dateDiv.appendChild(dot);
+            
+            dateDiv.title = bookingsOnDate.map(r => `${r.event_title} (${r.status})`).join('\n');
+        }
+
+        // Highlight today
+        if (dateStr === new Date().toDateString()) {
+            dateDiv.classList.add('today');
+        }
+
+        calendarDates.appendChild(dateDiv);
+    }
+}
+
+function prevMonth() {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
+}
+
+function nextMonth() {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+}
+
 function showServicesTab() {
     switchTab('servicesSection', 'navServices');
     loadServices();
@@ -37,7 +106,8 @@ function showScheduleTab() {
 
 function showMemoriesTab() {
     switchTab('memoriesSection', 'navMemories');
-    renderMemories(); 
+    loadCompletedBookingOptions();
+    loadVendorMemories();
 }
 
 function showProfileCardTab() {
@@ -285,7 +355,9 @@ async function loadBookingRequests() {
         if (!response.ok) throw new Error('Failed to load requests');
 
         const requests = await response.json();
-        renderRequests(requests);
+        allRequests = Array.isArray(requests) ? requests : [];
+        renderRequests(allRequests);
+        renderCalendar();
     } catch (error) {
         console.error('Error:', error);
         document.getElementById('requestCardsContainer').innerHTML = '<div class="error">Failed to load requests.</div>';
@@ -301,33 +373,50 @@ function renderRequests(requests) {
     }
 
     container.innerHTML = requests.map(req => {
-        // If the request isn't pending, maybe different styling or hide it
         const isPending = req.status === 'pending';
+        // Pick an icon based on service title or just a default
+        const icon = (req.service_title || '').toLowerCase().includes('photo') ? '📸' : 
+                     (req.service_title || '').toLowerCase().includes('catering') ? '🍱' : '🎉';
+
         return `
-        <div class="vendor-card">
-            <div class="vendor-details" style="padding-left: 20px;">
-                <h3>Event: ${req.event_title || 'Untitled Event'}</h3>
-                <div class="category">Customer: ${req.customer_name}</div>
-                
-                <div class="description">
-                    Booking Date: ${new Date(req.event_start).toLocaleString()}<br>
-                    Status: <strong>${req.status.toUpperCase()}</strong>
+        <div class="vendor-card horizontal-request">
+            <div class="request-icon">${icon}</div>
+            <div class="vendor-details">
+                <div class="info-main">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
+                        <h3 style="margin:0; font-size:20px;">${req.event_title || 'Untitled Event'}</h3>
+                        <span class="status-tag ${req.status}">${req.status.toUpperCase()}</span>
+                    </div>
+                    <div class="category" style="font-size:14px; margin-bottom:4px;">👤 Customer: <strong>${req.customer_name || 'Anonymous'}</strong></div>
+                    <div class="service-name" style="font-size:13px; color:#666;">🛠️ Service: ${req.service_title || 'General'}</div>
+                    
+                    <div class="request-date-box" style="margin-top:12px; display:flex; gap:15px; font-size:13px; color:#444;">
+                        <span>📅 ${new Date(req.event_start).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                        <span>🕒 ${new Date(req.event_start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
                 </div>
 
-                <div class="vendor-footer">
-                    <span class="price">Service: ${req.service_title || 'General'}</span>
+                <div class="info-side">
+                    <div class="price" style="font-size:22px; margin-bottom:15px;">₹${(parseInt(req.price_quote) || 0).toLocaleString()}</div>
                     ${isPending ? `
-                    <div class="action-buttons">
-                        <button class="accept-btn" onclick="updateRequestStatus('${req.id}', 'accepted', '${req.price_quote || 0}')">Accept</button>
-                        <button class="reject-btn" onclick="updateRequestStatus('${req.id}', 'rejected')" style="background: #e74c3c; color: white;">Reject</button>
+                    <div class="action-buttons" style="display:flex; flex-direction:column; gap:8px; width:100%;">
+                        <button class="accept-btn" style="width:100%; padding:8px;" onclick="updateRequestStatus('${req.id}', 'accepted', '${req.price_quote || 0}')">Accept Request</button>
+                        <button class="reject-btn" style="width:100%; padding:6px; background:#fdf2f2; color:#e74c3c; border:1px solid #ffcdd2; border-radius:4px; font-size:12px; cursor:pointer;" onclick="updateRequestStatus('${req.id}', 'rejected')">Decline</button>
                     </div>
-                    ` : ''}
+                    ` : `
+                    <div style="font-size:12px; color:#888; text-align:right;">
+                        Request was <strong>${req.status}</strong><br>
+                        on ${new Date(req.updated_at).toLocaleDateString()}
+                    </div>
+                    `}
                 </div>
             </div>
         </div>
         `;
     }).join('');
 }
+
+
 
 async function updateRequestStatus(itemId, status, currentPrice = 0) {
     let price_quote = currentPrice;
@@ -601,37 +690,151 @@ window.completeBooking = async (itemId) => {
 };
 
 // ===== MEMORIES TAB LOGIC =====
-let localMemories = []; 
+async function loadCompletedBookingOptions() {
+    const select = document.getElementById('memoryBookingSelect');
+    if (!select) return;
 
-function renderMemories() {
+    try {
+        const res = await window.fetchWithAuth('/bookings/vendor/completed-items');
+        const payload = await res.json();
+        const items = Array.isArray(payload) ? payload : (payload.data || []);
+
+        if (!res.ok) {
+            throw new Error(payload.message || 'Failed to load completed bookings');
+        }
+
+        if (items.length === 0) {
+            select.innerHTML = '<option value="">No completed bookings available</option>';
+            return;
+        }
+
+        select.innerHTML = '<option value="">Select completed event</option>' + items.map(item => {
+            const eventDate = item.event_start ? new Date(item.event_start).toLocaleDateString('en-IN', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            }) : 'Date pending';
+            return `<option value="${item.id}">${item.event_title || 'Event'} - ${item.customer_name || 'Customer'} - ${item.service_title || 'Service'} (${eventDate})</option>`;
+        }).join('');
+    } catch (error) {
+        console.error('Error loading completed bookings:', error);
+        select.innerHTML = '<option value="">Error loading completed bookings</option>';
+    }
+}
+
+function renderVendorMemories(memories) {
     const grid = document.getElementById('memoriesGrid');
-    if (localMemories.length === 0) {
-        grid.innerHTML = '<div class="no-services" style="grid-column: 1/-1;">No memories added yet.</div>';
+    if (!grid) return;
+
+    if (!memories || memories.length === 0) {
+        grid.innerHTML = '<div class="no-services" style="grid-column: 1/-1;">No event memories uploaded yet.</div>';
         return;
     }
 
-    grid.innerHTML = localMemories.map((m, idx) => `
-        <div class="service-card" style="position:relative;">
-            <div style="font-weight:600; color:#e53935; font-size:12px; margin-bottom:5px;">${m.event.toUpperCase()}</div>
-            <a href="${m.url}" target="_blank" style="font-size:13px; color:#3498db; text-decoration:none;">${m.url}</a>
-            <button onclick="removeMemory(${idx})" style="position:absolute; top:10px; right:10px; border:none; background:none; color:#e74c3c; cursor:pointer;">&times;</button>
-        </div>
-    `).join('');
+    grid.innerHTML = memories.map(memory => {
+        const eventDate = memory.event_start ? new Date(memory.event_start).toLocaleDateString('en-IN', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        }) : '';
+
+        return `
+            <div class="service-card" style="position:relative; overflow:hidden;">
+                <div style="height:180px; background:#f4f4f4; border-radius:10px; overflow:hidden; margin-bottom:14px;">
+                    ${memory.media_type === 'video'
+                        ? `<video src="${memory.media_url}" controls style="width:100%; height:100%; object-fit:cover;"></video>`
+                        : `<img src="${memory.media_url}" alt="${memory.event_title || 'Memory'}" style="width:100%; height:100%; object-fit:cover;">`
+                    }
+                </div>
+                <div style="font-weight:700; color:#333; margin-bottom:6px;">${memory.event_title || 'Event Memory'}</div>
+                <div style="font-size:13px; color:#666; margin-bottom:4px;">Customer: ${memory.customer_name || 'Customer'}</div>
+                <div style="font-size:13px; color:#666; margin-bottom:4px;">Service: ${memory.service_title || 'Service'}</div>
+                <div style="font-size:12px; color:#999;">${eventDate}${memory.location ? ` • ${memory.location}` : ''}</div>
+                <button onclick="deleteVendorMemory('${memory.id}')" style="position:absolute; top:12px; right:12px; border:none; background:rgba(231,76,60,0.9); color:#fff; width:28px; height:28px; border-radius:50%; cursor:pointer;">&times;</button>
+            </div>
+        `;
+    }).join('');
 }
 
-function handleAddMemory() {
-    const event = document.getElementById('memoryEventSelect').value;
-    const url = document.getElementById('memoryVideoURL').value.trim();
-    if (!event || !url) return alert('Fill all fields.');
+async function loadVendorMemories() {
+    const grid = document.getElementById('memoriesGrid');
+    if (!grid) return;
 
-    localMemories.push({ event, url });
-    document.getElementById('memoryVideoURL').value = '';
-    renderMemories();
+    grid.innerHTML = '<div class="loading" style="grid-column: 1/-1;">Loading memories...</div>';
+
+    try {
+        const res = await window.fetchWithAuth('/bookings/vendor/memories');
+        const payload = await res.json();
+        const memories = Array.isArray(payload) ? payload : (payload.data || []);
+
+        if (!res.ok) {
+            throw new Error(payload.message || 'Failed to load memories');
+        }
+
+        renderVendorMemories(memories);
+    } catch (error) {
+        console.error('Error loading vendor memories:', error);
+        grid.innerHTML = '<div class="error" style="grid-column: 1/-1;">Failed to load memories.</div>';
+    }
 }
 
-window.removeMemory = (idx) => {
-    localMemories.splice(idx, 1);
-    renderMemories();
+async function handleAddMemory() {
+    const bookingItemId = document.getElementById('memoryBookingSelect').value;
+    const filesInput = document.getElementById('memoryFiles');
+    const files = Array.from(filesInput?.files || []);
+
+    if (!bookingItemId) {
+        alert('Please select a completed booking first.');
+        return;
+    }
+
+    if (files.length === 0) {
+        alert('Please choose at least one image or video.');
+        return;
+    }
+
+    const formData = new FormData();
+    files.slice(0, 10).forEach(file => formData.append('files', file));
+
+    try {
+        const res = await window.fetchWithAuth(`/bookings/items/${bookingItemId}/memories`, {
+            method: 'POST',
+            body: formData
+        });
+        const payload = await res.json();
+
+        if (!res.ok) {
+            throw new Error(payload.message || 'Failed to upload memories');
+        }
+
+        filesInput.value = '';
+        showVendorNotification('Event memories sent to the customer.', 'success');
+        loadVendorMemories();
+    } catch (error) {
+        console.error('Error uploading memories:', error);
+        showVendorNotification(error.message || 'Failed to upload memories.', 'error');
+    }
+}
+
+window.deleteVendorMemory = async (memoryId) => {
+    if (!confirm('Delete this memory?')) return;
+
+    try {
+        const res = await window.fetchWithAuth(`/bookings/memories/${memoryId}`, {
+            method: 'DELETE'
+        });
+        const payload = await res.json();
+
+        if (!res.ok) {
+            throw new Error(payload.message || 'Failed to delete memory');
+        }
+
+        showVendorNotification('Memory deleted.', 'success');
+        loadVendorMemories();
+    } catch (error) {
+        console.error('Error deleting memory:', error);
+        showVendorNotification(error.message || 'Failed to delete memory.', 'error');
+    }
 };
 
 function showVendorNotification(msg, type = 'success') {

@@ -40,11 +40,24 @@ async function loadVendorProfile() {
 
 // ===== RENDER HERO + META =====
 function renderProfile(data) {
+    const categoryImages = {
+        venue: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=80',
+        catering: 'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=1200&q=80',
+        photography: 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&w=1200&q=80',
+        music: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=80',
+        decor: 'https://images.unsplash.com/photo-1522673607200-164883efcdf1?auto=format&fit=crop&w=1200&q=80',
+        other: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80'
+    };
+
     document.title = `${data.full_name} – Utsavya`;
 
     // Hero
+    const mainCategory = (data.services && data.services[0]?.category || 'other').toLowerCase();
+    const fallbackImg = categoryImages[mainCategory] || categoryImages.other;
+
     document.getElementById('vendorName').textContent = data.full_name || 'Vendor';
-    document.getElementById('vendorAvatar').src = data.profile_image || 'images/default-vendor.jpg';
+    document.getElementById('vendorAvatar').src = data.profile_image || fallbackImg;
+    document.getElementById('vendorAvatar').onerror = function() { this.src = categoryImages.other; };
     
     const city = data.city || (data.services && data.services[0]?.city) || '';
     document.getElementById('vendorCity').textContent = city ? `📍 ${city}` : '';
@@ -90,9 +103,15 @@ function renderProfile(data) {
     document.getElementById('infoRating').textContent = rating > 0 ? `${rating.toFixed(1)} / 5.0` : 'Not rated yet';
     document.getElementById('infoServices').textContent = (data.services || []).length;
 
-    // Hero background (use first media if available, else gradient remains)
-    if (data.cover_image) {
-        document.getElementById('heroBg').src = data.cover_image;
+    // Hero background (use cover_image, fallback to category image, then default gradient)
+    const heroBg = document.getElementById('heroBg');
+    if (heroBg) {
+        if (data.cover_image) {
+            heroBg.src = data.cover_image;
+        } else {
+            heroBg.src = fallbackImg;
+        }
+        heroBg.onerror = function() { this.src = categoryImages.other; };
     }
 }
 
@@ -136,6 +155,15 @@ function renderServices(services) {
     });
 }
 
+function getMediaUrl(media) {
+    return media?.media_url || media?.url || '';
+}
+
+function isVideoMedia(media) {
+    const mediaUrl = getMediaUrl(media);
+    return media?.media_type === 'video' || /\.(mp4|webm|ogg|mov|m4v)$/i.test(mediaUrl);
+}
+
 // ===== LOAD PORTFOLIO (media from all services) =====
 async function loadPortfolio(services) {
     const grid = document.getElementById('portfolioGrid');
@@ -147,7 +175,15 @@ async function loadPortfolio(services) {
             if (res.ok) {
                 const mediaList = await res.json();
                 const items = Array.isArray(mediaList) ? mediaList : (mediaList.data || []);
-                allMedia = allMedia.concat(items.map(m => ({ ...m, serviceTitle: service.title })));
+                allMedia = allMedia.concat(
+                    items
+                        .map(m => ({
+                            ...m,
+                            url: getMediaUrl(m),
+                            serviceTitle: service.title
+                        }))
+                        .filter(m => m.url)
+                );
             }
         } catch (e) {
             // silently skip
@@ -165,7 +201,7 @@ async function loadPortfolio(services) {
     }
 
     grid.innerHTML = allMedia.map((m, i) => {
-        const isVideo = m.media_type === 'video' || (m.url && m.url.match(/\.(mp4|webm|ogg)$/i));
+        const isVideo = isVideoMedia(m);
         return `
             <div class="portfolio-item" onclick="openLightbox('${m.url}', ${isVideo})">
                 ${isVideo
@@ -247,12 +283,22 @@ async function submitReview() {
     btn.textContent = 'Submitting...';
 
     try {
-        // Reviews require a booking_item_id – look it up from user's bookings
+        const itemRes = await window.fetchWithAuth(`/bookings/reviewable-item?vendor_id=${encodeURIComponent(vendorId)}&service_id=${encodeURIComponent(selectedServiceId)}`);
+        const itemPayload = await itemRes.json();
+        const bookingItem = itemPayload.data || null;
+
+        if (!itemRes.ok) {
+            throw new Error(itemPayload.message || 'Could not validate your completed booking for this review');
+        }
+
+        if (!bookingItem?.id) {
+            throw new Error('You can review this vendor only after a completed, paid booking for the selected service.');
+        }
+
         const res = await window.fetchWithAuth('/reviews', {
             method: 'POST',
             body: JSON.stringify({
-                vendor_id: vendorId,
-                service_id: selectedServiceId,
+                booking_item_id: bookingItem.id,
                 rating: selectedRating,
                 comment
             })

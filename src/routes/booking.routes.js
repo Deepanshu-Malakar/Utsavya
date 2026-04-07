@@ -23,6 +23,15 @@ const {
     updateBookingItemStatusController,
     cancelBookingItemController
 } = require("../controllers/booking.controller");
+const {
+    getReviewableBookingItemController,
+    uploadBookingMemoriesController,
+    getVendorCompletedBookingItemsController,
+    getVendorMemoriesController,
+    getCustomerMemoriesController,
+    deleteBookingMemoryController
+} = require("../controllers/bookingMemory.controller");
+const upload = require("../middlewares/upload.middleware");
 
 // Validation Schema for creating a new booking
 const createBookingValidation = [
@@ -76,6 +85,43 @@ router.patch(
     "/items/:id/status",
     authenticateUser,
     updateBookingItemStatusController
+);
+
+router.get(
+    "/reviewable-item",
+    authenticateUser,
+    getReviewableBookingItemController
+);
+
+router.get(
+    "/vendor/completed-items",
+    authenticateUser,
+    getVendorCompletedBookingItemsController
+);
+
+router.get(
+    "/vendor/memories",
+    authenticateUser,
+    getVendorMemoriesController
+);
+
+router.get(
+    "/memories",
+    authenticateUser,
+    getCustomerMemoriesController
+);
+
+router.post(
+    "/items/:id/memories",
+    authenticateUser,
+    upload.array("files", 10),
+    uploadBookingMemoriesController
+);
+
+router.delete(
+    "/memories/:id",
+    authenticateUser,
+    deleteBookingMemoryController
 );
 
 // --- FRONTEND INTEGRATION GUIDE: Get Full Booking Details ---

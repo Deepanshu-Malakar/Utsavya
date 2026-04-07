@@ -197,8 +197,25 @@ function updateBookingCard(card, b) {
     body.children[3].textContent = `⚠️ ${statusText}`;
     body.children[4].querySelector('.fill').style.width = `${progress}%`;
 
-    const btn = body.children[5];
-    btn.textContent = "Complete Booking";
+    // ADD VENDOR LISTING TO INCOMPLETE CARD
+    let vendorsList = body.querySelector('.assigned-vendors');
+    if (!vendorsList) {
+        vendorsList = document.createElement('div');
+        vendorsList.className = 'assigned-vendors';
+        vendorsList.style.marginTop = '10px';
+        body.insertBefore(vendorsList, body.children[5]);
+    }
+    
+    if (b.vendors && b.vendors.length > 0) {
+        const selectedCount = b.vendors.filter(v => v.is_selected).length;
+        vendorsList.innerHTML = `<p style="font-size:12px; font-weight:600; margin-bottom:5px;">Vendors (${b.vendors.length}):</p>` + 
+            b.vendors.map(v => `<span class="vendor-badge" style="${v.is_selected ? 'border-color:var(--primary-red); color:var(--primary-red);' : ''}">${v.is_selected ? '✅ ' : '👤 '}${v.vendor_name}</span>`).join('');
+    } else {
+        vendorsList.innerHTML = '<p style="font-size:11px; color:#999; font-style:italic;">No vendors added yet</p>';
+    }
+
+    const btn = body.children[6];
+    btn.textContent = "Continue Planning";
     btn.dataset.bookingId = b.id;
 }
 
@@ -221,14 +238,15 @@ function renderUpcomingEvents(bookings) {
             : `<span style="background:#f39c12; color:white; padding:2px 8px; border-radius:4px; font-size:11px;">⏳ ${b.status}</span>`;
 
         let vendorsHtml = '';
-        if (b.vendors && b.vendors.length > 0) {
+        if (b.vendors && Array.isArray(b.vendors) && b.vendors.length > 0) {
+            // Priority to selected vendors, but show others if it's confirmed
             vendorsHtml = `
                 <div class="assigned-vendors">
-                    ${b.vendors.map(v => `<span class="vendor-badge">👤 ${v.vendor_name} (${v.service_title})</span>`).join('')}
+                    ${b.vendors.map(v => `<span class="vendor-badge" style="${v.is_selected ? 'border-color:#27ae60; color:#27ae60;' : ''}">${v.is_selected ? '✅ ' : '👤 '}${v.vendor_name} (${v.service_title})</span>`).join('')}
                 </div>
             `;
         } else {
-            vendorsHtml = `<div class="assigned-vendors"><span style="font-size:11px; color:#999;">No vendors assigned yet</span></div>`;
+            vendorsHtml = `<div class="assigned-vendors"><span style="font-size:11px; color:#999; font-style:italic;">No selected vendors found</span></div>`;
         }
 
         div.innerHTML = `
@@ -375,11 +393,8 @@ async function submitReview(itemId) {
     if(!rating || rating < 1 || rating > 5) return showError("Please provide a rating between 1 and 5.");
 
     try {
-        const res = await window.fetchWithAuth(`/bookings/items/${itemId}/complete`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+        const res = await window.fetchWithAuth('/reviews', {
+            method: 'POST',
             body: JSON.stringify({
                 booking_item_id: itemId,
                 rating: parseInt(rating),

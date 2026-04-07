@@ -70,9 +70,13 @@
                     </div>
                     <div class="calendar-dates" id="calendarDates"></div>
                 </div>
-                <div id="requestCardsContainer">
+                <div id="requestTitleSection" style="width: 100%; margin-top: 40px; border-top: 2px solid #eee; padding-top: 20px;">
+                    <h2 style="color: #333; font-size: 24px; margin-bottom: 20px;">📋 Customer Requests</h2>
+                </div>
+                <div id="requestCardsContainer" style="width: 100%;">
                     <div class="loading">Loading requests...</div>
                 </div>
+
             </div>
         </main>
     </div>
@@ -137,17 +141,14 @@
             <div class="services-header">
                 <h2>📸 Event Memories</h2>
                 <div class="add-memory-form" style="display:flex; gap:10px;">
-                    <select id="memoryEventSelect">
-                        <option value="">Select Category</option>
-                        <option value="wedding">Wedding</option>
-                        <option value="birthday">Birthday</option>
-                        <option value="festival">Festival</option>
-                        <option value="corporate">Corporate</option>
+                    <select id="memoryBookingSelect">
+                        <option value="">Select completed event</option>
                     </select>
-                    <input type="text" id="memoryVideoURL" placeholder="Paste Video/Image URL...">
-                    <button class="add-service-btn" id="addMemoryBtn">Add Memory</button>
+                    <input type="file" id="memoryFiles" accept="image/*,video/*" multiple>
+                    <button class="add-service-btn" id="addMemoryBtn">Send to Customer</button>
                 </div>
             </div>
+            <p style="font-size:13px;color:#777;margin-bottom:16px;">Upload event photos or videos for completed bookings. Customers will see them in their Memories page.</p>
             <div class="services-grid" id="memoriesGrid">
                 <div class="loading">No memories added yet.</div>
             </div>

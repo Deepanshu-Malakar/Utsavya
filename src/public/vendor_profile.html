@@ -75,7 +75,7 @@
             <!-- ABOUT -->
             <div class="section-card" id="aboutSection">
                 <h2>About</h2>
-                <p id="vendorAbout" style="color:#555; font-size:14px; line-height:1.7;">Loading...</p>
+                <p id="vendorAbout">Loading...</p>
             </div>
 
             <!-- SERVICES -->
@@ -116,12 +116,12 @@
                     <span data-value="4">★</span>
                     <span data-value="5">★</span>
                 </div>
-                <select id="reviewServiceSelect" style="width:100%; padding:10px; border:1px solid #eee; border-radius:8px; font-size:13px; margin-bottom:12px; font-family:Poppins; background:#fafafa;">
+                <select id="reviewServiceSelect">
                     <option value="">Select which service you used...</option>
                 </select>
                 <textarea id="reviewComment" placeholder="Tell others about your experience..."></textarea>
                 <button class="submit-review-btn" id="submitReviewBtn" onclick="submitReview()">Submit Review</button>
-                <p id="reviewNote" style="font-size:11px; color:#aaa; margin-top:8px;">You can only review vendors you've used for a completed booking.</p>
+                <p id="reviewNote">You can only review vendors you've used for a completed booking.</p>
             </div>
 
         </div>
@@ -169,7 +169,7 @@
         <video id="lightboxVideo" controls style="display:none;"></video>
     </div>
 
-    <footer style="text-align:center; padding:30px; color:#aaa; font-size:13px;">
+    <footer class="profile-footer">
         © 2026 Utsavya
     </footer>
 

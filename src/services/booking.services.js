@@ -40,19 +40,20 @@ const getUserBookings = async (customerId) => {
 
     const query = `
         SELECT b.*, 
-        (
+        COALESCE((
             SELECT json_agg(json_build_object(
                 'id', bi.id,
                 'vendor_name', u.full_name,
                 'service_title', vs.title,
                 'status', bi.status,
+                'is_selected', bi.is_selected,
                 'price', bi.price_quote
             ))
             FROM booking_items bi
             JOIN vendor_services vs ON bi.service_id = vs.id
             JOIN users u ON bi.vendor_id = u.id
-            WHERE bi.booking_id = b.id AND bi.is_selected = TRUE
-        ) as vendors
+            WHERE bi.booking_id = b.id AND bi.status != 'cancelled'
+        ), '[]'::json) as vendors
         FROM bookings b
         WHERE b.customer_id = $1
         ORDER BY b.created_at DESC
@@ -135,13 +136,17 @@ const getVendorBookingRequests = async (user) => {
     const query = `
         SELECT 
             bi.*,
-            b.title,
+            b.title as event_title,
             b.event_start,
             b.event_end,
             b.location,
-            b.guest_count
+            b.guest_count,
+            u.full_name as customer_name,
+            vs.title as service_title
         FROM booking_items bi
         JOIN bookings b ON bi.booking_id = b.id
+        JOIN users u ON b.customer_id = u.id
+        JOIN vendor_services vs ON bi.service_id = vs.id
         WHERE bi.vendor_id = $1
         ORDER BY bi.created_at DESC
     `;
@@ -150,6 +155,7 @@ const getVendorBookingRequests = async (user) => {
 
     return rows;
 };
+
 
 const updateBookingItemStatus = async (user, itemId, data) => {
 
