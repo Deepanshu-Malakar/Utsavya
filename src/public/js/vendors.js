@@ -250,6 +250,67 @@ function openVendorProfile(id) {
     window.location.href = `vendor_profile.html?id=${id}`;
 }
 
+function formatServicePrice(service) {
+    const price = parseFloat(service.price) || 0;
+    if (!price) return 'Contact for price';
+    return `₹${price.toLocaleString('en-IN')}${service.price_type === 'per_person' ? ' / person' : ''}`;
+}
+
+function askServiceSelection(vendorName, services) {
+    return new Promise((resolve) => {
+        if (!Array.isArray(services) || services.length === 0) {
+            resolve(null);
+            return;
+        }
+
+        if (services.length === 1) {
+            resolve(services[0]);
+            return;
+        }
+
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay service-selector-overlay';
+        modal.innerHTML = `
+            <div class="service-selector-modal">
+                <button class="service-selector-close" type="button">&times;</button>
+                <h3>Select a Service</h3>
+                <p>Choose the service you want to book from ${vendorName}.</p>
+                <div class="service-selector-list">
+                    ${services.map(service => `
+                        <button class="service-option-btn" type="button" data-service-id="${service.id}">
+                            <div class="service-option-copy">
+                                <strong>${service.title || 'Service'}</strong>
+                                <span>${service.description ? service.description.substring(0, 100) : 'Professional event service'}</span>
+                            </div>
+                            <em>${formatServicePrice(service)}</em>
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        const close = (selected = null) => {
+            modal.remove();
+            resolve(selected);
+        };
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal || e.target.classList.contains('service-selector-close')) {
+                close(null);
+            }
+        });
+
+        modal.querySelectorAll('.service-option-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const selected = services.find(service => service.id === btn.dataset.serviceId) || null;
+                close(selected);
+            });
+        });
+
+        document.body.appendChild(modal);
+    });
+}
+
 // ------------------- EVENT SELECTOR MODAL -------------------
 
 async function showEventSelectorModal(buttonEl, vendorCard) {
@@ -326,7 +387,6 @@ async function addToCart(button) {
     const vendorId = card.getAttribute('data-vendor-id');
     const vendorName = card.querySelector('.vendor-details h3').textContent;
 
-    // Already in existingItems?
     if (existingItems.find(i => i.vendor_id === vendorId && !['rejected', 'cancelled'].includes(i.status))) {
         showNotification(`${vendorName} is already in your booking.`, 'error');
         return;
@@ -336,7 +396,7 @@ async function addToCart(button) {
         return;
     }
 
-    button.textContent = '⏳ Loading...';
+    button.textContent = 'Loading...';
     button.disabled = true;
 
     try {
@@ -345,23 +405,28 @@ async function addToCart(button) {
         const services = profile.services || [];
         if (services.length === 0) throw new Error('No services found for this vendor');
 
-        const serviceId = services[0].id;
-        const price = parseFloat(services[0].price) || 0;
+        const selectedService = await askServiceSelection(vendorName, services);
+        if (!selectedService) {
+            button.textContent = '+ Add';
+            button.disabled = false;
+            return;
+        }
 
         cart.push({
             vendorId,
             name: vendorName,
-            category: card.querySelector('.category')?.textContent || '',
+            category: selectedService.title || 'Service',
             location: card.querySelector('.location')?.textContent || '',
-            serviceId,
-            price,
-            status: 'cart'  // local only, not yet sent
+            serviceId: selectedService.id,
+            price: parseFloat(selectedService.price) || 0,
+            priceType: selectedService.price_type || 'fixed',
+            status: 'cart'
         });
 
-        button.textContent = '✓ Added';
+        button.textContent = 'Added';
         button.classList.add('added');
         button.disabled = true;
-        showNotification(`${vendorName} added!`);
+        showNotification(`${vendorName} added with ${selectedService.title || 'the selected service'}!`);
         updateCart();
     } catch (err) {
         button.textContent = '+ Add';
@@ -369,7 +434,6 @@ async function addToCart(button) {
         showNotification(`Failed to add: ${err.message}`, 'error');
     }
 }
-
 function updateCart() {
     const cartItemsDiv = document.getElementById('cartItems');
     const cartTotal = document.getElementById('cartTotal');

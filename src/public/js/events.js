@@ -205,11 +205,9 @@ function updateBookingCard(card, b) {
         vendorsList.style.marginTop = '10px';
         body.insertBefore(vendorsList, body.children[5]);
     }
-    
     if (b.vendors && b.vendors.length > 0) {
-        const selectedCount = b.vendors.filter(v => v.is_selected).length;
         vendorsList.innerHTML = `<p style="font-size:12px; font-weight:600; margin-bottom:5px;">Vendors (${b.vendors.length}):</p>` + 
-            b.vendors.map(v => `<span class="vendor-badge" style="${v.is_selected ? 'border-color:var(--primary-red); color:var(--primary-red);' : ''}">${v.is_selected ? '✅ ' : '👤 '}${v.vendor_name}</span>`).join('');
+            b.vendors.map(v => `<span class="vendor-badge" style="${v.is_selected ? 'border-color:var(--primary-red); color:var(--primary-red);' : ''}">${v.is_selected ? 'Selected: ' : ''}${v.vendor_name}${v.service_title ? ` (${v.service_title})` : ''}</span>`).join('');
     } else {
         vendorsList.innerHTML = '<p style="font-size:11px; color:#999; font-style:italic;">No vendors added yet</p>';
     }
@@ -279,9 +277,14 @@ function renderPastEvents(bookings) {
         const div = document.createElement('div');
         div.className = 'list-item';
 
+        const servicesSummary = Array.isArray(b.vendors) && b.vendors.length > 0
+            ? b.vendors.map(v => `${v.vendor_name}${v.service_title ? ` (${v.service_title})` : ''}`).join(', ')
+            : 'No vendor services booked';
+
         div.innerHTML = `
             <span>${formatShortDate(b.event_start)}</span>
             <span>${b.title}</span>
+            <span style="font-size:12px; color:#666;">${servicesSummary}</span>
             <span>📍 ${b.location || 'TBD'}</span>
             <button class="btn-outline btn-review" data-booking-id="${b.id}" style="border-color: #f39c12; color: #f39c12; font-size: 13px; padding: 5px 10px;">⭐ Review Vendors</button>
         `;
