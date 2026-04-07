@@ -204,10 +204,12 @@ async function loadPortfolio(services) {
         const isVideo = isVideoMedia(m);
         return `
             <div class="portfolio-item" onclick="openLightbox('${m.url}', ${isVideo})">
+                <div class="portfolio-service-tag">${m.serviceTitle || 'Service'}</div>
                 ${isVideo
                     ? `<video src="${m.url}" muted preload="metadata" style="pointer-events:none;"></video>`
                     : `<img src="${m.url}" alt="Portfolio ${i+1}" loading="lazy">`
                 }
+                <div class="portfolio-caption">${m.serviceTitle || 'Service'}</div>
                 <div class="portfolio-overlay">
                     <span>${isVideo ? '▶' : '🔍'}</span>
                 </div>
