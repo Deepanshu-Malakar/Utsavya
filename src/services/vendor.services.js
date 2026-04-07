@@ -100,7 +100,7 @@ const getVendorProfile = async (vendorId) => {
 
     // Services
     const servicesQuery = `
-        SELECT id, title, price, price_type
+        SELECT id, title, description, city, price, price_type
         FROM vendor_services
         WHERE vendor_id = $1
     `;

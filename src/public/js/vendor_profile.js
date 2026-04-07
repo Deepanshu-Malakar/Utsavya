@@ -96,8 +96,15 @@ function renderProfile(data) {
         : `<small>Contact for pricing</small>`;
 
     // About
-    document.getElementById('vendorAbout').textContent =
-        data.bio || data.description || `${data.full_name} is a professional event vendor. Contact to learn more about their services.`;
+    const serviceDescriptions = (data.services || [])
+        .filter(service => service && service.description)
+        .map(service => `<strong>${service.title || 'Service'}:</strong> ${service.description.trim()}`);
+
+    document.getElementById('vendorAbout').innerHTML =
+        serviceDescriptions.join('<br><br>') ||
+        data.bio ||
+        data.description ||
+        `${data.full_name} is a professional event vendor. Contact to learn more about their services.`;
 
     // Quick info
     document.getElementById('infoRating').textContent = rating > 0 ? `${rating.toFixed(1)} / 5.0` : 'Not rated yet';
@@ -133,7 +140,6 @@ function renderServices(services) {
     grid.innerHTML = services.map(s => `
         <div class="service-item">
             <h4>${s.title || 'Service'}</h4>
-            <p>${s.description ? s.description.substring(0, 80) + '...' : ''}</p>
             <div class="service-price">
                 ₹${parseFloat(s.price || 0).toLocaleString('en-IN')}
                 <span class="service-price-type">${s.price_type === 'per_person' ? '/ person' : ' fixed'}</span>
