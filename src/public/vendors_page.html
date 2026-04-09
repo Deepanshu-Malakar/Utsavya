@@ -119,8 +119,14 @@
         <main class="vendors-section">
 
             <div class="vendors-header">
-                <h2>Available Vendors</h2>
-                <span class="vendor-count" id="vendorCount">Loading...</span>
+                <div class="vendors-header-copy">
+                    <h2>Available Vendors</h2>
+                    <p>Explore services for every celebration, then use the planner to split your budget smartly before you book.</p>
+                </div>
+                <div class="vendors-header-actions">
+                    <button class="ai-planner-btn" type="button" onclick="openBudgetPlanner()">AI Budget Planner</button>
+                    <span class="vendor-count" id="vendorCount">Loading...</span>
+                </div>
             </div>
 
             <div class="vendors-grid" id="vendorsGrid">
@@ -247,5 +253,92 @@
         }
     </script>
 
+
+    <div class="planner-modal" id="budgetPlannerModal" style="display: none;">
+        <div class="planner-shell">
+            <button class="planner-close" type="button" onclick="closeBudgetPlanner()">&times;</button>
+
+            <div class="planner-hero">
+                <div>
+                    <span class="planner-kicker">AI Budget Planner</span>
+                    <h2>Build a service-wise budget for any event</h2>
+                    <p>Share your event type, budget, guest count, and needed services. The planner recommends how much you can reserve for each service.</p>
+                </div>
+                <div class="planner-badge">
+                    <strong>Made for every celebration</strong>
+                    <span>From weddings and birthdays to festivals, corporate events, concerts, and custom occasions.</span>
+                </div>
+            </div>
+
+            <div class="planner-layout">
+                <form id="budgetPlannerForm" class="planner-form">
+                    <div class="planner-field">
+                        <label for="plannerEventType">Event type</label>
+                        <select id="plannerEventType" required>
+                            <option value="wedding">Wedding</option>
+                            <option value="engagement">Engagement</option>
+                            <option value="birthday">Birthday</option>
+                            <option value="anniversary">Anniversary</option>
+                            <option value="babyshower">Baby Shower</option>
+                            <option value="housewarming">Housewarming</option>
+                            <option value="festival">Festival</option>
+                            <option value="religious">Religious Ceremony</option>
+                            <option value="corporate">Corporate Event</option>
+                            <option value="concert">Concert / Stage Event</option>
+                            <option value="other">Other Event</option>
+                        </select>
+                    </div>
+
+                    <div class="planner-field-grid">
+                        <div class="planner-field">
+                            <label for="plannerBudget">Total budget (INR)</label>
+                            <input type="number" id="plannerBudget" min="1000" step="1000" placeholder="500000" required>
+                        </div>
+                        <div class="planner-field">
+                            <label for="plannerGuests">Expected guests</label>
+                            <input type="number" id="plannerGuests" min="1" step="1" placeholder="250" required>
+                        </div>
+                    </div>
+
+                    <div class="planner-field">
+                        <label for="plannerStyle">Planning style</label>
+                        <select id="plannerStyle">
+                            <option value="balanced">Balanced plan</option>
+                            <option value="food_first">Food-first</option>
+                            <option value="visual_first">Decor-first</option>
+                            <option value="experience_first">Entertainment-first</option>
+                            <option value="intimate">Intimate and simple</option>
+                        </select>
+                    </div>
+
+                    <div class="planner-field">
+                        <label>Services you need</label>
+                        <div class="planner-services">
+                            <label><input type="checkbox" name="plannerServices" value="venue" checked> Venue</label>
+                            <label><input type="checkbox" name="plannerServices" value="decoration" checked> Decoration</label>
+                            <label><input type="checkbox" name="plannerServices" value="catering" checked> Catering</label>
+                            <label><input type="checkbox" name="plannerServices" value="photography" checked> Photography</label>
+                            <label><input type="checkbox" name="plannerServices" value="videography"> Videography</label>
+                            <label><input type="checkbox" name="plannerServices" value="makeup"> Makeup & Styling</label>
+                            <label><input type="checkbox" name="plannerServices" value="entertainment"> Music / Entertainment</label>
+                            <label><input type="checkbox" name="plannerServices" value="planning"> Event Planner</label>
+                            <label><input type="checkbox" name="plannerServices" value="invitations"> Invitations & Gifting</label>
+                            <label><input type="checkbox" name="plannerServices" value="transport"> Transport & Logistics</label>
+                        </div>
+                    </div>
+
+                    <button class="planner-submit-btn" type="submit">Generate Budget Plan</button>
+                </form>
+
+                <section class="planner-results" id="plannerResults">
+                    <div class="planner-results-empty">
+                        <h3>Your recommended split will appear here</h3>
+                        <p>Example: for a wedding budget of 5,00,000, the planner can recommend a split across decoration, catering, photos, venue, entertainment, and logistics based on your inputs.</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
+

@@ -6,6 +6,32 @@ let existingItems = [];  // Already-submitted booking_items from backend
 let selectedBookingId = null;
 let selectedBookingTitle = null;
 let statusPollInterval = null;
+const plannerServiceMeta = {
+    venue: { label: 'Venue', note: 'Reserve this for the space, permits, furniture, and basic setup.' },
+    decoration: { label: 'Decoration', note: 'Use this for stage design, florals, lighting, and ambience details.' },
+    catering: { label: 'Catering', note: 'Keep this aligned with guest count, menu complexity, and service style.' },
+    photography: { label: 'Photography', note: 'Set this aside for still coverage, albums, and edited highlights.' },
+    videography: { label: 'Videography', note: 'Useful for cinematic coverage, reels, and event film edits.' },
+    makeup: { label: 'Makeup & Styling', note: 'Plan this for artists, draping, grooming, and touch-up support.' },
+    entertainment: { label: 'Music / Entertainment', note: 'Use this for DJs, bands, anchors, performers, or stage acts.' },
+    planning: { label: 'Event Planner', note: 'Helps with coordination, timelines, vendor management, and execution.' },
+    invitations: { label: 'Invitations & Gifting', note: 'Covers invitations, welcome kits, favors, and gifting details.' },
+    transport: { label: 'Transport & Logistics', note: 'Budget here for guest movement, loading, parking, and delivery runs.' }
+};
+
+const plannerEventProfiles = {
+    wedding: { venue: 0.22, decoration: 0.23, catering: 0.24, photography: 0.1, videography: 0.06, makeup: 0.05, entertainment: 0.04, planning: 0.03, invitations: 0.02, transport: 0.01 },
+    engagement: { venue: 0.21, decoration: 0.2, catering: 0.23, photography: 0.11, videography: 0.06, makeup: 0.06, entertainment: 0.05, planning: 0.03, invitations: 0.03, transport: 0.02 },
+    birthday: { venue: 0.18, decoration: 0.2, catering: 0.26, photography: 0.08, videography: 0.04, makeup: 0.03, entertainment: 0.11, planning: 0.03, invitations: 0.04, transport: 0.03 },
+    anniversary: { venue: 0.21, decoration: 0.18, catering: 0.24, photography: 0.1, videography: 0.05, makeup: 0.04, entertainment: 0.07, planning: 0.04, invitations: 0.04, transport: 0.03 },
+    babyshower: { venue: 0.18, decoration: 0.22, catering: 0.22, photography: 0.1, videography: 0.04, makeup: 0.05, entertainment: 0.06, planning: 0.04, invitations: 0.05, transport: 0.04 },
+    housewarming: { venue: 0.08, decoration: 0.16, catering: 0.31, photography: 0.08, videography: 0.03, makeup: 0.03, entertainment: 0.08, planning: 0.05, invitations: 0.08, transport: 0.1 },
+    festival: { venue: 0.16, decoration: 0.2, catering: 0.2, photography: 0.06, videography: 0.05, makeup: 0.02, entertainment: 0.16, planning: 0.07, invitations: 0.02, transport: 0.06 },
+    religious: { venue: 0.15, decoration: 0.18, catering: 0.27, photography: 0.06, videography: 0.03, makeup: 0.02, entertainment: 0.09, planning: 0.07, invitations: 0.04, transport: 0.09 },
+    corporate: { venue: 0.24, decoration: 0.1, catering: 0.22, photography: 0.08, videography: 0.06, makeup: 0.01, entertainment: 0.11, planning: 0.09, invitations: 0.03, transport: 0.06 },
+    concert: { venue: 0.23, decoration: 0.11, catering: 0.12, photography: 0.08, videography: 0.08, makeup: 0.03, entertainment: 0.2, planning: 0.07, invitations: 0.02, transport: 0.06 },
+    other: { venue: 0.2, decoration: 0.16, catering: 0.24, photography: 0.1, videography: 0.05, makeup: 0.04, entertainment: 0.08, planning: 0.05, invitations: 0.04, transport: 0.04 }
+};
 
 document.addEventListener('DOMContentLoaded', async function () {
     // Check for payment outcomes
@@ -38,6 +64,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     updateSelectedEventBanner();
+    initializeBudgetPlanner();
     loadVendors();
 });
 
@@ -124,6 +151,214 @@ function changeEvent() {
     updateCart();
     updateSelectedEventBanner();
     showEventSelectorModal(null, null);
+}
+
+// ------------------- BUDGET PLANNER -------------------
+
+function initializeBudgetPlanner() {
+    const plannerForm = document.getElementById('budgetPlannerForm');
+    const eventSelect = document.getElementById('eventSelect');
+    const plannerEventType = document.getElementById('plannerEventType');
+    const modal = document.getElementById('budgetPlannerModal');
+
+    if (eventSelect && plannerEventType) {
+        eventSelect.addEventListener('change', () => {
+            if (eventSelect.value && eventSelect.value !== 'all') {
+                plannerEventType.value = eventSelect.value;
+            }
+        });
+    }
+
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeBudgetPlanner();
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal && modal.style.display !== 'none') {
+            closeBudgetPlanner();
+        }
+    });
+
+    if (!plannerForm) return;
+    plannerForm.addEventListener('submit', handleBudgetPlannerSubmit);
+}
+
+function openBudgetPlanner() {
+    const modal = document.getElementById('budgetPlannerModal');
+    const eventSelect = document.getElementById('eventSelect');
+    const plannerEventType = document.getElementById('plannerEventType');
+    if (eventSelect && plannerEventType && eventSelect.value !== 'all') {
+        plannerEventType.value = eventSelect.value;
+    }
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeBudgetPlanner() {
+    const modal = document.getElementById('budgetPlannerModal');
+    if (modal) modal.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+function handleBudgetPlannerSubmit(event) {
+    event.preventDefault();
+
+    const budget = parseInt(document.getElementById('plannerBudget')?.value, 10);
+    const guests = parseInt(document.getElementById('plannerGuests')?.value, 10);
+    const eventType = document.getElementById('plannerEventType')?.value || 'other';
+    const style = document.getElementById('plannerStyle')?.value || 'balanced';
+    const selectedServices = Array.from(document.querySelectorAll('input[name="plannerServices"]:checked')).map(input => input.value);
+
+    if (!budget || budget <= 0) {
+        showNotification('Please enter a valid total budget.', 'error');
+        return;
+    }
+
+    if (!guests || guests <= 0) {
+        showNotification('Please enter the expected guest count.', 'error');
+        return;
+    }
+
+    if (selectedServices.length === 0) {
+        showNotification('Select at least one service for the planner.', 'error');
+        return;
+    }
+
+    const allocations = generateBudgetPlan({ budget, guests, eventType, style, selectedServices });
+    renderBudgetPlannerResults({ budget, guests, eventType, style, allocations });
+}
+
+function generateBudgetPlan({ budget, guests, eventType, style, selectedServices }) {
+    const baseProfile = { ...(plannerEventProfiles[eventType] || plannerEventProfiles.other) };
+
+    if (style === 'food_first') {
+        baseProfile.catering = (baseProfile.catering || 0) + 0.07;
+        baseProfile.decoration = Math.max((baseProfile.decoration || 0) - 0.03, 0.04);
+        baseProfile.entertainment = Math.max((baseProfile.entertainment || 0) - 0.02, 0.02);
+        baseProfile.venue = Math.max((baseProfile.venue || 0) - 0.02, 0.08);
+    } else if (style === 'visual_first') {
+        baseProfile.decoration = (baseProfile.decoration || 0) + 0.07;
+        baseProfile.photography = (baseProfile.photography || 0) + 0.02;
+        baseProfile.catering = Math.max((baseProfile.catering || 0) - 0.04, 0.08);
+        baseProfile.transport = Math.max((baseProfile.transport || 0) - 0.02, 0.01);
+    } else if (style === 'experience_first') {
+        baseProfile.entertainment = (baseProfile.entertainment || 0) + 0.08;
+        baseProfile.videography = (baseProfile.videography || 0) + 0.02;
+        baseProfile.decoration = Math.max((baseProfile.decoration || 0) - 0.03, 0.05);
+        baseProfile.invitations = Math.max((baseProfile.invitations || 0) - 0.02, 0.01);
+    } else if (style === 'intimate') {
+        baseProfile.venue = Math.max((baseProfile.venue || 0) - 0.04, 0.05);
+        baseProfile.catering = Math.max((baseProfile.catering || 0) - 0.03, 0.1);
+        baseProfile.planning = Math.max((baseProfile.planning || 0) - 0.02, 0.02);
+        baseProfile.photography = (baseProfile.photography || 0) + 0.03;
+        baseProfile.invitations = (baseProfile.invitations || 0) + 0.02;
+        baseProfile.transport = (baseProfile.transport || 0) + 0.01;
+    }
+
+    const guestMultiplier = guests > 500 ? 1.1 : guests > 250 ? 1.06 : guests < 80 ? 0.94 : 1;
+    baseProfile.catering = (baseProfile.catering || 0) * guestMultiplier;
+    baseProfile.transport = (baseProfile.transport || 0) * (guests > 300 ? 1.12 : guests < 100 ? 0.9 : 1);
+    baseProfile.venue = (baseProfile.venue || 0) * (guests > 300 ? 1.08 : guests < 100 ? 0.94 : 1);
+    baseProfile.decoration = (baseProfile.decoration || 0) * (budget >= 1000000 ? 1.08 : budget <= 150000 ? 0.92 : 1);
+    baseProfile.planning = (baseProfile.planning || 0) * (selectedServices.length >= 6 ? 1.15 : 1);
+
+    let totalWeight = selectedServices.reduce((sum, service) => sum + (baseProfile[service] || 0.05), 0);
+    if (!totalWeight) totalWeight = selectedServices.length;
+
+    let runningTotal = 0;
+    const allocations = selectedServices.map((service, index) => {
+        const ratio = (baseProfile[service] || 0.05) / totalWeight;
+        let amount = Math.round((budget * ratio) / 1000) * 1000;
+        if (index === selectedServices.length - 1) {
+            amount = Math.max(budget - runningTotal, 0);
+        } else {
+            runningTotal += amount;
+        }
+
+        const percent = Math.round((amount / budget) * 100);
+        return {
+            key: service,
+            label: plannerServiceMeta[service]?.label || service,
+            amount,
+            percent,
+            note: plannerServiceMeta[service]?.note || 'Reserve this portion for the selected service.'
+        };
+    }).sort((a, b) => b.amount - a.amount);
+
+    return allocations;
+}
+
+function renderBudgetPlannerResults({ budget, guests, eventType, style, allocations }) {
+    const results = document.getElementById('plannerResults');
+    if (!results) return;
+
+    const eventLabel = getPlannerEventLabel(eventType);
+    const styleLabel = getPlannerStyleLabel(style);
+    const topRecommendation = allocations[0];
+    const perGuest = Math.round(budget / guests);
+
+    results.innerHTML = `
+        <div class="planner-summary-card">
+            <h3>${eventLabel} budget plan ready</h3>
+            <p>For a total budget of ${formatCurrency(budget)} and around ${guests} guests, the planner suggests prioritising <strong>${topRecommendation.label}</strong> with about <strong>${formatCurrency(topRecommendation.amount)}</strong>.</p>
+            <div class="planner-summary-meta">
+                <span class="planner-chip">Budget: ${formatCurrency(budget)}</span>
+                <span class="planner-chip">Guests: ${guests}</span>
+                <span class="planner-chip">Per guest: ${formatCurrency(perGuest)}</span>
+                <span class="planner-chip">Style: ${styleLabel}</span>
+            </div>
+        </div>
+        <div class="planner-allocation-list">
+            ${allocations.map(item => `
+                <div class="planner-allocation-item">
+                    <div class="planner-allocation-top">
+                        <strong>${item.label}</strong>
+                        <span>${formatCurrency(item.amount)} · ${item.percent}%</span>
+                    </div>
+                    <div class="planner-progress">
+                        <div class="planner-progress-bar" style="width:${Math.max(item.percent, 6)}%"></div>
+                    </div>
+                    <p>${item.note}</p>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function formatCurrency(amount) {
+    return `₹${Math.round(amount).toLocaleString('en-IN')}`;
+}
+
+function getPlannerEventLabel(eventType) {
+    const map = {
+        wedding: 'Wedding',
+        engagement: 'Engagement',
+        birthday: 'Birthday',
+        anniversary: 'Anniversary',
+        babyshower: 'Baby Shower',
+        housewarming: 'Housewarming',
+        festival: 'Festival',
+        religious: 'Religious Ceremony',
+        corporate: 'Corporate Event',
+        concert: 'Concert / Stage Event',
+        other: 'Custom Event'
+    };
+    return map[eventType] || 'Custom Event';
+}
+
+function getPlannerStyleLabel(style) {
+    const map = {
+        balanced: 'Balanced',
+        food_first: 'Food-first',
+        visual_first: 'Decor-first',
+        experience_first: 'Entertainment-first',
+        intimate: 'Intimate'
+    };
+    return map[style] || 'Balanced';
 }
 
 // ------------------- LOAD & RENDER VENDORS -------------------
