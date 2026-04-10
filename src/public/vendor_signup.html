@@ -96,7 +96,8 @@
         </nav>
 
         <div class="profile">
-            Hello Deepanshu
+            <span class="nav-greeting">Hello</span>
+            <span id="navUserName">User</span>
             <img src="images/profile.png">
         </div>
 
@@ -129,16 +130,10 @@
                     <input type="text" name="city" placeholder="Enter your city" required>
                 </div>
 
-                <!-- Aadhar -->
+                <!-- Documents -->
                 <div class="form-group">
-                    <label>Aadhar Card (Google Drive Link)</label>
-                    <input type="url" name="aadhar_url" placeholder="Paste Google Drive link" required>
-                </div>
-
-                <!-- License -->
-                <div class="form-group">
-                    <label>Business License (Google Drive Link)</label>
-                    <input type="url" name="license_url" placeholder="Paste Google Drive link" required>
+                    <label>Documents Link</label>
+                    <input type="url" name="documents_url" placeholder="Paste one Google Drive or folder link with your verification documents" required>
                 </div>
 
                 <button type="submit" class="submit-btn">
@@ -160,8 +155,7 @@
                 business_name: formData.get("business_name"),
                 business_description: formData.get("business_description"),
                 city: formData.get("city"),
-                aadhar_url: formData.get("aadhar_url"),
-                license_url: formData.get("license_url")
+                documents_url: formData.get("documents_url")
             };
 
             // Get token from localStorage (assuming it's stored there)

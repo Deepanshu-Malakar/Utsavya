@@ -47,9 +47,30 @@ window.fetchWithAuth = async (url, options = {}) => {
     }
 };
 
+function getStoredAuthToken() {
+    return localStorage.getItem('accessToken') || localStorage.getItem('authToken');
+}
+
+function getProfileFromStoredToken() {
+    const token = getStoredAuthToken();
+    if (!token) return null;
+
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return {
+            full_name: payload.full_name,
+            name: payload.name,
+            email: payload.email
+        };
+    } catch (e) {
+        console.error('Failed to parse stored auth token:', e);
+        return null;
+    }
+}
+
 // Silent Token Refresh (Improved to return success status)
 async function silentRefresh() {
-    const hasToken = !!(localStorage.getItem('accessToken') || localStorage.getItem('authToken'));
+    const hasToken = !!getStoredAuthToken();
     if(!hasToken) return false;
 
     try {
@@ -78,6 +99,40 @@ document.addEventListener('DOMContentLoaded', async () => {
     const profileImg = profileContainer ? profileContainer.querySelector('img') : null;
 
     if (!profileContainer || !profileImg) return;
+
+    function ensureNavUserNameElement() {
+        let navUserName = document.getElementById('navUserName');
+        if (navUserName) return navUserName;
+
+        navUserName = document.createElement('span');
+        navUserName.id = 'navUserName';
+
+        const greeting = profileContainer.querySelector('.nav-greeting');
+        if (greeting) {
+            greeting.insertAdjacentElement('afterend', navUserName);
+        } else {
+            profileContainer.insertBefore(navUserName, profileImg);
+        }
+
+        return navUserName;
+    }
+
+    function setNavbarProfile(profile = {}) {
+        const navUserName = ensureNavUserNameElement();
+        const displayName = profile.full_name || profile.name || profile.business_name || 'User';
+
+        navUserName.textContent = displayName;
+        profileImg.alt = `${displayName} profile`;
+
+        if (profile.profile_image) {
+            profileImg.src = profile.profile_image;
+        }
+
+        const dropdownName = document.getElementById('dd-name');
+        const dropdownEmail = document.getElementById('dd-email');
+        if (dropdownName) dropdownName.textContent = displayName;
+        if (dropdownEmail) dropdownEmail.textContent = profile.email || '';
+    }
 
     // Inject CSS for the dropdowns
     const style = document.createElement('style');
@@ -258,25 +313,57 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Load Data
     let profileLoaded = false;
+    let profileDataPromise = null;
     async function loadProfileData() {
-        if(profileLoaded) return;
-        const token = localStorage.getItem('accessToken') || localStorage.getItem('authToken');
+        const token = getStoredAuthToken();
         if (!token) {
-            document.getElementById('dd-name').textContent = 'Guest';
-            return;
+            setNavbarProfile({ full_name: 'Guest' });
+            profileLoaded = true;
+            return null;
         }
-        try {
-            const res = await window.fetchWithAuth('/auth/profile');
-            if(res.ok) {
-                const data = await res.json();
-                document.getElementById('dd-name').textContent = data.data.full_name || data.data.name || 'User';
-                document.getElementById('dd-email').textContent = data.data.email || '';
-                profileLoaded = true;
-            } else {
-                document.getElementById('dd-name').textContent = 'Session Expired';
+
+        const storedProfile = getProfileFromStoredToken();
+        if (storedProfile) {
+            setNavbarProfile(storedProfile);
+        }
+
+        if (profileLoaded && profileDataPromise) {
+            return profileDataPromise;
+        }
+
+        profileDataPromise = (async () => {
+            try {
+                const res = await window.fetchWithAuth('/auth/profile');
+                if(res.ok) {
+                    const data = await res.json();
+                    const profile = data.data || {};
+                    setNavbarProfile(profile);
+                    profileLoaded = true;
+                    return profile;
+                }
+
+                if (res.status === 401) {
+                    setNavbarProfile({ ...(storedProfile || {}), full_name: 'Session Expired' });
+                } else if (!storedProfile) {
+                    setNavbarProfile({ full_name: 'User' });
+                }
+                console.error(`Failed to load profile for navbar. Status: ${res.status}`);
+                return null;
+            } catch(e) {
+                console.error(e);
+                if (!storedProfile) {
+                    setNavbarProfile({ full_name: 'User' });
+                }
+                return null;
             }
-        } catch(e) {
-            console.error(e);
+        })();
+
+        try {
+            return await profileDataPromise;
+        } finally {
+            if (!profileLoaded) {
+                profileDataPromise = null;
+            }
         }
     }
 
@@ -328,5 +415,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Initial interval for background refresh
+    loadProfileData();
     setInterval(silentRefresh, 600000); // 10 mins
 });

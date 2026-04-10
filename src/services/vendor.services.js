@@ -15,9 +15,14 @@ const submitVendorRequest = async (user, data) => {
         throw new Error("Only customers can request vendor access");
     }
 
+    const documents_url =
+        data.documents_url ||
+        [data.aadhar_url, data.license_url].filter(Boolean).join("\n");
+
     const vendorRequest = await createVendorRequest({
         user_id: user.userId,
-        ...data
+        ...data,
+        documents_url
     });
 
     return vendorRequest;

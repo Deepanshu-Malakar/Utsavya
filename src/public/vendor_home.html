@@ -25,10 +25,10 @@
             <a href="javascript:void(0)" id="navServices" onclick="showServicesTab()">My Services</a>
             <a href="javascript:void(0)" id="navSchedule" onclick="showScheduleTab()">Schedule</a>
             <a href="javascript:void(0)" id="navMemories" onclick="showMemoriesTab()">Memories</a>
-            <a href="javascript:void(0)" id="navProfileCard" onclick="showProfileCardTab()">Profile Card</a>
         </nav>
         <div class="profile">
-            Hello <span id="navUserName">Vendor</span>
+            <span class="nav-greeting">Hello</span>
+            <span id="navUserName">Vendor</span>
             <img src="images/profile.png" id="profilePic">
             <button class="notifications-btn">🔔</button>
         </div>
@@ -151,80 +151,6 @@
             <p style="font-size:13px;color:#777;margin-bottom:16px;">Upload event photos or videos for completed bookings. Customers will see them in their Memories page.</p>
             <div class="services-grid" id="memoriesGrid">
                 <div class="loading">No memories added yet.</div>
-            </div>
-        </main>
-    </div>
-
-    <!-- PROFILE CARD CUSTOMISER -->
-    <div id="profileCardSection" class="tab-content">
-        <main class="services-section" style="max-width:1100px; margin:30px auto; padding:0 20px;">
-
-            <div class="services-header">
-                <h2>🎨 My Profile Card</h2>
-            </div>
-            <p style="font-size:14px;color:#888;margin-bottom:30px;">This is exactly how customers see your card in the
-                vendor listing. Customise it to attract more bookings.</p>
-
-            <div class="profile-card-editor">
-
-                <!-- LIVE PREVIEW -->
-                <div class="card-preview-wrapper" style="flex: 0 0 320px;">
-                    <h3 class="editor-label">Live Preview</h3>
-                    <div class="vendor-card vendor-card-preview" id="cardPreview" style="margin: 0 auto;">
-                        <div class="vendor-image">
-                            <img id="previewImage" src="images/default-vendor.jpg" alt="Preview">
-                        </div>
-                        <div class="vendor-details">
-                            <h3 id="previewName">Your Name</h3>
-                            <p class="category" id="previewCategory">🏷️ Your Services</p>
-                            <p class="location" id="previewCity">📍 Your City</p>
-                            <p id="previewTagline" style="font-size:12px;color:#888;font-style:italic;margin-top:4px;">Your tagline...</p>
-                            <div style="color:#f39c12;font-size:14px;margin:6px 0;">★★★★☆</div>
-                            <div id="previewPrice" style="font-size:16px;font-weight:700;color:#27ae60;">₹–</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-editor-controls" style="flex: 1;">
-                    <h3 class="editor-label">Edit Card Content</h3>
-                    <div class="edit-group">
-                        <label>Select Service to Customize</label>
-                        <select id="selectServiceForCard" onchange="loadServiceCardDetails(this.value)">
-                            <option value="">Select a service...</option>
-                        </select>
-                    </div>
-
-                    <div class="edit-form-card" style="background:#f8f4ef; padding:20px; border-radius:12px; margin-top:15px;">
-                        <div class="edit-group">
-                            <label>Service Title</label>
-                            <input type="text" id="editServiceTitle" placeholder="e.g. Wedding Photography" oninput="updateLivePreview()">
-                        </div>
-
-                        <div class="edit-group">
-                            <label>Card Tagline <small style="color:#aaa;font-weight:400;">(80 chars max)</small></label>
-                            <input type="text" id="editTagline" placeholder="e.g. Making every moment magical ✨" maxlength="80" oninput="updateLivePreview()">
-                        </div>
-
-                        <div class="edit-group" style="display:flex; gap:15px;">
-                            <div style="flex:1;">
-                                <label>Price (₹)</label>
-                                <input type="number" id="editServicePrice" placeholder="50000" oninput="updateLivePreview()">
-                            </div>
-                            <div style="flex:1;">
-                                <label>City</label>
-                                <input type="text" id="editServiceCity" placeholder="Delhi" oninput="updateLivePreview()">
-                            </div>
-                        </div>
-
-                        <div class="edit-group">
-                            <label>Service Image URL</label>
-                            <input type="url" id="editServiceImage" placeholder="https://..." oninput="updateLivePreview()">
-                        </div>
-
-                        <button class="save-card-btn" onclick="saveProfileCard()" style="margin-top:10px;">💾 Save Profile Card Changes</button>
-                        <p id="saveCardStatus" style="font-size:12px;color:#aaa;margin-top:8px;"></p>
-                    </div>
-                </div>
             </div>
         </main>
     </div>

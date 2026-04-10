@@ -30,6 +30,7 @@ const { updateBookingItemStatusController } = require("../controllers/booking.co
 const vendorRequestValidation = [
     body("business_name").notEmpty().withMessage("Business name is required").trim(),
     body("city").notEmpty().withMessage("City is required").trim(),
+    body("documents_url").notEmpty().withMessage("Documents link is required").isURL().withMessage("Documents link must be a valid URL").trim(),
     validate
 ];
 

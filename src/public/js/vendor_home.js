@@ -1,6 +1,6 @@
 // Tab switching functionality
-const ALL_TABS = ['homeSection', 'servicesSection', 'scheduleSection', 'memoriesSection', 'profileCardSection'];
-const ALL_TAB_BTNS = ['navHome', 'navServices', 'navSchedule', 'navMemories', 'navProfileCard'];
+const ALL_TABS = ['homeSection', 'servicesSection', 'scheduleSection', 'memoriesSection'];
+const ALL_TAB_BTNS = ['navHome', 'navServices', 'navSchedule', 'navMemories'];
 
 let currentDate = new Date();
 let allRequests = [];
@@ -108,11 +108,6 @@ function showMemoriesTab() {
     switchTab('memoriesSection', 'navMemories');
     loadCompletedBookingOptions();
     loadVendorMemories();
-}
-
-function showProfileCardTab() {
-    switchTab('profileCardSection', 'navProfileCard');
-    loadProfileCardData();
 }
 
 // Load vendor services
@@ -223,7 +218,6 @@ document.getElementById('addServiceForm').addEventListener('submit', async funct
         alert('Service added successfully!');
         closeAddServiceModal();
         if (typeof loadServices === 'function') loadServices(); // Refresh the services list
-        if (typeof loadProfileCardData === 'function') loadProfileCardData(); // Refresh the profile card dropdown too
     } catch (error) {
         console.error('Error adding service:', error);
         alert('Failed to add service. Please try again.');

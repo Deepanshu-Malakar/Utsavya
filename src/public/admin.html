@@ -668,6 +668,53 @@
         // ─────────────────────────────────────────
         //  INIT
         // ─────────────────────────────────────────
+        function normalizeDocumentUrl(value) {
+            if (!value) return '';
+            const firstUrl = String(value)
+                .split(/\s+/)
+                .map(part => part.trim())
+                .find(part => /^https?:\/\//i.test(part) || /^www\./i.test(part));
+
+            if (!firstUrl) return '';
+            return /^https?:\/\//i.test(firstUrl) ? firstUrl : `https://${firstUrl}`;
+        }
+
+        function requestCard(r) {
+            const initials = (r.requester_name || '?').charAt(0).toUpperCase();
+            const date = r.created_at ? new Date(r.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : 'â€”';
+            const documentsUrl = normalizeDocumentUrl(r.documents_url);
+            const docHtml = documentsUrl
+                ? `<a class="doc-link" href="${documentsUrl}" target="_blank" rel="noopener noreferrer">ðŸ“„ View Documents</a>`
+                : `<span class="no-doc">ðŸ“ No documents uploaded</span>`;
+
+            return `
+            <div class="request-card" id="req-${r.id}">
+                <div class="request-card-header">
+                    <div>
+                        <div class="request-biz-name">${escHtml(r.business_name)}</div>
+                        <div class="request-city">ðŸ“ ${escHtml(r.city)}</div>
+                    </div>
+                    <div class="request-date-badge">${date}</div>
+                </div>
+                <div class="request-card-body">
+                    <div class="request-requester">
+                        <div class="requester-avatar">${initials}</div>
+                        <div class="requester-info">
+                            <div class="name">${escHtml(r.requester_name || 'Unknown')}</div>
+                            <div class="email">${escHtml(r.requester_email || '')}</div>
+                        </div>
+                    </div>
+                    <p class="request-desc">${escHtml(r.business_description || 'No description provided.')}</p>
+                    ${docHtml}
+                    <textarea class="note-input" id="note-${r.id}" rows="2" placeholder="Optional admin note (visible to applicant)â€¦"></textarea>
+                    <div class="request-actions">
+                        <button class="btn-approve" onclick="reviewRequest('${r.id}', 'approved')">âœ… Approve</button>
+                        <button class="btn-reject"  onclick="reviewRequest('${r.id}', 'rejected')">âŒ Reject</button>
+                    </div>
+                </div>
+            </div>`;
+        }
+
         (async () => {
             await verifyAdmin();
             loadStats();
