@@ -33,12 +33,13 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             "default-src": ["'self'"],
-            "script-src": ["'self'", "'unsafe-inline'", "https://js.stripe.com"],
+            "script-src": ["'self'", "'unsafe-inline'", "https://js.stripe.com", "https://accounts.google.com"],
             "script-src-attr": ["'unsafe-inline'"],
             "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
             "font-src": ["'self'", "https://fonts.gstatic.com"],
             "img-src": ["'self'", "data:", "blob:", "https:", "http:"],
-            "connect-src": ["'self'", "http:", "https:"]
+            "connect-src": ["'self'", "http:", "https:"],
+            "frame-src": ["'self'", "https://accounts.google.com"]
         }
     }
 }));

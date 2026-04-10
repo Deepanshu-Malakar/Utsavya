@@ -138,6 +138,9 @@
                 <button class="book-now-btn" id="bookNowBtn" onclick="addVendorToEvent()">
                     ➕ Add to Event
                 </button>
+                <button class="report-vendor-btn" id="reportVendorBtn" onclick="openReportModal()">
+                    Report Vendor
+                </button>
                 <p class="book-meta">Select a service below, then click above to add to your active event cart.</p>
             </div>
 
@@ -174,6 +177,27 @@
     <footer class="profile-footer">
         © 2026 Utsavya
     </footer>
+
+    <div class="report-modal-overlay" id="reportModal">
+        <div class="report-modal-card">
+            <h3>Report Vendor</h3>
+            <p>Tell us what happened. Admins will review this complaint.</p>
+            <select id="reportReason">
+                <option value="">Select reason</option>
+                <option value="No show">No show</option>
+                <option value="Fraud / scam">Fraud / scam</option>
+                <option value="Abusive behavior">Abusive behavior</option>
+                <option value="Poor service quality">Poor service quality</option>
+                <option value="Misleading pricing">Misleading pricing</option>
+                <option value="Other">Other</option>
+            </select>
+            <textarea id="reportDetails" placeholder="Optional details (what happened, date, evidence links, etc.)"></textarea>
+            <div class="report-modal-actions">
+                <button type="button" class="report-cancel-btn" onclick="closeReportModal()">Cancel</button>
+                <button type="button" class="report-submit-btn" onclick="submitVendorReport()">Submit Complaint</button>
+            </div>
+        </div>
+    </div>
 
     <script src="js/vendor_profile.js"></script>
     <script src="js/navbar.js"></script>

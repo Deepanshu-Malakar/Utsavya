@@ -306,9 +306,7 @@
 
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
                     <button type="submit" style="flex: 1; margin-top: 0;">Sign In</button>
-                    <button type="button" id="googleLoginBtn" style="flex: 1; margin-top: 0; background: #DB4437; color: white;">
-                        G Google
-                    </button>
+                    <div id="googleSignInContainer" style="flex: 1; margin-top: 0; display: flex; justify-content: center;"></div>
                 </div>
 
                 <div style="margin-top: 15px; text-align: center;">
@@ -386,6 +384,91 @@
             }
         };
 
+        function redirectByRole(accessToken) {
+            const payload = JSON.parse(atob(accessToken.split('.')[1]));
+            const role = payload.role;
+
+            if (role === 'admin') {
+                window.location.href = "/admin/dashboard";
+            } else if (role === 'vendor') {
+                window.location.href = "vendor_home.html";
+            } else {
+                window.location.href = "dashboard.html";
+            }
+        }
+
+        async function initializeGoogleSignIn() {
+            try {
+                const cfgRes = await fetch('/auth/google-config');
+                if (!cfgRes.ok) {
+                    console.error('Google config fetch failed');
+                    return;
+                }
+
+                const { clientId } = await cfgRes.json();
+                if (!clientId) {
+                    console.error('Google client ID missing');
+                    return;
+                }
+
+                let attempts = 0;
+                while ((!window.google || !window.google.accounts || !window.google.accounts.id) && attempts < 80) {
+                    await new Promise(resolve => setTimeout(resolve, 150));
+                    attempts++;
+                }
+
+                if (!window.google || !window.google.accounts || !window.google.accounts.id) {
+                    console.error('Google Identity Services script not loaded');
+                    return;
+                }
+
+                google.accounts.id.initialize({
+                    client_id: clientId,
+                    callback: async (response) => {
+                        if (!response || !response.credential) {
+                            alert('Google login failed: missing credential.');
+                            return;
+                        }
+
+                        try {
+                            const res = await fetch('/auth/google', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ idToken: response.credential })
+                            });
+
+                            if (!res.ok) {
+                                const data = await res.json().catch(() => ({}));
+                                throw new Error(data.message || 'Google login failed.');
+                            }
+
+                            const { accessToken } = await res.json();
+                            localStorage.setItem("accessToken", accessToken);
+                            localStorage.setItem("authToken", accessToken);
+                            redirectByRole(accessToken);
+                        } catch (err) {
+                            console.error(err);
+                            alert(err.message || "Could not complete Google login.");
+                        }
+                    }
+                });
+
+                google.accounts.id.renderButton(
+                    document.getElementById('googleSignInContainer'),
+                    {
+                        theme: 'filled_blue',
+                        size: 'large',
+                        type: 'standard',
+                        shape: 'pill',
+                        text: 'signin_with',
+                        width: 180
+                    }
+                );
+            } catch (err) {
+                console.error('Google initialization error:', err);
+            }
+        }
+
         /* BACKEND (UNCHANGED) */
         document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
@@ -404,19 +487,8 @@
                 localStorage.setItem("accessToken", accessToken);
                 localStorage.setItem("authToken", accessToken); // old-key compatibility
 
-                // Determine role from JWT payload for redirect
-                const payload = JSON.parse(atob(accessToken.split('.')[1]));
-                const role = payload.role;
-
                 alert("Logged in successfully!");
-
-                if (role === 'admin') {
-                    window.location.href = "/admin/dashboard";
-                } else if (role === 'vendor') {
-                    window.location.href = "vendor_home.html";
-                } else {
-                    window.location.href = "dashboard.html";
-                }
+                redirectByRole(accessToken);
             } else {
                 const error = await res.json();
                 console.log('Login error:', error);
@@ -429,37 +501,10 @@
 
         });
 
-        /* GOOGLE AUTHENTICATION EVENT */
-        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
-            const mockToken = prompt('Please paste a valid Google idToken or cancel (requires valid Client ID setup):');
-            if(!mockToken) return;
-            
-            try {
-                const res = await fetch('/auth/google', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ idToken: mockToken })
-                });
-                
-                if (res.ok) {
-                    const { accessToken } = await res.json();
-                    localStorage.setItem("accessToken", accessToken);
-                    localStorage.setItem("authToken", accessToken);
-                    
-                    const payload = JSON.parse(atob(accessToken.split('.')[1]));
-                    if (payload.role === 'admin') window.location.href = "/admin/dashboard";
-                    else if (payload.role === 'vendor') window.location.href = "vendor_home.html";
-                    else window.location.href = "dashboard.html";
-                } else {
-                    alert('Google login failed or invalid token.');
-                }
-            } catch (err) {
-                console.error(err);
-                alert("Could not connect to Google Auth API.");
-            }
-        });
+        initializeGoogleSignIn();
     </script>
 
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="js/navbar.js"></script>
 </body>
 

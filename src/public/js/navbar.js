@@ -98,7 +98,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     const profileContainer = document.querySelector('.profile');
     const profileImg = profileContainer ? profileContainer.querySelector('img') : null;
 
-    if (!profileContainer || !profileImg) return;
+    if (!profileContainer) return;
+
+    function normalizeProfile(payload = {}) {
+        const source = payload.data || payload.user || payload || {};
+        return {
+            full_name: source.full_name || source.fullName || source.name || source.business_name || '',
+            name: source.name || source.full_name || source.fullName || '',
+            business_name: source.business_name || '',
+            email: source.email || source.user_email || '',
+            profile_image: source.profile_image || source.avatar || source.image || ''
+        };
+    }
 
     function ensureNavUserNameElement() {
         let navUserName = document.getElementById('navUserName');
@@ -110,28 +121,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         const greeting = profileContainer.querySelector('.nav-greeting');
         if (greeting) {
             greeting.insertAdjacentElement('afterend', navUserName);
-        } else {
+        } else if (profileImg) {
             profileContainer.insertBefore(navUserName, profileImg);
+        } else {
+            profileContainer.appendChild(navUserName);
         }
 
         return navUserName;
     }
 
     function setNavbarProfile(profile = {}) {
+        const safeProfile = normalizeProfile(profile);
         const navUserName = ensureNavUserNameElement();
-        const displayName = profile.full_name || profile.name || profile.business_name || 'User';
+        const displayName = safeProfile.full_name || safeProfile.name || safeProfile.business_name || 'User';
 
         navUserName.textContent = displayName;
-        profileImg.alt = `${displayName} profile`;
+        if (profileImg) {
+            profileImg.alt = `${displayName} profile`;
+        }
 
-        if (profile.profile_image) {
-            profileImg.src = profile.profile_image;
+        if (profileImg && safeProfile.profile_image) {
+            profileImg.src = safeProfile.profile_image;
         }
 
         const dropdownName = document.getElementById('dd-name');
         const dropdownEmail = document.getElementById('dd-email');
         if (dropdownName) dropdownName.textContent = displayName;
-        if (dropdownEmail) dropdownEmail.textContent = profile.email || '';
+        if (dropdownEmail) dropdownEmail.textContent = safeProfile.email || '';
     }
 
     // Inject CSS for the dropdowns
@@ -246,16 +262,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Toggle Dropdown
-    profileImg.style.cursor = 'pointer';
-    profileImg.removeAttribute('title');
-    profileImg.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if(notifDropdown && notifDropdown.classList.contains('show')) notifDropdown.classList.remove('show');
-        dropdown.classList.toggle('show');
-        if(dropdown.classList.contains('show')) {
-            loadProfileData();
-        }
-    });
+    if (profileImg) {
+        profileImg.style.cursor = 'pointer';
+        profileImg.removeAttribute('title');
+        profileImg.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if(notifDropdown && notifDropdown.classList.contains('show')) notifDropdown.classList.remove('show');
+            dropdown.classList.toggle('show');
+            if(dropdown.classList.contains('show')) {
+                loadProfileData();
+            }
+        });
+    }
 
     // Close on outside click
     document.addEventListener('click', () => {
@@ -336,7 +354,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const res = await window.fetchWithAuth('/auth/profile');
                 if(res.ok) {
                     const data = await res.json();
-                    const profile = data.data || {};
+                    const profile = normalizeProfile(data);
                     setNavbarProfile(profile);
                     profileLoaded = true;
                     return profile;

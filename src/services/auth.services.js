@@ -17,7 +17,9 @@ const generateTokens = (user) => {
     const accessToken = jwt.sign(
         {
             userId: user.id,
-            role: user.role
+            role: user.role,
+            full_name: user.full_name,
+            email: user.email
         },
         process.env.JWT_SECRET,
         { expiresIn: ACCESS_TOKEN_EXPIRY }
@@ -449,7 +451,7 @@ const refreshTokenService = async (refreshToken) => {
 
         // 6. Generate NEW tokens
         const userRes = await client.query(
-            `SELECT id, role FROM users WHERE id = $1`,
+            `SELECT id, role, full_name, email FROM users WHERE id = $1`,
             [userId]
         );
         const user = userRes.rows[0];

@@ -315,9 +315,11 @@
                     ${statCard('👤', 'red',    s.total_users,            'Total Users')}
                     ${statCard('🚫', 'orange',  s.blocked_users,          'Blocked Users')}
                     ${statCard('🏪', 'blue',    s.total_vendors,          'Active Vendors')}
-                    ${statCard('✅', 'green',   s.approved_vendors,       'Approved Vendors')}
+                    ${statCard('🧾', 'purple',  s.total_vendors_overall,  'All Vendor Accounts')}
                     ${statCard('📅', 'purple',  s.upcoming_events,        'Upcoming Events')}
                     ${statCard('⏳', 'red',     s.pending_verifications,  'Pending Verifications')}
+                    ${statCard('🚨', 'red',     s.total_vendor_reports,   'Total Complaints')}
+                    ${statCard('📈', 'green',   s.users_joined_this_month,'Users Joined This Month')}
                     ${statCard('🗑️', 'orange',  s.monthly_deletions,     'Deletions This Month')}
                 `;
 
@@ -330,9 +332,13 @@
                         <tbody>
                             ${snapRow('Total Registered Users',   s.total_users)}
                             ${snapRow('Currently Blocked',        s.blocked_users, '#e53935')}
-                            ${snapRow('Vendors on Platform',      s.total_vendors)}
+                            ${snapRow('Active Vendors',           s.total_vendors)}
+                            ${snapRow('All Vendor Accounts',      s.total_vendors_overall)}
                             ${snapRow('Pending Vendor Requests',  s.pending_verifications, '#f39c12')}
                             ${snapRow('Upcoming Events',          s.upcoming_events)}
+                            ${snapRow('Events Needing Action',    s.events_needing_action, '#f39c12')}
+                            ${snapRow('Complaints (all-time)',    s.total_vendor_reports, '#e53935')}
+                            ${snapRow('Complaints (this month)',  s.monthly_vendor_reports, '#e53935')}
                             ${snapRow('Accounts Deleted (month)', s.monthly_deletions, '#e53935')}
                         </tbody>
                     </table>
@@ -604,6 +610,12 @@
             const reasons  = (v.reasons || []).filter(Boolean);
             const reasonTags = reasons.slice(0, 5).map(r => `<span class="reason-tag">${escHtml(r)}</span>`).join('');
             const extra = reasons.length > 5 ? `<span class="reason-tag">+${reasons.length - 5} more</span>` : '';
+            const latestReason = escHtml(v.latest_reason || '');
+            const latestDetails = escHtml(v.latest_details || '');
+            const latestReporter = escHtml(v.latest_reporter_name || 'Customer');
+            const lastReportedAt = v.last_reported_at
+                ? new Date(v.last_reported_at).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+                : 'Unknown';
 
             return `
             <div class="mod-card" id="mod-${v.vendor_id}">
@@ -616,6 +628,13 @@
                     <div class="reports-count">🚨 ${v.report_count} report${v.report_count !== 1 ? 's' : ''}</div>
                 </div>
                 ${reasons.length ? `<div class="reasons-list">${reasonTags}${extra}</div>` : '<p style="font-size:12px;color:#aaa;margin-bottom:14px;">No reason details.</p>'}
+                <div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:10px 12px;margin-bottom:12px;">
+                    <div style="font-size:12px;color:#777;margin-bottom:5px;">
+                        Latest complaint by <strong>${latestReporter}</strong> • ${lastReportedAt}
+                    </div>
+                    <div style="font-size:13px;color:#444;font-weight:600;margin-bottom:4px;">${latestReason || 'No reason provided'}</div>
+                    ${latestDetails ? `<div style="font-size:12px;color:#666;line-height:1.45;">${latestDetails}</div>` : ''}
+                </div>
                 <button class="btn-block-vendor" onclick="confirmBlockVendor('${v.vendor_id}', '${escHtml(v.full_name)}')">
                     🔒 Block This Vendor
                 </button>

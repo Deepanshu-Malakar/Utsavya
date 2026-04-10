@@ -16,6 +16,7 @@ const {
     verify,
     login,
     googleAuth,
+    getGoogleClientConfig,
     refresh,
     logout
 } = require("../controllers/auth.controller");
@@ -83,6 +84,7 @@ router.post("/login", authLimiter, loginValidation, login);
 // Note: Get idToken after user selects account in your frontend. 
 // Sets secure cookie and returns { accessToken }
 router.post("/google", googleValidation, googleAuth);
+router.get("/google-config", getGoogleClientConfig);
 
 // --- FRONTEND INTEGRATION GUIDE: Token Refresh ---
 // POST /auth/refresh | No Body | Returns { accessToken }

@@ -241,12 +241,50 @@ const searchVendors = async (queryParams) => {
 
 const reportVendor = async (reporterId, vendorId, data) => {
     const { reason, details } = data;
+
+    if (!reason || typeof reason !== "string" || reason.trim().length < 5) {
+        throw new Error("Please provide a valid complaint reason");
+    }
+
+    if (reporterId === vendorId) {
+        throw new Error("You cannot report yourself");
+    }
+
+    // Ensure target exists and is a vendor account
+    const vendorRes = await pool.query(
+        "SELECT id, role, full_name FROM users WHERE id = $1 AND is_active = true",
+        [vendorId]
+    );
+    if (vendorRes.rows.length === 0) {
+        throw new Error("Vendor not found");
+    }
+    if (vendorRes.rows[0].role !== "vendor") {
+        throw new Error("You can only report vendor accounts");
+    }
+
     const query = `
         INSERT INTO vendor_reports (reporter_id, vendor_id, reason, details)
         VALUES ($1, $2, $3, $4)
         RETURNING *
     `;
-    const { rows } = await pool.query(query, [reporterId, vendorId, reason, details]);
+    const { rows } = await pool.query(query, [reporterId, vendorId, reason.trim(), details || null]);
+
+    // Notify admins in-app so moderation can react quickly
+    const adminsRes = await pool.query("SELECT id FROM users WHERE role = 'admin' AND is_active = true");
+    if (adminsRes.rows.length > 0) {
+        const { createNotification } = require("./notification.services");
+        await Promise.allSettled(
+            adminsRes.rows.map((admin) =>
+                createNotification(
+                    admin.id,
+                    "New Vendor Complaint",
+                    `A customer reported vendor ${vendorRes.rows[0].full_name}.`,
+                    "system"
+                )
+            )
+        );
+    }
+
     return rows[0];
 };
 

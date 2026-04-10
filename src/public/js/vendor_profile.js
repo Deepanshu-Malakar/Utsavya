@@ -18,7 +18,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadVendorProfile();
     setupStarInput();
+    configureReportButtonVisibility();
+
+    const reportModal = document.getElementById('reportModal');
+    if (reportModal) {
+        reportModal.addEventListener('click', (e) => {
+            if (e.target === reportModal) closeReportModal();
+        });
+    }
 });
+
+function getStoredAuthToken() {
+    return localStorage.getItem('accessToken') || localStorage.getItem('authToken');
+}
+
+function getCurrentUserRole() {
+    const token = getStoredAuthToken();
+    if (!token) return null;
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.role || null;
+    } catch (_) {
+        return null;
+    }
+}
+
+function configureReportButtonVisibility() {
+    const btn = document.getElementById('reportVendorBtn');
+    if (!btn) return;
+    const role = getCurrentUserRole();
+    btn.style.display = role === 'customer' ? 'block' : 'none';
+}
 
 // ===== LOAD FULL VENDOR PROFILE =====
 async function loadVendorProfile() {
@@ -340,6 +370,56 @@ function addVendorToEvent() {
 
 function scrollToBook() {
     document.getElementById('bookCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function openReportModal() {
+    const role = getCurrentUserRole();
+    if (role !== 'customer') {
+        showNotification('Only customers can report vendors.', 'error');
+        return;
+    }
+    const modal = document.getElementById('reportModal');
+    if (!modal) return;
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeReportModal() {
+    const modal = document.getElementById('reportModal');
+    if (!modal) return;
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+async function submitVendorReport() {
+    if (!vendorId) return;
+    const reasonEl = document.getElementById('reportReason');
+    const detailsEl = document.getElementById('reportDetails');
+    const reason = (reasonEl?.value || '').trim();
+    const details = (detailsEl?.value || '').trim();
+
+    if (!reason) {
+        showNotification('Please select a complaint reason.', 'error');
+        return;
+    }
+
+    try {
+        const res = await window.fetchWithAuth(`/vendors/${vendorId}/report`, {
+            method: 'POST',
+            body: JSON.stringify({ reason, details })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+            throw new Error(data.message || 'Failed to submit complaint.');
+        }
+
+        closeReportModal();
+        if (reasonEl) reasonEl.value = '';
+        if (detailsEl) detailsEl.value = '';
+        showNotification('Complaint submitted. Admins will review it.', 'success');
+    } catch (err) {
+        showNotification(err.message || 'Could not submit complaint.', 'error');
+    }
 }
 
 // ===== LIGHTBOX =====

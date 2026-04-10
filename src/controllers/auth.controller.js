@@ -66,6 +66,14 @@ const googleAuth = asyncHandler(async (req, res) => {
     res.status(200).json({ accessToken });
 });
 
+// GOOGLE CLIENT CONFIG
+const getGoogleClientConfig = asyncHandler(async (req, res) => {
+    if (!process.env.GOOGLE_CLIENT_ID) {
+        return res.status(500).json({ message: "Google OAuth is not configured" });
+    }
+    res.status(200).json({ clientId: process.env.GOOGLE_CLIENT_ID });
+});
+
 
 // REFRESH
 // --- FRONTEND INTEGRATION GUIDE: Silent Refresh ---
@@ -116,6 +124,7 @@ module.exports = {
     verify,
     login,
     googleAuth,
+    getGoogleClientConfig,
     refresh,
     logout
 };

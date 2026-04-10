@@ -34,6 +34,21 @@ const vendorRequestValidation = [
     validate
 ];
 
+const reportVendorValidation = [
+    body("reason")
+        .notEmpty()
+        .withMessage("Complaint reason is required")
+        .isLength({ min: 5, max: 200 })
+        .withMessage("Reason must be between 5 and 200 characters")
+        .trim(),
+    body("details")
+        .optional({ nullable: true })
+        .isLength({ max: 2000 })
+        .withMessage("Details cannot exceed 2000 characters")
+        .trim(),
+    validate
+];
+
 // Route to request becoming a vendor
 // --- FRONTEND INTEGRATION GUIDE: Become a Vendor ---
 // POST /vendors/request | Body: { business_name, city }
@@ -104,6 +119,7 @@ router.post(
     "/:id/report",
     authenticateUser,
     authorizeRoles("customer"),
+    reportVendorValidation,
     reportVendorController
 );
 
